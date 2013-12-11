@@ -1,7 +1,8 @@
 
 sort
 
-  Sign = struct P1 | P2 | P3 | P4 | S1 | S2 | S3 | S4 ;
+  PreSign = struct P1 | P2 | P3 | P4 ;
+  StopSign = struct S1 | S2 | S3 | S4 ;
   Barrier = struct B1 | B2 | B3 | B4 ;
   Lock = struct L1 | L2 ;
 
@@ -11,25 +12,22 @@ sort
   sDeck = struct up | down ;
 
   Motor = struct movingUp | movingDown | stopped | broken ;
- 
-  
 
 act
   
-  setSign, getSign: Sign;
-  setBarrier, getBarrier: Barrier;
-  setLock, getLock: Lock;
+  setPreSign: PreSign;
+  setStopSign: StopSign;
+  setBarrier: Barrier;
+  setLock: Lock;
   Open, Close, setDeck, getDeck, motorStatus;
 
 map
 %functions
-  
+
 
 
 eqn
 %rules
-
-
   
 proc 
   Signs = 
