@@ -4,14 +4,10 @@ In order to create a model for the bridge in mCRL2, which is modeling software u
 
 \begin{enumerate}
 	\item \textbf{Stop signs cannot be lit as long as the pre lights have not been lit}
-	When setSign is set on for all stop-signs, then check for all pre-signs if getSign is on before, and not off intermediate.
-	Else when setSign is set on for all stop-signs, then check for three pre-signs if getSign is on before, and not off intermediate.
-	Else, give error and stop.
+	When setSign(Si,On), before setSign(Pi,On) should have occurred and setSign(Pi,Off) may not occur intermediate.
 
 	\item \textbf{Barriers cannot be closed if the stop signs have not been lit}
-	When setBarrier is set down for all barriers, then check for all stop-signs if getSign is on before, and not off intermediate.
-	Else when setBarrier is set down for all barriers, then check for three stop-signs if getSign is on before, and not off intermediate.
-	Else, give error and stop.
+	When setBarrier(Bi,Up), before setSign(Si,On) should have occurred and setSign(Si,Off) may not occur intermediate.
 
 	\item \textbf{Bridge can only be unlocked when all barriers are down}
 	When setLock is set unlocked for all locks, then check for all barriers if getBarrier is down before, and not up intermediate.
