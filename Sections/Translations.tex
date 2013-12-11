@@ -29,20 +29,20 @@ In order to create a model for the bridge in mCRL2, which is modeling software u
 	Always when setBarrier(B, up), getLock(L1) or getLock(L2) are enabled, and not disabled intermediately.
 
 	\item \textbf{Stop sign can be shut off only when the barriers are up}
-	Always when setSign(S, off), for each B1, B2, B3, B4, getBarier should be up before, and not changed intermediately.
+	Always when setSign(S$_i$, off) occurs, setBarrier(B$_i$, up) has to be occured before for all barriers. No setBarrier(B$_i$, down) may have occured intermediately.
 
 	\item \textbf{The bridge should be able to be opened when a ship approaches}
-	When giving the open command, somewhere in the process setDeck should be set to up.
+	When open occurs, setDeck(OPEN) should eventually occur.
 
 	\item \textbf{The bridge should be able to close in order to let cars pass}
-	When giving the close command, somewhere in the process setDeck should be set to down.
+	When close occurs, setDeck(CLOSE) should eventually occur.
 
 	\item \textbf{The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge}
-	Always when setBarrier(B2, down), getBarrier(B1) must be down or else the process is stopped. 
-	Always when setBarrier(B3, down), getBarrier(B4) must be down or else the process is stopped. 
-
+	Always when setBarrier(B$_2$, down), setBarrier(B$_1$, up) has to be occured before. No setBarrier(B$_1$, up) may have occured intermediately.
+	Always when setBarrier(B3, down), setBarrier(B$_4$, up) has to be occured before. No setBarrier(B$_4$, up) may have occured intermediately.
+	
 	\item \textbf{The stop signs can only be lit if at least one pre signs is being lit at each side of the bridge}
-	Always when setSign(S1, on) or setSign(S2, on), at least one status of getSign(P1) or getSign(P2) must be on. If not, the process is stopped.
+	Always when setSign(S$_1$, on) or setSign(S2, on), at least one status of getSign(P1) or getSign(P2) must be on. If not, the process is stopped.
 	Always when setSign(S1, on) or setSign(S2, on), at least one status of getSign(P1) or getSign(P2) must be on. If not, the process is stopped.
 
 	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge}
