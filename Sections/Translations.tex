@@ -1,21 +1,19 @@
-n\subsection{Translation of Requirements in Terms of Interactions}
+\section{Translation of Requirements in Terms of Interactions}
 
 In order to create a model for the bridge in mCRL2, which is modeling software used for system validation, the requirements have to expressed in terms of the previous stated interactions. At the moment, we are still rewriting these translations after the feedback we received during last week's meeting. The following translations are from last week.
 
 \begin{enumerate}
-	\item \textbf{Stop signs cannot be lit as long as the pre lights have not been lit}
-	When setSign(Si,On), before setSign(Pi,On) should have occurred and setSign(Pi,Off) may not occur intermediate.
+	\item \textbf{Stop signs cannot be lit unless the pre lights are on}
+	Always after a \mcode{setSign(Si,off)}, a \mcode{setSign(Pi,on)} cannot occur unless a \mcode{setSign(Pi,on)} has occured intermediately.
 
-	\item \textbf{Barriers cannot be closed if the stop signs have not been lit}
-	When setBarrier(Bi,Up), before setSign(Si,On) should have occurred and setSign(Si,Off) may not occur intermediate.
+	\item \textbf{Barriers cannot be lowered unless the stop signs are on}
+	Always after a \mcode{setSign(Si,off)}, a \mcode{setBarrier(Bi,down)} cannot occur unless a \mcode{setSign(Si,on)} has occured intermediately.
 
 	\item \textbf{Bridge can only be unlocked when all barriers are down}
-	When setLock is set unlocked for all locks, then check for all barriers if getBarrier is down before, and not up intermediate.
-	Else, give error and stop.
+	Always after a \mcode{setBarrier(Bi,up)}, a \mcode{setLock(Li,disengage)} cannot occur unless a \mcode{setBarrier(Bi,down)} has occured intermediately.
 
-	\item	\textbf{The deck can only lifted when it is completely unlocked}
-	When setDeck is set up for the bridge deck, then check for all locks if getLock is unlocked before, and not locked intermediate.
-	Else, give error and stop.
+	\item	\textbf{The deck can only be lifted when both locks are disengaged}
+	Always after a \mcode{setBarrier(Li,engage)}, a \mcode{setDeck(up)} cannot occur unless a \mcode{setLock(Li,disengage)} has occured intermediately.
 
 	\item \textbf{Bridge can only be locked when the deck is down}
 	Always when setLock(L2), then getDeck is down before, and not changed intermediately.
