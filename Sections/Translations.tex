@@ -20,7 +20,7 @@ In order to create a model for the bridge in mCRL2, which is modeling software u
 	Always when setLock(L1), then getDeck is down before, and not changed intermediately.
 
 	\item \textbf{Barriers can only be up when the bridge is locked by at least one lock}
-	Always when setBarrier(B, up), getLock(L1) or getLock(L2) are enabled, and not disabled intermediately.
+	Always after a \texttt{setLock(L1, disabled)} and \texttt{setLock(L2, disabled)}, a \texttt{setBarrier(B, up)} cannot happen unless a \texttt{setLock(L1, enabled)} or \texttt{setLock(L2, enabled)} happend intermediately.
 
 	\item \textbf{Stop sign can be shut off only when the barriers are up}
 	Always when setSign(S$_i$, off) occurs, setBarrier(B$_i$, up) has to be occured before for all barriers. No setBarrier(B$_i$, down) may have occured intermediately.
