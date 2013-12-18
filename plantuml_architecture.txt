@@ -1,0 +1,40 @@
+@startuml
+
+activate Controller
+Controller -> Controller: openBridge
+
+activate Signs
+Controller -> Signs: setPre(Sign, on)
+Signs --> Controller: commPreSigns(Sign)
+
+Controller -> Signs: setStop(Sign, on)
+Signs --> Controller: commStopSigns(Sign)
+
+activate Barriers
+Controller -> Barriers: setBarrier(Barrier, up)
+Signs --> Controller: commBarrier(Barrier)
+
+activate Bridge
+Controller -> Bridge: setLock(Lock, engage)
+Bridge --> Controller: commLock(Lock)
+Controller -> Bridge: setDeck(up)
+Bridge --> Controller: commDeck
+
+Controller -> Controller: closeBrige
+
+Controller -> Bridge: setDeck(down)
+Bridge --> Controller: commDeck
+Controller -> Bridge: setLock(Lock, disengage)
+Bridge --> Controller: commLock(Lock)
+deactivate Bridge
+
+Controller -> Barriers: setBarrier(Barrier, down)
+Signs --> Controller: commBarrier(Barrier)
+deactivate Barrier
+
+Controller -> Signs: setStop(Sign, off)
+Signs --> Controller: commStopSigns(Sign)
+deactivate Signs
+
+
+@enduml
