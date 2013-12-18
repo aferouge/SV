@@ -1,9 +1,9 @@
 \subsection{Interactions}
 \label{sec:act}
 
-The interactions can be divided into two categories. The first category contains the global interactions, which are the direct translations of the requirements from Section \ref{sec:requirements}.
-Switching of the signs, moving the barriers or engaging the locking pins are all action to be performed by the controller.
-The internal interactions are used for communication purposes, combining the state perceptions of different processes (e.g. \mcode{accept(50ct)} && \mcode{insert(50ct)} -> true*(50ct)).
+The interactions can be divided into two categories. The first category contains the global interactions, which are the direct translations of the requirements from Section \ref{sec:glob}.
+Switching of the signs, moving the barriers or engaging the locking pins are all action to be performed by the controller and can be found in Table \ref{tab:glob_act}
+The internal interactions are used for communication purposes, combining the state perceptions of different processes. These can be found in Table \ref{tab:int_act}
 %
 \begin{table}[htb]%
 \begin{tabular}{lll}
@@ -11,49 +11,57 @@ The internal interactions are used for communication purposes, combining the sta
       \hline
       \mcode{openBridge} & Initiates the system to open the bridge &\\
       \mcode{closeBridge} & Initiates the system to close the bridge & \\
-      \mcode{setPre} & Switches on/off the pre sign & Sign, status\\
-      \mcode{setStop} & Switches on/off the stop sign & Sign, status\\
-      \mcode{setBarrier} & Lifts/lowers the barriers & Barrier, status\\
-      \mcode{setLock} & Engages/disengages the locks & Lock, status\\
-      \mcode{setDeck} & Lifts/lowers the bridge deck & Deck, status\\
+      \mcode{setPre} & Switches on/off the pre sign & Sign, signStatus\\
+      \mcode{setStop} & Switches on/off the stop sign & Sign, signStatus\\
+      \mcode{setBarrier} & Lifts/lowers the barriers & Barrier, barrierStatus\\
+      \mcode{setLock} & Engages/disengages the locks & Lock, lockStatus\\
+      \mcode{setDeck} & Lifts/lowers the bridge deck & Deck, deckStatus\\
 \end{tabular}
 \caption{All global interactions to be performed by the safety layer of the control system.}
-\label{tab:act}
+\label{tab:glob_act}
 \end{table}
 
 \begin{table}[htb]%
 \begin{tabular}{lll}
       \textbf{Interaction} &	\textbf{Description}	&	\textbf{Parameters}\\
       \hline
-      \mcode{sendPre} & Sends the status of a particular pre signs & Sign, status\\
-      \mcode{receivePre} & Receives status of a particular pre signs & Sign, status\\
-      \mcode{commPreSign} & Synchronization action for sendStatusPreSign $\mid$ receiveStatusPreSign &\\
+      \mcode{sendPre} & Sends the status of a particular pre signs & Sign, signStatus\\
+      \mcode{receivePre} & Receives status of a particular pre signs & Sign, signStatus\\
+      \mcode{commPreSign} & Synchronization action for sendPre $\mid$ receivePre &\\
       
-      \mcode{sendStop} & Sends the status of a particular stop sign & Sign, status\\
-      \mcode{receiveStop} & Receives status of a particular stop signs & Sign, status\\
-      \mcode{commStopSign} & Synchronization action for sendStatusStopSign $\mid$ receiveStatusStopSign &\\
+      \mcode{sendStop} & Sends the status of a particular stop sign & Sign, signStatus\\
+      \mcode{receiveStop} & Receives status of a particular stop signs & Sign, signStatus\\
+      \mcode{commStopSign} & Synchronization action for sendStop $\mid$ receiveStop &\\
       
-      \mcode{sendBarrier} & Sends the status of a particular barrier & Barrier, status\\
-      \mcode{receiveBarrier} & Receives status of a particular barrier & Barriers, status\\
-      \mcode{commBarrier} & Synchronization action for sendStatusBarrier $\mid$ receiveStatusBarrier &\\
+      \mcode{sendBarrier} & Sends the status of a particular barrier & Barrier, barrierStatus\\
+      \mcode{receiveBarrier} & Receives status of a particular barrier & Barrier, barrierStatus\\
+      \mcode{commBarrier} & Synchronization action for sendBarrier $\mid$ receiveBarrier &\\
       
-      \mcode{sendLock} & Sends the status of a locking pin & Lock, status\\
-      \mcode{receiveLock} & Receives status of a particular locking pin & Lock, status\\
-      \mcode{commLock} & Synchronization action for sendStatusLock $\mid$ receiveStatusLock &\\
+      \mcode{sendLock} & Sends the status of a locking pin & Lock, lockStatus\\
+      \mcode{receiveLock} & Receives status of a particular locking pin & Lock, lockStatus\\
+      \mcode{commLock} & Synchronization action for sendLock $\mid$ receiveLock &\\
       
-      \mcode{sendDeck} & Sends the status of the bridge deck & Status\\
-      \mcode{receiveDeck} & Receives status of the bridge deck & Status\\
-      \mcode{commDeck} & Synchronization action for sendStatusDeck $\mid$ receiveStatusDeck &\\
+      \mcode{sendDeck} & Sends the status of the bridge deck & deckStatus\\
+      \mcode{receiveDeck} & Receives status of the bridge deck & deckStatus\\
+      \mcode{commDeck} & Synchronization action for sendDeck $\mid$ receiveDeck &\\
       
       \mcode{motorStatus} & Receives the status of the motor & Status\\
-      
-      
-      
-      
-      
-      
-      
 \end{tabular}
 \caption{All internal interactions of the safety layer of the control system.}
-\label{tab:act}
+\label{tab:int_act}
+\end{table}
+
+For the values of the interactions, datatypes are introduced which group certain values. Table \ref{tab:types} lists these datatypes and their possible values.
+
+\begin{table}[htb]%
+\begin{tabular}{lll}
+	\textbf{Datatype} & \textbf{Values}\\
+	Sign & P1, P2, P3, P4, S1, S2, S3, S4\\
+	signStatus & on, off\\
+	barrierStatus & up, down\\
+	lockStatus & engage, disengage\\
+	deckStatus & up, down\\
+\end{tabular}
+\caption{Datatypes used as parameters for the interactions.}
+\label{tab:types}
 \end{table}
