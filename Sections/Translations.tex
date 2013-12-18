@@ -35,15 +35,10 @@ In order to create a model for the bridge in mCRL2, which is modeling software u
 	Always when setBarrier(B$_2$, down), setBarrier(B$_1$, up) has to be occured before. No setBarrier(B$_1$, up) may have occured intermediately.
 	Always when setBarrier(B3, down), setBarrier(B$_4$, up) has to be occured before. No setBarrier(B$_4$, up) may have occured intermediately.
 	
-	\item \textbf{The stop signs can only be lit if at least one pre signs is being lit at each side of the bridge}
-	Always when setSign(S$_1$, on) or setSign(S2, on), at least one status of getSign(P1) or getSign(P2) must be on. If not, the process is stopped.
-	Always when setSign(S1, on) or setSign(S2, on), at least one status of getSign(P1) or getSign(P2) must be on. If not, the process is stopped.
+	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge.} \\
+	Always after a setPre(Pi, on), a setBarrier(Bi, down) cannot happen unless a receivePre(Pi, on) happend intermediately.
 
-	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge}
-	Always when setBarrier(B1, down), getSign(S1) and getSign(S2) must be down. If not, the process is stopped.
-	Always when setBarrier(B1, down), getSign(S1) and getSign(S2) must be down. If not, the process is stopped.
-
-	\item \textbf{If the motor is in the 'broken' status, the bridge should stay in the current position}
-	Whenever motorStatus has been changed to broken and has not changed back to stopped, moving up or moving down, no components may be set anymore.
+	\item \textbf{If the motor is in the 'broken' status, the bridge should stay in the current position.} \\
+	Always after a motorStatus(broken), a next action cannot happen unless a motorStatus(!broken) happend intermediately.
 
 \end{enumerate}
