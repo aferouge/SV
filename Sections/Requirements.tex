@@ -1,42 +1,47 @@
-N\subsection{Global Requirements}
+\subsection{Global Requirements}
 \label{sec:glob}
 
-Using the Project Guide\footnote{J. J. A. Keiren, System Validation (IN4387) Project Guide, VU University Amterdam, november 2013} as a source for the desired behaviour, the following requirements are defined:
-\\
-\\
-\textbf{Opening the bridge}
-	\begin{enumerate}
-  	\item Switching on pre signs should be the first action when opening the bridge
-		\item Stop signs cannot be lit as long as the pre lights have not been lit
-		\item Barriers cannot be lowered if the stop signs have not been lit
-		\item Bridge can only be unlocked when all barriers are down
-		\item The deck can only lifted when both locks are unlocked
-   \newcounter{enumTemp}
-   \setcounter{enumTemp}{\theenumi}
- \end{enumerate}
-  
-\textbf{Closing the bridge}
-  \begin{enumerate}
-    \setcounter{enumi}{\theenumTemp}
-  	\item Bridge can only be locked when the deck is down
-		\item Barriers can only be up when the bridge is locked by at least 
-		\setcounter{enumTemp}{\theenumi}
-  \end{enumerate}
- 
-\textbf{Functional requirements}
-	\begin{enumerate}
-	
-			\item The bridge should be able to be opened when a ship approaches
-			\item The bridge should be able to close in order to let cars pass
-			\item The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge
-		\setcounter{enumTemp}{\theenumi}
-	\end{enumerate}
+Using the Project Guide\footnote{J. J. A. Keiren, System Validation (IN4387)
+Project Guide, VU University Amterdam, november 2013} as a source for the
+desired behaviour, the following requirements are defined:
 
-\textbf{Failure}
-	\begin{enumerate}
-		\setcounter{enumi}{\theenumTemp}
-			\item The stop signs can only be lit if at least one pre signs is being lit at each side of the bridge
-			\item The barriers can only be lowered if both stop signs are being lit at each side of the bridge
-			\item If the motor is in the 'broken' status, the bridge may not be opened
-		\setcounter{enumTemp}{\theenumi}
-	\end{enumerate}
+\subsubsection*{Opening the bridge}
+\begin{enumerate}
+	\item Stop signs cannot be lit unless the pre lights are lit
+	\item Barriers cannot be lowered unless the stop signs are on
+	\item Bridge can only be unlocked when all barriers are down
+	\item The deck can only lifted when both locks are unlocked
+	\newcounter{enumTemp}
+	\setcounter{enumTemp}{\theenumi}
+\end{enumerate}
+
+\subsubsection*{Closing the bridge}
+\begin{enumerate}
+	\setcounter{enumi}{\theenumTemp}
+	\item Bridge can only be locked when the deck is down
+	\item Barriers can only be raised when the bridge is locked by at least one
+	      lock
+	\setcounter{enumTemp}{\theenumi}
+\end{enumerate}
+
+\subsubsection*{Functional requirements}
+\begin{enumerate}
+	\setcounter{enumi}{\theenumTemp}
+	\item The bridge should be able to be opened when a ship approaches
+	\item The bridge should be able to close and barriers should in order to
+	      let cars pass
+	\item The second barrier encountered by the cars is lowered after
+	      the first in order to enable cars to leave the bridge
+	\setcounter{enumTemp}{\theenumi}
+\end{enumerate}
+
+\subsubsection*{Failure}
+\begin{enumerate}
+	\setcounter{enumi}{\theenumTemp}
+	\item The stop signs can only be lit if at least one pre sign is lit at
+	      each side of the bridge
+	\item The barriers can only be lowered if both stop signs are lit at each
+	      side of the bridge
+	\item If the motor is in the `broken' status, the bridge may not be opened
+	\setcounter{enumTemp}{\theenumi}
+\end{enumerate}
