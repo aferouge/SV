@@ -1,46 +1,71 @@
 \section{Translation of Requirements in Terms of Interactions}
 
-In order to create a model for the bridge in mCRL2, which is modeling software used for system validation, the requirements have to expressed in terms of the previous stated interactions. At the moment, we are still rewriting these translations after the feedback we received during last week's meeting. The following translations are from last week.
+In order to create a model for the bridge in mCRL2, which is modeling software used for system validation, the requirements have to expressed in terms of the previous stated interactions. Then, in order to check our model in mCRL2, the requirements have to be written using $\mu$-calculus. During the project, these translations will be used for model checking and therefore constantly be revised. The following translations are from last week.
 
 \begin{enumerate}
-	\item \textbf{Stop signs cannot be lit unless the pre lights are on}\\
-	Always after a \mcode{setSign(Si,off)}, a \mcode{setSign(Pi,on)} cannot occur unless a 
-	\mcode{setSign(Pi,on)} has occured intermediately.\\
-	\texttt{[true*.}
-
-	\item \textbf{Barriers cannot be lowered unless the stop signs are on}
-	Always after a \mcode{setSign(Si,off)}, a \mcode{setBarrier(Bi,down)} cannot occur unless a \mcode{setSign(Si,on)} has occured intermediately.
-
-	\item \textbf{Bridge can only be unlocked when all barriers are down}
-	Always after a \mcode{setBarrier(Bi,up)}, a \mcode{setLock(Li,disengage)} cannot occur unless a \mcode{setBarrier(Bi,down)} has occured intermediately.
-
-	\item	\textbf{The deck can only be lifted when both locks are disengaged}
-	Always after a \mcode{setBarrier(Li,engage)}, a \mcode{setDeck(up)} cannot occur unless a \mcode{setLock(Li,disengage)} has occured intermediately.
-
-	\item \textbf{Bridge can only be locked when the deck is down}
-	Always when setLock(L2), then getDeck is down before, and not changed intermediately.
-	Always when setLock(L1), then getDeck is down before, and not changed intermediately.
-
-	\item \textbf{Barriers can only be up when the bridge is locked by at least one lock}
-	Always after a \texttt{setLock(L1, disabled)} and \texttt{setLock(L2, disabled)}, a \texttt{setBarrier(B, up)} cannot happen unless a \texttt{setLock(L1, enabled)} or \texttt{setLock(L2, enabled)} happend intermediately.
-
-	\item \textbf{Stop sign can be shut off only when the barriers are up}
-	Always when setSign(S$_i$, off) occurs, setBarrier(B$_i$, up) has to be occured before for all barriers. No setBarrier(B$_i$, down) may have occured intermediately.
-
-	\item \textbf{The bridge should be able to be opened when a ship approaches}
-	When open occurs, setDeck(OPEN) should eventually occur.
-
-	\item \textbf{The bridge should be able to close in order to let cars pass}
-	When close occurs, setDeck(CLOSE) should eventually occur.
-
-	\item \textbf{The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge}
-	Always when setBarrier(B$_2$, down), setBarrier(B$_1$, up) has to be occured before. No setBarrier(B$_1$, up) may have occured intermediately.
-	Always when setBarrier(B3, down), setBarrier(B$_4$, up) has to be occured before. No setBarrier(B$_4$, up) may have occured intermediately.
+	%Requirement 1
+	\item \textbf{Stop signs cannot be switched on unless all pre lights are switched on}\\
+	Always after a \texttt{setSign(S$_i$,off)}, a \texttt{setSign(P$_i$,on)} cannot occur unless a \texttt{setSign(P$_i$,on)} has occured intermediately.\\
+	$[true^* \cdot setPre(P_i, off)^{*} \cdot \overline{setPre(P_i, on)^{*}} \cdot setStop(S_i, on)]false$
 	
-	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge.} \\
-	Always after a setPre(Pi, on), a setBarrier(Bi, down) cannot happen unless a receivePre(Pi, on) happend intermediately.
+	%Requirement 2
+	\item \textbf{Barriers cannot be lowered unless all stop signs are switched on}\\
+	Always after a \texttt{setSign(S$_i$,off)}, a \texttt{setBarrier(B$_i$,down)} cannot occur unless a \texttt{setSign(S$_i$,on)} has occured intermediately.\\
+	$[true^* \cdot setStop(S_i, off)^{*} \cdot \overline{setStop(S_i, on)^{*}} \cdot setBarrier(B_i, down)]false$
 
+	%Requirement 3
+	\item \textbf{The bridge can only be unlocked when all barriers are down}\\
+	Always after a \texttt{setBarrier(B$_i$,up)}, \texttt{setLock(L$_1$,disengage)} or \texttt{setLock(L$_2$,disengage)} cannot occur unless a \texttt{setBarrier(B$_i$,down)} has occured intermediately.\\
+	$[true^* \cdot setBarrier(B_j, down)^{*} \cdot \overline{setBarrier(B_j, up^{*})} \cdot (setLock(L1, disengage) \cup setLock(L2, disengage)]false$
+
+	%Requirement 4
+	\item	\textbf{The deck can only be lifted when both locks are disengaged}\\
+	Always after a \texttt{setLock(L$_1$,engage)}, a \texttt{setDeck(up)} cannot occur unless a \texttt{setLock(L$_1$,disengage)} has occured intermediately. 
+	Always after a \texttt{setLock(L$_2$,engage)}, a \texttt{setDeck(up)} cannot occur unless a \texttt{setLock(L$_2$,disengage)} has occured intermediately.\\
+	$[true^* \cdot (setLock(L1, engage)^{*} \cdot \overline{setLock(L1, disengage)^{*}}) \cup (setLock(L2, 	engage)^{*} \cdot \overline{setLock(L2, disengage)^{*}}) \cdot setDeck(up)]false$
+
+	%Requirement 5
+	\item \textbf{Bridge locks can only be engaged when the deck is down}\\
+	Always when \texttt{setLock(L$_1$, engaged)} or \texttt{setLock(L$_2$, engaged)}, then \texttt{setDeck(down)} has occurred before, and no \texttt{setDeck(up)} has occurred intermediately. 
+	$[true^* \cdot setBarrier(B_j, down)^{*} \cdot \overline{setBarrier(B_j, up^{*})} \cdot (setLock(L1, disengage) \cup setLock(L2, disengage)]false}$
+	
+	%Requirement 6
+	\item \textbf{Barriers can only be up when the bridge is locked by at least one lock}\\
+	Always after a \texttt{setLock(L$_1$, disabled)}, a \texttt{setBarrier(B$_j$, up)} cannot occur unless a \texttt{setLock(L$_1$, engage)} has occurred intermediately.
+	Always after a \texttt{setLock(L$_2$, disabled)}, a \texttt{setBarrier(B$_j$, up)} cannot occur unless a \texttt{setLock(L$_2$, engage)} has occurred intermediately.\\
+	$[true^* \cdot (setLock(L1, disengage)^{*} \cdot \overline{setLock(L1, engage)^{*}}) \cup (setLock(L2, 	disengage)^{*} \cdot \overline{setLock(L2, engage)^{*}}) \cdot setBarrier(B_j, up)]false$
+
+
+	%Requirement 7
+	\item \textbf{Stop signs can be shut off only when all barriers are up}\\
+	Always when setStop(S$_i$, off) occurs, setBarrier(B$_j$, up) has to be occured and no setBarrier(B$_j$, down) may have occured intermediately.\\
+	$[true^* \cdot setBarrier(B_j, down)^{*} \cdot \overline{setBarrier(B_j, up)^{*}} \cdot setStop(S_i,	off)]false}$
+
+	%Requirement 8
+	\item \textbf{The bridge should be able to be opened when a ship approaches}\\
+	When open occurs, \texttt{setDeck(up)} should eventually occur.\\
+	$[openBridge]\mu \vartimes.(true \wedge <setDeck(up)>\vartimes)$
+
+	%Requirement 9
+	\item \textbf{The bridge should be able to close in order to let cars pass}\\
+	When close occurs, \texttt{setDeck(down)} should eventually occur.\\
+	$[closeBridge]\mu \vartimes.(true \wedge <setDeck(down)>\vartimes)$
+
+	%Requirement 10
+	\item \textbf{The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge}\\
+	Always when \texttt{setBarrier(B$_2$, down)}, \texttt{setBarrier(B$_1$, up)} has to be occured before. No \texttt{setBarrier(B$_1$, up)} may have occured intermediately.
+	Always when \texttt{setBarrier(B$_3$, down)}, \texttt{setBarrier(B$_4$, up)} has to be occured before. No \texttt{setBarrier(B$_4$, up)} may have occured intermediately.\\
+	$[true^* \cdot setBarrier(B_1, up)^{*} \cdot \overline{setBarrier(B_1, down)^{*}} \cdot setBarrier(B_2, down)]false}$\\
+	$[true^* \cdot setBarrier(B_3, up)^{*} \cdot \overline{setBarrier(B_3, down)^{*}} \cdot setBarrier(B_4, down)]false}$
+	
+	%Requirement 11
+	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge.} \\
+	Always after a \texttt{setPre(P$_i$, on)}, a \texttt{setBarrier(B$_i$, down)} cannot happen unless a \texttt{setPre(P$_i$, on)} happend intermediately.\\
+	$[true^* \cdot setStop(S_i, off)^{*} \cdot \overline{setStop(S_i, on)^{*}} \cdot setBarrier(B_j, down)]false}$
+
+	%Requirement 12
 	\item \textbf{If the motor is in the 'broken' status, the bridge should stay in the current position.} \\
-	Always after a motorStatus(broken), a next action cannot happen unless a motorStatus(!broken) happend intermediately.
+	Always after a \texttt{motorStatus(broken)}, a next action cannot happen unless a \texttt{motorStatus(!broken)} happened intermediately.\\
+	$[true^* \cdot motorStatus(Broken)^* \cdot \overline{motorStatus(Broken)^*}  \cdot setDeck(up)]false$
 
 \end{enumerate}

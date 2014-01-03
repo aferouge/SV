@@ -1,8 +1,10 @@
-\section{Architecture}\label{sec:trans}
+\section{Architecture}
+\label{sec:trans}
+
 
 Three parallel processes exist being \emph{signs}, \emph{barriers} and \emph{bridge}. \emph{Signs} handles the control of the lights, whereas \emph{barriers} handles the barriers and \emph{bridge} the locks and the deck.
 
-\emph{Signs} is the first one to be executed when an \mcode{open} or \mcode{close} command is given. After first lighting the pre signs and then the stop signs, control is given to the \emph{barriers} process.
+\emph{Signs} is the first one to be executed when an \texttt{open} or \texttt{close} command is given. After first lighting the pre signs and then the stop signs, control is given to the \emph{barriers} process.
 
 \emph{Barriers} makes sure all barriers are lowered if the stop signs are lit. When this is the case, \emph{bridge} takes over.
 
