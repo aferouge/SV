@@ -1,10 +1,7 @@
 
 sort
   st_deck = struct up | down;
-
   st_sign = struct on | off;
-  pre_sign = struct P1 | P2 | P3 | P4;
-  stop_sign = struct S1 | S2 | S3 | S4;
 
 act
   s_deck: st_deck;
@@ -14,14 +11,18 @@ proc
     = sum st: st_deck . s_deck(st) . Deck(st);
 
 act
-  s_pre_sign: pre_sign # st_sign;
-  s_stop_sign: stop_sign # st_sign;
+  s_pre_sign: st_sign;
+  s_stop_sign: st_sign;
 
 proc
-  PreSign(sign: pre_sign, status: st_sign)
-    = sum st: st_sign . s_pre_sign(sign, st) . PreSign(sign, st);
+  PreSign(status: st_sign)
+    = sum st: st_sign . s_pre_sign(st) . PreSign(st);
 
-  StopSign(sign: stop_sign, status: st_sign)
-    = sum st: st_sign . s_stop_sign(sign, st) . StopSign(sign, st);
+  StopSign(status: st_sign)
+    = sum st: st_sign . s_stop_sign(st) . StopSign(st);
 
-init PreSign(P1, off) || StopSign(S1, off);
+init
+%  allow(
+%    {s_pre_sign|s_stop_sign},
+    PreSign(off) || StopSign(off);
+%  );
