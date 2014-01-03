@@ -1,49 +1,13 @@
 
 sort
-
-  PreSign = struct P1 | P2 | P3 | P4 ;
-  StopSign = struct S1 | S2 | S3 | S4 ;
-  Barrier = struct B1 | B2 | B3 | B4 ;
-  Lock = struct L1 | L2 ;
-
-  sSign = struct on | off ; 
-  sBarrier = struct up | down ;
-  sLock = struct locked | unlocked ;
-  sDeck = struct up | down ;
-
-  Motor = struct movingUp | movingDown | stopped | broken ;
+  st_deck = struct up | down ;
 
 act
-  
-  setPreSign: PreSign;
-  setStopSign: StopSign;
-  setBarrier: Barrier;
-  setLock: Lock;
-  Open, Close, setDeck, getDeck, motorStatus;
 
-map
-%functions
+  s_deck : st_deck;
 
+proc
+  Deck(status: st_deck)
+    = sum st: st_deck . s_deck(st) . Deck(st);
 
-
-eqn
-%rules
-  
-proc 
-  Signs = 
-    something. Signs;
-
-  Barriers = 
-    something. Barriers;
-	
-  Bridge = 
-    something. Bridge;
-    
-    
-init
-  allow(
-    { Open, Close },
-    comm(
-      {  },
-      Signs || Barriers ||  Bridge
-));
+init Deck(down);
