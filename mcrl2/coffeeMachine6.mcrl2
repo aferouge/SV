@@ -1,0 +1,60 @@
+% Modify the user such that he only pays in euros,
+% and only accepts coffee.
+% What does this change about the complete system?
+
+sort
+    Money = struct zero | fiftyCents | euro;
+    Beverage = struct coffee | tea;
+
+% We need to calculate with it….
+map
+    plus, minus : Money # Money -> Money ;
+
+var
+    m : Money ;
+
+eqn
+    plus( zero, m) = m;
+    plus( m, zero) = m;
+    plus(fiftyCents, fiftyCents) = euro;
+    plus(fiftyCents, euro) = euro;
+    plus(euro, fiftyCents) = euro;
+
+    minus(m, zero) = m;
+    minus(fiftyCents, fiftyCents) = zero;
+    minus(euro, fiftyCents) = fiftyCents;
+    minus(euro, euro) = zero;
+
+act
+    r_coin : Money ;
+    s_bvg: Beverage;
+
+
+proc
+
+    CoffeeMachine5 (content : Money )
+                   = sum coin : Money .
+                          (content != euro) -> r_coin (coin) .
+                             CoffeeMachine5(plus(content, coin))
+                   +
+                        (content == euro) -> s_bvg(coffee).
+                             CoffeeMachine5(minus(content, euro))
+                   +
+                        (content != zero) -> s_bvg(tea) .
+                             CoffeeMachine5(minus(content, fiftyCents));
+
+act s_coin: Money;
+    r_bvg: Beverage;
+
+% A user with an infinite amount of coins...
+proc User = s_coin(euro) . User
+     + r_bvg(coffee) . User;
+
+% Some additional actions for communication
+act c_bvg: Beverage;
+    c_coin: Money;
+
+% You can try what happens if the allow and comm below are removed.
+init allow({c_bvg,c_coin},
+     comm({r_bvg|s_bvg->c_bvg, r_coin|s_coin->c_coin},
+            User || CoffeeMachine5 (zero))) ;
