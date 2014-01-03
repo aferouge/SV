@@ -4,25 +4,27 @@ sort
   st_sign = struct on | off;
 
 act
-  s_deck: st_deck;
+  open_deck, lower_deck;
 
 proc
   Deck(status: st_deck)
-    = sum st: st_deck . s_deck(st) . Deck(st);
+    = open_deck . Deck(up)
+    + lower_deck . Deck(down);
 
 act
-  s_pre_sign: st_sign;
-  s_stop_sign: st_sign;
+  s_pre_sign_on, s_pre_sign_off;
+  s_stop_sign_on, s_stop_sign_off;
 
 proc
   PreSign(status: st_sign)
-    = sum st: st_sign . s_pre_sign(st) . PreSign(st);
+    = s_pre_sign_on  . PreSign(on)
+    + s_pre_sign_off . PreSign(off);
 
   StopSign(status: st_sign)
-    = sum st: st_sign . s_stop_sign(st) . StopSign(st);
+    = s_stop_sign_on  . StopSign(on)
+    + s_stop_sign_off . StopSign(off);
 
-init
-%  allow(
-%    {s_pre_sign|s_stop_sign},
-    PreSign(off) || StopSign(off);
-%  );
+init allow(
+    {s_pre_sign_on|s_stop_sign_off,s_pre_sign_on|s_stop_sign_on},
+    PreSign(off) || StopSign(off)
+  );
