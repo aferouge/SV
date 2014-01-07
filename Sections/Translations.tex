@@ -1,4 +1,5 @@
 \section{Translation of Requirements in Terms of Interactions}
+\label{sec:trans}
 
 In order to create a model for the bridge in mCRL2, which is modeling software used for system validation, the requirements have to expressed in terms of the previous stated interactions. Then, in order to check our model in mCRL2, the requirements have to be written using $\mu$-calculus. During the project, these translations will be used for model checking and therefore constantly be revised. The following translations are from last week.
 
@@ -16,7 +17,7 @@ In order to create a model for the bridge in mCRL2, which is modeling software u
 	%Requirement 3
 	\item \textbf{The bridge can only be unlocked when all barriers are down}\\
 	Always after a \texttt{setBarrier(B$_i$,up)}, \texttt{setLock(L$_1$,disengage)} or \texttt{setLock(L$_2$,disengage)} cannot occur unless a \texttt{setBarrier(B$_i$,down)} has occured intermediately.\\
-	$[true^* \cdot setBarrier(B_j, down)^{*} \cdot \overline{setBarrier(B_j, up^{*})} \cdot (setLock(L1, disengage) \cup setLock(L2, disengage)]false$
+	$[true^* \cdot setBarrier(B_j, down)^{*} \cdot \overline{setBarrier(B_j, up^{*})} \cdot (setLock(L1, disengage) \cup setLock(L2, disengage))]false$
 
 	%Requirement 4
 	\item	\textbf{The deck can only be lifted when both locks are disengaged}\\
@@ -27,7 +28,7 @@ In order to create a model for the bridge in mCRL2, which is modeling software u
 	%Requirement 5
 	\item \textbf{Bridge locks can only be engaged when the deck is down}\\
 	Always when \texttt{setLock(L$_1$, engaged)} or \texttt{setLock(L$_2$, engaged)}, then \texttt{setDeck(down)} has occurred before, and no \texttt{setDeck(up)} has occurred intermediately. 
-	$[true^* \cdot setBarrier(B_j, down)^{*} \cdot \overline{setBarrier(B_j, up^{*})} \cdot (setLock(L1, disengage) \cup setLock(L2, disengage)]false}$
+	$[true^* \cdot setBarrier(B_j, down)^{*} \cdot \overline{setBarrier(B_j, up^{*})} \cdot (setLock(L1, disengage) \cup setLock(L2, disengage))]false}$
 	
 	%Requirement 6
 	\item \textbf{Barriers can only be up when the bridge is locked by at least one lock}\\
