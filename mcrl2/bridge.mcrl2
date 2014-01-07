@@ -1,36 +1,37 @@
 
 sort
-  st_deck = struct up | down;
   st_sign = struct on | off;
-
-act
-  s_deck: st_deck;
-
-proc
-  Deck(status: st_deck)
-    = sum st: st_deck . s_deck(st) . Deck(st);
 
 act
   s_pre_sign: st_sign;
   r_pre_sign: st_sign;
+  c_pre_sign: st_sign;
 
-  s_stop_sign_on, s_stop_sign_off;
+  s_stop_sign: st_sign;
+  r_stop_sign: st_sign;
+  c_stop_sign: st_sign;
 
 proc
   PreSign(status: st_sign)
-    = sum st: st_sign . (s_pre_sign(st) | r_pre_sign(st)) . PreSign(st);
+    = sum st: st_sign .
+        (status == off) -> r_pre_sign(st) . PreSign(st)
+    +
+      (status == on) -> s_stop_sign(on) . PreSign(status);
 
   StopSign(status: st_sign)
-    = s_stop_sign_on  . StopSign(on)
-    + s_stop_sign_off . StopSign(off);
+    = sum st: st_sign .
+        (status == off) -> r_stop_sign(st) . StopSign(st)
+    +
+      (status == on) -> s_pre_sign(off) . StopSign(status);
 
-proc User = s_pre_sign(on) . User;
-
-act c_pre_sign: st_sign;
+  User
+    = s_pre_sign(on) . User
+    + r_stop_sign(off) . User;
 
 init
   allow(
-    {c_pre_sign},
-    comm({r_pre_sign|s_pre_sign -> c_pre_sign},
-      PreSign(off) || User
-    ));
+    {c_pre_sign,c_stop_sign},
+    comm({r_pre_sign|s_pre_sign->c_pre_sign, r_stop_sign|s_stop_sign->c_stop_sign},
+      PreSign(off) || StopSign(off) || User
+    ))
+    ;
