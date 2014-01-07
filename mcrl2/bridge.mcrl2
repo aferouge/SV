@@ -1,7 +1,9 @@
 
 sort
-  st_sign = struct on | off;
-  st_deck = struct up | down;
+  st_sign = struct on | off;			%sign status
+  st_deck = struct up | down;			%deck status
+  st_barrier = struct lift | lower; 		%barrier status 
+  st_lock = struct engaged | disengaged;	%lock status
 
 map
   flip_sign: st_sign -> st_sign;
@@ -20,8 +22,8 @@ var
   st: st_deck;
 
 eqn
-  flip_deck(up) = down;
-  flip_deck(down) = up;
+  flip_deck(up) = up;
+  flip_deck(down) = down;
 
 act
   sendPre: st_sign;
@@ -36,6 +38,18 @@ act
   receiveDeck: st_deck;
   commDeck: st_deck;
 
+  sendBarrier_2_3: st_barrier; 
+  receiveBarrier_2_3: st_barrier;
+  commBarrier_2_3: st_barrier;
+
+  sendBarrier_1_4: st_barrier;
+  receiveBarrier_1_4: st_barrier;
+  commBarrier_1_4: st_barrier;
+
+  sendLock: st_lock;
+  receiveLock: st_lock;
+  commLock: st_lock;
+
 proc
   PreSign(status: st_sign)
     = receivePre(flip_sign(status)) . PreSign(flip_sign(status))
@@ -43,12 +57,37 @@ proc
 
   StopSign(status: st_sign)
     = receiveStop(flip_sign(status)) . StopSign(flip_sign(status))
-    + (status == on)  -> sendDeck(up) . StopSign(status)
+    + (status == on)  -> sendBarrier_1_4(lower) . StopSign(status)
     + (status == off) -> sendPre(off) . StopSign(status);
 
-  Deck(status: st_deck)
-    = receiveDeck(flip_deck(status)) . Deck(flip_deck(status))
-    + (status == down) -> sendStop(off) . Deck(status);
+proc
+  Barrier_1_4 (status : st_barrier) 
+  = (status == lower) -> sendBarrier_2_3(lower).Barrier_1_4(lower)
+  + (status == lower) -> receiveBarrier_1_4(lift).Barrier_1_4(lift)
+  + (status == lift) -> receiveBarrier_1_4(lower).Barrier_1_4(lower)
+  + (status == lift) -> sendStop(off).Barrier_1_4(lift);
+
+  % When barrier 2 & 3 are lower, the locks can be disengaged
+  % Requirement 3
+  Barrier_2_3 (status : st_barrier)
+  = (status == lower) -> sendLock(disengaged).Barrier_2_3(lower)
+  + (status == lower) -> receiveBarrier_2_3(lift).Barrier_2_3(lift)
+  + (status == lift) -> sendBarrier_1_4(lift).Barrier_2_3(lift)
+  + (status == lift) -> receiveBarrier_2_3(lower).Barrier_2_3(lower);
+
+proc 
+  % When both locks are disengaged, the deck can be lifted
+  % Requirement 4
+  Lock (status : st_lock)
+  = (status == disengaged) -> sendDeck(up).Lock(status)
+  + (status == disengaged) -> receiveLock(engaged).Lock(engaged)
+  + (status == engaged) -> sendBarrier_2_3(lift).Lock(engaged)
+  + (status == engaged) -> receiveLock(disengaged).Lock(disengaged);
+
+  Deck (status : st_deck)
+  = (status == down) -> receiveDeck(up).Deck(up)
+  + (status == down) -> sendLock(engaged).Deck(down)
+  + (status == up) -> receiveDeck(down).Deck(down);
 
 proc
   User
@@ -60,15 +99,25 @@ init
     {
       commPreSign,
       commStopSign,
+      commBarrier_1_4,
+      commBarrier_2_3,
+      commLock,
       commDeck
     },
     comm({
+        receiveBarrier_1_4 | sendBarrier_1_4 -> commBarrier_1_4, 
+        receiveBarrier_2_3 | sendBarrier_2_3 -> commBarrier_2_3,
+        receiveLock | sendLock -> commLock,
         receivePre|sendPre -> commPreSign,
         receiveStop|sendStop -> commStopSign,
         receiveDeck|sendDeck -> commDeck
       },
+      
       PreSign(off)
       || StopSign(off)
+      || Barrier_1_4(lift)
+      || Barrier_2_3(lift)
+      || Lock(engaged)
       || Deck(down)
       || User
     )
