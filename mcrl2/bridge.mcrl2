@@ -1,16 +1,27 @@
 
 sort
   st_sign = struct on | off;
+  st_deck = struct deck_up | deck_down;
 
 map
-  flip: st_sign -> st_sign;
+  flip_sign: st_sign -> st_sign;
 
 var
   st: st_sign;
 
 eqn
-  flip(on) = off;
-  flip(off) = on;
+  flip_sign(on) = off;
+  flip_sign(off) = on;
+
+map
+  flip_deck: st_deck -> st_deck;
+
+var
+  st: st_deck;
+
+eqn
+  flip_deck(deck_up) = deck_down;
+  flip_deck(deck_down) = deck_up;
 
 act
   s_pre_sign: st_sign;
@@ -21,23 +32,44 @@ act
   r_stop_sign: st_sign;
   c_stop_sign: st_sign;
 
+  s_deck: st_deck;
+  r_deck: st_deck;
+  c_deck: st_deck;
+
 proc
   PreSign(status: st_sign)
-    = r_pre_sign(flip(status)) . PreSign(flip(status))
+    = r_pre_sign(flip_sign(status)) . PreSign(flip_sign(status))
     + s_stop_sign(status) . PreSign(status);
 
   StopSign(status: st_sign)
-    = r_stop_sign(flip(status)) . StopSign(flip(status))
-    + s_pre_sign(status) . StopSign(status);
+    = r_stop_sign(flip_sign(status)) . StopSign(flip_sign(status))
+    + (status == on)  -> s_deck(deck_up) . StopSign(status)
+    + (status == off) -> s_pre_sign(off) . StopSign(status);
 
+  Deck(status: st_deck)
+    = r_deck(flip_deck(status)) . Deck(flip_deck(status))
+    + (status == deck_down) -> s_stop_sign(off) . Deck(status);
+
+proc
   User
     = s_pre_sign(on) . User
-    + s_stop_sign(off) . User;
+    + s_deck(deck_down) . User;
 
 init
   allow(
-    {c_pre_sign,c_stop_sign},
-    comm({r_pre_sign|s_pre_sign->c_pre_sign, r_stop_sign|s_stop_sign->c_stop_sign},
-      PreSign(off) || StopSign(off) || User
+    {
+      c_pre_sign,
+      c_stop_sign,
+      c_deck
+    },
+    comm({
+        r_pre_sign|s_pre_sign -> c_pre_sign,
+        r_stop_sign|s_stop_sign -> c_stop_sign,
+        r_deck|s_deck -> c_deck
+      },
+      PreSign(off)
+      || StopSign(off)
+      || Deck(deck_down)
+      || User
     )
   );
