@@ -2,6 +2,16 @@
 sort
   st_sign = struct on | off;
 
+map
+  flip: st_sign -> st_sign;
+
+var
+  st: st_sign;
+
+eqn
+  flip(on) = off;
+  flip(off) = on;
+
 act
   s_pre_sign: st_sign;
   r_pre_sign: st_sign;
@@ -13,25 +23,21 @@ act
 
 proc
   PreSign(status: st_sign)
-    = sum st: st_sign .
-        (status == off) -> r_pre_sign(st) . PreSign(st)
-    +
-      (status == on) -> s_stop_sign(on) . PreSign(status);
+    = r_pre_sign(flip(status)) . PreSign(flip(status))
+    + s_stop_sign(status) . PreSign(status);
 
   StopSign(status: st_sign)
-    = sum st: st_sign .
-        (status == off) -> r_stop_sign(st) . StopSign(st)
-    +
-      (status == on) -> s_pre_sign(off) . StopSign(status);
+    = r_stop_sign(flip(status)) . StopSign(flip(status))
+    + s_pre_sign(status) . StopSign(status);
 
   User
     = s_pre_sign(on) . User
-    + r_stop_sign(off) . User;
+    + s_stop_sign(off) . User;
 
 init
   allow(
     {c_pre_sign,c_stop_sign},
     comm({r_pre_sign|s_pre_sign->c_pre_sign, r_stop_sign|s_stop_sign->c_stop_sign},
       PreSign(off) || StopSign(off) || User
-    ))
-    ;
+    )
+  );
