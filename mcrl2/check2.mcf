@@ -1,0 +1,2 @@
+[true* . sendStop(off)* . !sendStop(on)* . sendBarrier_1_4(lower)]false
+

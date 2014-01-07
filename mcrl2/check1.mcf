@@ -1,1 +1,1 @@
-[ true* ] < true* . commPreSign(off) > true
+[true* . sendPre(off)* . !sendPre(on)* . sendStop(on)]false
