@@ -1,2 +1,1 @@
-[true* . sendStop(off)* . !sendStop(on)* . sendBarrier_1_4(lower)]false
-
+[true* . sendStop(off) . !sendStop(on)* . (sendBarrier_1_4(lower) && sendBarrier_2_3(lower))]false
