@@ -10,10 +10,6 @@ sort
 % SIGNS
 map
   flip_sign: st_sign -> st_sign;
-
-var
-  st: st_sign;
-
 eqn
   flip_sign(on) = off;
   flip_sign(off) = on;
@@ -21,10 +17,6 @@ eqn
 % DECK
 map
   flip_deck: st_deck -> st_deck;
-
-var
-  st: st_deck;
-
 eqn
   flip_deck(up) = up;
   flip_deck(down) = down;
