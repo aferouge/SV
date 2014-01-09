@@ -1,0 +1,1 @@
+[true* . commLock(disengaged) . !commLock(engaged) . (commBarrier_1_4(lift) || commBarrier_2_3(lift))]false
