@@ -6,6 +6,9 @@ sort
   st_lock    = struct engaged | disengaged; %lock status
   st_bridge  = struct open | close;
 
+  pre_id = struct P1 | P2 | P3 | P4;
+  stop_id = struct P1 | P2 | P3 | P4;
+
 % Flip actions to make a bridge component alter his status
 % SIGNS
 map
@@ -24,10 +27,6 @@ eqn
 % FRONT BARRIERS
 map
   flip_barfront: st_barrier -> st_barrier;
-
-var
-  st: st_barrier;
-
 eqn
   flip_barfront(lift) = lift;
   flip_barfront(lower) = lower;
@@ -35,10 +34,6 @@ eqn
 % BACK BARRIERS
 map
   flip_barback: st_barrier -> st_barrier;
-
-var
-  st: st_barrier;
-
 eqn
   flip_barback(lift) = lift;
   flip_barback(lower) = lower;
@@ -46,10 +41,6 @@ eqn
 % LOCKS
 map
   flip_lock: st_lock -> st_lock;
-
-var
-  st: st_lock;
-
 eqn
   flip_lock(engaged) = engaged;
   flip_lock(engaged) = disengaged;
