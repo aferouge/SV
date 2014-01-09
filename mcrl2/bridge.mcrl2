@@ -128,14 +128,9 @@ proc
     + (status == up) -> receiveDeck(down).Deck(down);
 
 proc
-  Bridge(status: st_bridge)
-    = (status == close) -> receiveOpenBridge . sendPre(on) . Bridge(open)
-    + (status == open) -> receiveCloseBridge . sendDeck(down) . Bridge(close);
-
-proc
   User
-    = sendOpenBridge . User
-    + sendCloseBridge . User;
+    = sendPre(on) . User
+    + sendDeck(down) . User;
 
 init
   allow(
@@ -146,8 +141,11 @@ init
       commBar_back,
       commLock,
       commDeck,
-      openBridge,
-      closeBridge,
+      sendPre,
+      sendStop,
+      sendDeck,
+      sendBarrier_1_4,
+      sendBarrier_2_3
     },
     comm({
         receiveBar_front | sendBar_front -> commBar_front,
@@ -166,7 +164,6 @@ init
       || Bar_back(lift)
       || Lock(engaged)
       || Deck(down)
-      || Bridge(close)
       || User
     )
   );
