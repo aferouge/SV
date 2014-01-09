@@ -6,8 +6,8 @@ sort
   st_lock    = struct engaged | disengaged; %lock status
   st_bridge  = struct open | close;
 
-  pre_id = struct P1 | P2 | P3 | P4;
-  stop_id = struct P1 | P2 | P3 | P4;
+  pre_id = struct P1 | P2 | P3;
+  stop_id = struct S1 | S2 | S3 | S4;
 
 % Flip actions to make a bridge component alter his status
 % SIGNS
@@ -47,9 +47,9 @@ eqn
 
 % Actions for communication between the bridge components
 act
-  sendPre: st_sign;
-  receivePre: st_sign;
-  commPreSign: st_sign;
+  sendPre: pre_id # st_sign;
+  receivePre: pre_id # st_sign;
+  commPreSign: pre_id # st_sign;
 
   sendStop: st_sign;
   receiveStop: st_sign;
@@ -80,14 +80,14 @@ act
   receiveCloseBridge;
 
 proc
-  PreSign(status: st_sign)
-    = receivePre(flip_sign(status)) . PreSign(flip_sign(status))
-    + sendStop(status) . PreSign(status);
+  PreSign(id: pre_id, status: st_sign)
+    = receivePre(id, flip_sign(status)) . PreSign(status = flip_sign(status))
+    + sendStop(status) . PreSign();
 
   StopSign(status: st_sign)
     = receiveStop(flip_sign(status)) . StopSign(flip_sign(status))
     + (status == on)  -> sendBar_front(lower) . StopSign(status)
-    + (status == off) -> sendPre(off) . StopSign(status);
+    + (status == off) -> (sum id: pre_id . sendPre(id, off)) . StopSign(status);
 
 proc
   Bar_front (status : st_barrier)
@@ -120,7 +120,7 @@ proc
 
 proc
   User
-    = sendPre(on) . User
+    = sum pre: pre_id . sendPre(pre, on) . User
     + sendDeck(down) . User;
 
 init
@@ -131,12 +131,7 @@ init
       commBar_front,
       commBar_back,
       commLock,
-      commDeck,
-      sendPre,
-      sendStop,
-      sendDeck,
-      sendBarrier_1_4,
-      sendBarrier_2_3
+      commDeck
     },
     comm({
         receiveBar_front | sendBar_front -> commBar_front,
@@ -149,12 +144,9 @@ init
         receiveCloseBridge|sendCloseBridge -> closeBridge
       },
 
-         PreSign(off)
-      || StopSign(off)
-      || Bar_front(lift)
-      || Bar_back(lift)
-      || Lock(engaged)
-      || Deck(down)
+         PreSign(P1, off)
+      || PreSign(P2, off)
+      || PreSign(P3, off)
       || User
     )
   );
