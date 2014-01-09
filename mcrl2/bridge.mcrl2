@@ -1,4 +1,4 @@
-
+% All possible states for the bridge components
 sort
   st_sign    = struct on | off;             %sign status
   st_deck    = struct up | down;            %deck status
@@ -6,6 +6,8 @@ sort
   st_lock    = struct engaged | disengaged; %lock status
   st_bridge  = struct open | close;
 
+% Flip actions to make a bridge component alter his status
+% SIGNS
 map
   flip_sign: st_sign -> st_sign;
 
@@ -16,6 +18,7 @@ eqn
   flip_sign(on) = off;
   flip_sign(off) = on;
 
+% DECK
 map
   flip_deck: st_deck -> st_deck;
 
@@ -26,6 +29,40 @@ eqn
   flip_deck(up) = up;
   flip_deck(down) = down;
 
+% FRONT BARRIERS
+map
+  flip_barfront: st_barrier -> st_barrier;
+
+var
+  st: st_barrier;
+
+eqn
+  flip_barfront(lift) = lift;
+  flip_barfront(lower) = lower;
+
+% BACK BARRIERS
+map
+  flip_barback: st_barrier -> st_barrier;
+
+var
+  st: st_barrier;
+
+eqn
+  flip_barback(lift) = lift;
+  flip_barback(lower) = lower;
+
+% LOCKS
+map
+  flip_lock: st_lock -> st_lock;
+
+var
+  st: st_lock;
+
+eqn
+  flip_lock(engaged) = engaged;
+  flip_lock(engaged) = disengaged;
+
+% Actions for communication between the bridge components
 act
   sendPre: st_sign;
   receivePre: st_sign;
@@ -39,13 +76,13 @@ act
   receiveDeck: st_deck;
   commDeck: st_deck;
 
-  sendBarrier_2_3: st_barrier;
-  receiveBarrier_2_3: st_barrier;
-  commBarrier_2_3: st_barrier;
+  sendBar_back: st_barrier;
+  receiveBar_back: st_barrier;
+  commBar_back: st_barrier;
 
-  sendBarrier_1_4: st_barrier;
-  receiveBarrier_1_4: st_barrier;
-  commBarrier_1_4: st_barrier;
+  sendBar_front: st_barrier;
+  receiveBar_front: st_barrier;
+  commBar_front: st_barrier;
 
   sendLock: st_lock;
   receiveLock: st_lock;
@@ -66,23 +103,23 @@ proc
 
   StopSign(status: st_sign)
     = receiveStop(flip_sign(status)) . StopSign(flip_sign(status))
-    + (status == on)  -> sendBarrier_1_4(lower) . StopSign(status)
+    + (status == on)  -> sendBar_front(lower) . StopSign(status)
     + (status == off) -> sendPre(off) . StopSign(status);
 
 proc
-  Barrier_1_4 (status : st_barrier)
-    = (status == lower) -> sendBarrier_2_3(lower).Barrier_1_4(lower)
-    + (status == lower) -> receiveBarrier_1_4(lift).Barrier_1_4(lift)
-    + (status == lift) -> receiveBarrier_1_4(lower).Barrier_1_4(lower)
-    + (status == lift) -> sendStop(off).Barrier_1_4(lift);
+  Bar_front (status : st_barrier)
+    = (status == lower) -> sendBar_back(lower).Bar_front(lower)
+    + (status == lower) -> receiveBar_front(lift).Bar_front(lift)
+    + (status == lift) -> receiveBar_front(lower).Bar_front(lower)
+    + (status == lift) -> sendStop(off).Bar_front(lift);
 
   % When barrier 2 & 3 are lower, the locks can be disengaged
   % Requirement 3
-  Barrier_2_3 (status : st_barrier)
-    = (status == lower) -> sendLock(disengaged).Barrier_2_3(lower)
-    + (status == lower) -> receiveBarrier_2_3(lift).Barrier_2_3(lift)
-    + (status == lift) -> sendBarrier_1_4(lift).Barrier_2_3(lift)
-    + (status == lift) -> receiveBarrier_2_3(lower).Barrier_2_3(lower);
+  Bar_back (status : st_barrier)
+    = (status == lower) -> sendLock(disengaged).Bar_back(lower)
+    + (status == lower) -> receiveBar_back(lift).Bar_back(lift)
+    + (status == lift) -> sendBar_front(lift).Bar_back(lift)
+    + (status == lift) -> receiveBar_back(lower).Bar_back(lower);
 
 proc
   % When both locks are disengaged, the deck can be lifted
@@ -90,7 +127,7 @@ proc
   Lock (status : st_lock)
     = (status == disengaged) -> sendDeck(up).Lock(status)
     + (status == disengaged) -> receiveLock(engaged).Lock(engaged)
-    + (status == engaged) -> sendBarrier_2_3(lift).Lock(engaged)
+    + (status == engaged) -> sendBar_back(lift).Lock(engaged)
     + (status == engaged) -> receiveLock(disengaged).Lock(disengaged);
 
   Deck (status : st_deck)
@@ -113,16 +150,16 @@ init
     {
       commPreSign,
       commStopSign,
-      commBarrier_1_4,
-      commBarrier_2_3,
+      commBar_front,
+      commBar_back,
       commLock,
       commDeck,
       openBridge,
-      closeBridge
+      closeBridge,
     },
     comm({
-        receiveBarrier_1_4 | sendBarrier_1_4 -> commBarrier_1_4,
-        receiveBarrier_2_3 | sendBarrier_2_3 -> commBarrier_2_3,
+        receiveBar_front | sendBar_front -> commBar_front,
+        receiveBar_back | sendBar_back -> commBar_back,
         receiveLock | sendLock -> commLock,
         receivePre|sendPre -> commPreSign,
         receiveStop|sendStop -> commStopSign,
@@ -133,8 +170,8 @@ init
 
          PreSign(off)
       || StopSign(off)
-      || Barrier_1_4(lift)
-      || Barrier_2_3(lift)
+      || Bar_front(lift)
+      || Bar_back(lift)
       || Lock(engaged)
       || Deck(down)
       || Bridge(close)
