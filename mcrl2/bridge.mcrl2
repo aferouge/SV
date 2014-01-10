@@ -53,14 +53,18 @@ eqn
 
 % LOCKS
 map
-  flip_lock: st_lock -> st_lock;
+  flip_lockL1: st_lock -> st_lock;
+  flip_lockL2: st_lock -> st_lock;
 
 var
   st: st_lock;
 
 eqn
-  flip_lock(engaged) = engaged;
-  flip_lock(engaged) = disengaged;
+  flip_lockL1(engaged) = engaged;
+  flip_lockL1(disengaged) = disengaged;
+  flip_lockL2(engaged) = engaged;
+  flip_lockL2(disengaged) = disengaged;
+
 
 % Actions for communication between the bridge components
 act
@@ -84,9 +88,13 @@ act
   receiveBar_front: st_barrier;
   commBar_front: st_barrier;
 
-  sendLock: st_lock;
-  receiveLock: st_lock;
-  commLock: st_lock;
+  sendLock1: st_lock;
+  receiveLock1: st_lock;
+  commLock1: st_lock;
+
+  sendLock2: st_lock;
+  receiveLock2: st_lock;
+  commLock2: st_lock;
 
   openBridge;
   sendOpenBridge;
@@ -108,32 +116,39 @@ proc
 
 proc
   Bar_front (status : st_barrier)
-    = (status == lower) -> sendBar_back(lower).Bar_front(lower)
-    + (status == lower) -> receiveBar_front(lift).Bar_front(lift)
-    + (status == lift) -> receiveBar_front(lower).Bar_front(lower)
+    = receiveBar_front(flip_barfront(status)) . Bar_front(flip_barfront(status))
+    + (status == lower) -> sendBar_back(lower).Bar_front(lower)
     + (status == lift) -> sendStop(off).Bar_front(lift);
 
   % When barrier 2 & 3 are lower, the locks can be disengaged
   % Requirement 3
   Bar_back (status : st_barrier)
-    = (status == lower) -> sendLock(disengaged).Bar_back(lower)
-    + (status == lower) -> receiveBar_back(lift).Bar_back(lift)
-    + (status == lift) -> sendBar_front(lift).Bar_back(lift)
-    + (status == lift) -> receiveBar_back(lower).Bar_back(lower);
+    = receiveBar_back(flip_barback(status)) . Bar_back(flip_barback(status))
+    + (status == lower) -> sendLock1(disengaged).Bar_back(lower)
+    + (status == lower) -> sendLock2(disengaged).Bar_back(lower)
+    + (status == lift) -> sendBar_front(lift).Bar_back(lift);
 
 proc
   % When both locks are disengaged, the deck can be lifted
   % Requirement 4
-  Lock (status : st_lock)
-    = (status == disengaged) -> sendDeck(up).Lock(status)
-    + (status == disengaged) -> receiveLock(engaged).Lock(engaged)
-    + (status == engaged) -> sendBar_back(lift).Lock(engaged)
-    + (status == engaged) -> receiveLock(disengaged).Lock(disengaged);
+  L1 (status : st_lock)
+    = receiveLock1(flip_lockL1(status)) . sendLock1(status) . L1(flip_lockL1(status))
+    + (status == disengaged) -> receiveLock2(status) . (status == disengaged) -> sendDeck(up) . L1(status)
+    + (status == disengaged) -> receiveLock2(status) . (status == engaged) -> receiveLock1(flip_lockL1(status)) . sendLock1(status) . L1(flip_lockL1(status))
+    + (status == engaged) -> receiveLock2(status) . (status == disengaged) -> sendBar_back(lift) . L1(status)
+    + (status == engaged) -> receiveLock2(status) . (status == disengaged) -> receiveLock1(flip_lockL1(status)) . sendLock1(status) . L1(flip_lockL1(status));
+
+  L2 (status : st_lock)
+    = receiveLock2(flip_lockL2(status)) . sendLock2(status) . L2(flip_lockL2(status))
+    + (status == disengaged) -> receiveLock1(status) . (status == disengaged) -> sendDeck(up). L2(status)
+    + (status == disengaged) -> receiveLock1(status) . (status == engaged) -> receiveLock2(flip_lockL1(status)) . sendLock2(status) . L2(flip_lockL2(status))
+    + (status == engaged) -> receiveLock1(status) . (status == disengaged) -> sendBar_back(lift) . L2(status)
+    + (status == engaged) -> receiveLock1(status) . (status == disengaged) -> receiveLock2(flip_lockL1(status)) . sendLock2(status) . L2(flip_lockL2(status));
 
   Deck (status : st_deck)
-    = (status == down) -> receiveDeck(up).Deck(up)
-    + (status == down) -> sendLock(engaged).Deck(down)
-    + (status == up) -> receiveDeck(down).Deck(down);
+    = receiveDeck(flip_deck(status)) . Deck(flip_deck(status))
+    + (status == down) -> sendLock1(engaged).Deck(down)
+    + (status == down) -> sendLock2(engaged).Deck(down);
 
 proc
   Bridge(status: st_bridge)
@@ -142,8 +157,8 @@ proc
 
 proc
   User
-    = sendOpenBridge . User
-    + sendCloseBridge . User;
+    = sendLock1(engaged) . User;
+%    + sendCloseBridge . User;
 
 init
   allow(
@@ -152,15 +167,24 @@ init
       commStopSign,
       commBar_front,
       commBar_back,
-      commLock,
+      commLock1,
+      commLock2,
       commDeck,
       openBridge,
       closeBridge,
+      sendPre,
+      sendStop,
+      sendBar_front,
+      sendBar_back,
+      sendLock1,
+      sendLock2,
+      sendDeck
     },
     comm({
         receiveBar_front | sendBar_front -> commBar_front,
         receiveBar_back | sendBar_back -> commBar_back,
-        receiveLock | sendLock -> commLock,
+        receiveLock1 | sendLock1 -> commLock1,
+        receiveLock2 | sendLock2 -> commLock2,
         receivePre|sendPre -> commPreSign,
         receiveStop|sendStop -> commStopSign,
         receiveDeck|sendDeck -> commDeck,
@@ -168,13 +192,14 @@ init
         receiveCloseBridge|sendCloseBridge -> closeBridge
       },
 
-         PreSign(off)
-      || StopSign(off)
-      || Bar_front(lift)
-      || Bar_back(lift)
-      || Lock(engaged)
-      || Deck(down)
-      || Bridge(close)
+      %   PreSign(off)
+      %|| StopSign(off)
+      %|| Bar_front(lift)
+      %|| Bar_back(lift)
+       L1(engaged)
+      || L2(engaged)
+      %|| Deck(down)
+      %|| Bridge(close)
       || User
     )
   );
