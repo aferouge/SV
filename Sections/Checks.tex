@@ -1,3 +1,13 @@
-\section{Checks}
+\section{Model verification}
 
-Bla
+In section~\ref{sec:trans} the translations of the requirements are also
+translated into $\mu$-calculus. From that it is trivial to transform that into
+a mcf (mu-calculus formula) file which can be checked with the mCRL2 tools. For example the first
+requirement of~\ref{sec:trans} is translated to:
+
+\begin{verbatim}
+[true* . commPreSign(off) . !commPreSign(on)* . commStopSign(on)]false
+\end{verbatim}
+
+After writing all the requirements into the mcf format we have found that all
+the model satisfies all $\mu$-calculus formulas.
