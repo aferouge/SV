@@ -20,22 +20,22 @@ eqn
 map
   flip_deck: st_deck -> st_deck;
 eqn
-  flip_deck(up) = up;
-  flip_deck(down) = down;
+  flip_deck(up) = down;
+  flip_deck(down) = up;
 
 % FRONT BARRIERS
 map
   flip_barfront: st_barrier -> st_barrier;
 eqn
-  flip_barfront(lift) = lift;
-  flip_barfront(lower) = lower;
+  flip_barfront(lift) = lower;
+  flip_barfront(lower) = lift;
 
 % BACK BARRIERS
 map
   flip_barback: st_barrier -> st_barrier;
 eqn
-  flip_barback(lift) = lift;
-  flip_barback(lower) = lower;
+  flip_barback(lift) = lower;
+  flip_barback(lower) = lift;
 
 % LOCKS
 map
@@ -46,8 +46,8 @@ var
   st: st_lock;
 
 eqn
-  flip_lock(engaged) = engaged;
-  flip_lock(disengaged) = disengaged;
+  flip_lock(engaged) = disengaged;
+  flip_lock(disengaged) = engaged;
 %  flip_lockL2(engaged) = engaged;
 %  flip_lockL2(disengaged) = disengaged;
 
@@ -107,8 +107,8 @@ proc
 proc
   Bar_front (status : st_barrier)
     = receiveBar_front(flip_barfront(status)) . Bar_front(flip_barfront(status))
-    + (status == lower) -> sendBar_back(lower).Bar_front(lower)
-    + (status == lift) -> sendStop(off).Bar_front(lift);
+    + (status == lower) -> sendBar_back(lower) . Bar_front(lower)
+    + (status == lift) -> sendStop(off ). Bar_front(lift);
 
   % When barrier 2 & 3 are lower, the locks can be disengaged
   % Requirement 3
@@ -169,6 +169,7 @@ init
 %      sendLock2,
       sendDeck
     },
+
     comm({
         receiveBar_front | sendBar_front -> commBar_front,
         receiveBar_back | sendBar_back -> commBar_back,
