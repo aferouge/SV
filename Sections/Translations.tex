@@ -49,9 +49,8 @@ Because the requirements often concern all individual objects of a specific comp
 	%Requirement 5
 	\item \textbf{Bridge locks can only be engaged when the deck is down}
 	\begin{enumerate}
-		\item Always when \texttt{setLock(L$_1$, engaged)} or \texttt{setLock(L$_2$, engaged)}, then \texttt{setDeck(down)} has occurred before, and no \texttt{setDeck(up)} has occurred intermediately. 
-		\item $[true^* \cdot setBarrier(B_i, lower) \cdot \overline{setBarrier(B_i, lift^{*})} \cdot setLock(L1, disengage)]false}$\\
-					$[true^* \cdot setBarrier(B_i, lower) \cdot \overline{setBarrier(B_i, lift^{*})} \cdot setLock(L2, disengage)]false}$
+		\item Always when \texttt{setLock(L$_j$, engaged)} or \texttt{setLock(L$_j$, engaged)}, then \texttt{setDeck(down)} has occurred before, and no \texttt{setDeck(up)} has occurred intermediately. 
+		\item $[true^* \cdot setDeck(down) \cdot \overline{setDeck(up^{*})} \cdot setLock(L_j, engage)]false}$\\
 	\end{enumerate}
 	
 	%Requirement 6
