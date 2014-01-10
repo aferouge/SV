@@ -1,0 +1,2 @@
+[true* . commBar_front(lift) . !commBar_front(lower)* . commLock(disengaged)]false &&
+[true* . commBar_back(lift) . !commBar_back(lower)* . commLock(disengaged)]false

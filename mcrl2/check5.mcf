@@ -1,5 +1,0 @@
-[true*
-  . (commBar_front(lower) && commBar_back(lower))
-  . (!commBar_front(lift) && !commBar_back(lift))*
-  . commLock(disengaged)
-]false
