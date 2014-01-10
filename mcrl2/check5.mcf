@@ -1,5 +1,5 @@
 [true*
-  . (commBarrier_1_4(lower) && commBarrier_2_3(lower))
-  . (!commBarrier_1_4(lift) && !commBarrier_2_3(lift))*
+  . (commBar_front(lower) && commBar_back(lower))
+  . (!commBar_front(lift) && !commBar_back(lift))*
   . commLock(disengaged)
 ]false
