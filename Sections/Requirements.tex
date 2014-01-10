@@ -5,10 +5,10 @@ Having used the project guide as a source for the desired behaviour, the followi
 
 \subsubsection*{Opening the bridge}
 \begin{enumerate}
-	\item Stop signs cannot be lit unless the pre lights are lit
-	\item Barriers cannot be lowered unless the stop signs are on
-	\item Bridge can only be unlocked when all barriers are down
-	\item The deck can only lifted when both locks are disengaged
+	\item Stop signs cannot be switched on unless all pre lights are switched on
+	\item Barriers cannot be lowered unless all stop signs are switched on
+	\item The bridge can only be unlocked when all barriers are down
+	\item The deck can only be lifted when both locks are disengaged
 	\newcounter{enumTemp}
 	\setcounter{enumTemp}{\theenumi}
 \end{enumerate}
@@ -16,34 +16,32 @@ Having used the project guide as a source for the desired behaviour, the followi
 \subsubsection*{Closing the bridge}
 \begin{enumerate}
 	\setcounter{enumi}{\theenumTemp}
-	\item Bridge can only be locked when the deck is down
-	\item Barriers can only be raised when the bridge is locked by at least one
-	      lock
-	\item Stop sign cannot be shut off only when the barriers are down
+	\item Bridge locks can only be engaged when the deck is down
+	\item Barriers can only be up when the bridge is locked
+	\item Stop signs can only be shut off only when all barriers are up
 	\setcounter{enumTemp}{\theenumi}
 \end{enumerate}
 
 \subsubsection*{Functional requirements}
 \begin{enumerate}
 	\setcounter{enumi}{\theenumTemp}
-	\item The bridge should be able to be opened when a ship approaches
-	\item The bridge should be able to close and barriers should in order to
-	      let cars pass
-	\item The second barrier encountered by the cars is lowered after
-	      the first in order to enable cars to leave the bridge
+	\item The bridge should be able to be opened when a ship wants to pass
+	\item The bridge should be able to close in order to let cars pass
+	\item The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge
 	\setcounter{enumTemp}{\theenumi}
 \end{enumerate}
 
-\subsubsection*{Failure}
-\begin{enumerate}
-	\setcounter{enumi}{\theenumTemp}
-	\item The stop signs can only be lit if at least one pre sign is lit at
-	      each side of the bridge
-	\item The barriers can only be lowered if both stop signs are lit at each
-	      side of the bridge
-	\item If the motor is in the `broken' status, the bridge may not be opened
-	\setcounter{enumTemp}{\theenumi}
-\end{enumerate}
+
+%\subsubsection*{Failure}
+%\begin{enumerate}
+%	\setcounter{enumi}{\theenumTemp}
+%	\item The stop signs can only be lit if at least one pre sign is lit at
+%	      each side of the bridge
+%	\item The barriers can only be lowered if both stop signs are lit at each
+%	      side of the bridge
+%	\item If the motor is in the `broken' status, the bridge may not be opened
+%	\setcounter{enumTemp}{\theenumi}
+%\end{enumerate}
 %
 
 \newpage
