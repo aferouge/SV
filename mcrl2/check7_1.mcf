@@ -1,5 +1,0 @@
-[true*
-  . commBarrier_1_4(lower)
-  . !commBarrier_1_4(lift)*
-  . commStopSign(on)
-]false
