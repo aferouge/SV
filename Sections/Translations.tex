@@ -36,8 +36,8 @@ Because the requirements often concern all individual objects of a specific comp
 	\begin{enumerate}
 		\item Always after a \texttt{commBar\_back(up)}, \texttt{commLock(disengage)} cannot occur unless a \texttt{commBar\_back(down)} has occured intermediately. \\
 					Always after a \texttt{commBar\_front(up)}, \texttt{commLock(disengage)} cannot occur unless a \texttt{commBar\_front(down)} has occured intermediately.
-		\item $[true^* \cdot commBar\_back(lift) \cdot \overline{commBar\_back(lower^{*})} \cdot (commLock(disengaged))]false$
-					$[true^* \cdot commBar\_front(lift) \cdot \overline{commBar\_front(lower^{*})} \cdot (commLock(disengaged))]false$
+		\item $[true^* \cdot commBar\_back(lift) \cdot \overline{commBar\_back(lower)^{*}} \cdot commLock(disengaged)]false$
+					$[true^* \cdot commBar\_front(lift) \cdot \overline{commBar\_front(lower^{*})} \cdot commLock(disengaged)]false$
 	\end{enumerate}
 
 	%Requirement 4
@@ -73,14 +73,14 @@ Because the requirements often concern all individual objects of a specific comp
 	\item \textbf{The bridge should be able to be opened when a ship approaches}
 	\begin{enumerate}
 		\item From every state eventually \texttt{commDeck(up)} can occur.
-		\item $[true* \cdot commDeck(up)]true$
+		\item $[true^* \cdot commDeck(up)]true$
 	\end{enumerate}
 
 	%Requirement 9
 	\item \textbf{The bridge should be able to close in order to let cars pass}
 	\begin{enumerate}
 		\item From every state eventually \texttt{commStopSign(off)} can occur.
-		\item $[true* \cdot commStopSign(off)]true$
+		\item $[true^* \cdot commStopSign(off)]true$
 	\end{enumerate}
 
 	%Requirement 10
