@@ -1,2 +1,2 @@
-[true* . commBarrier_front(lower) . !commBarrier_front(lift)* . commLock(on)]false &&
-[true* . commBarrier_back(lower) . !commBarrier_back(lift)* . commLock(on)]false
+[true* . commBar_front(lower) . !commBar(lift)* . commLock(on)]false &&
+[true* . commBar_back(lower) . !commBar(lift)* . commLock(on)]false
