@@ -1,1 +1,1 @@
-[true* . commBar_front(up) . !commBar_front(down) . commBar_back(down)]false
+[true* . commBar_front(lift) . !commBar_front(lower) . commBar_back(lower)]false

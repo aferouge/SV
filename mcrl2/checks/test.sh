@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-mcrl22lps bridge.mcrl2 bridge.lps
+mcrl22lps ../bridge.mcrl2 ../bridge.lps
 
 files=`find . -name '*.mcf' | sort`
 
