@@ -19,8 +19,8 @@
 \usepackage[linkbordercolor={white}]{hyperref}
 \usepackage{nameref}
 \usepackage{listings}
-\usepackage{mcode}
 \usepackage{graphicx} % Required for the inclusion of images
+\newcommand{\sectionbreak}{\clearpage} % Every section on new page
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
@@ -34,7 +34,7 @@
 \LARGE{Report System Validation Project \\
   Modeling a Bridge's Control System\\
   Creating a safety layer with mCRL2 using Labelled Transition Systems} % Title
-\vspace{+50pt}} % Ruimte tussen titel en auteurs
+\vspace{+50pt} % Ruimte tussen titel en auteurs
 
 \Large{Aimee \textsc{Ferouge} 4014030 \\
   Wieger \textsc{IJntema} 4034570 \\
@@ -42,7 +42,7 @@
   Group 7} % Author name
 
 \date{	\today} % Date for the report
-\vspace{+300pt}} % Title
+\vspace{+300pt} % Title
 
 \vfill
 \begin{center}
@@ -55,6 +55,7 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 \raggedright
 \normalsize
 
+
 %----------------------------------------------------------------------------------------
 %	Preface, lists, TOC
 %----------------------------------------------------------------------------------------
@@ -62,12 +63,12 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 \pagenumbering{roman}
 \setcounter{page}{0}
 
-%\addcontentsline{toc}{section}{Preface}
-%\input{Sections/Preface}
-%\addcontentsline{toc}{section}{List of Figures}
-%\listoffigures
-%\addcontentsline{toc}{section}{List of Tables}
-%\listoftables
+\addcontentsline{toc}{section}{Preface}
+\input{Sections/Preface}
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+\addcontentsline{toc}{section}{List of Tables}
+\listoftables
 
 \newpage
 \tableofcontents
@@ -83,26 +84,24 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 %----------------------------------------------------------------------------------------
 %	Report
 %----------------------------------------------------------------------------------------
+\input{Sections/Summary}
 \input{Sections/Introduction}
-\newpage
 \input{Sections/Requirements}
-\newpage
 \input{Sections/Interactions}
-\newpage
 \input{Sections/Architecture}
-\newpage
-\input{Sections/Translations}
-\newpage
+%\input{Sections/Translations}
 \input{Sections/Modeling}
+\input{Sections/Checks}
+\input{Sections/Conclusion}
 
 
 %----------------------------------------------------------------------------------------
 %	Appendices
 %----------------------------------------------------------------------------------------
 
-\appendix
-\newpage
-\input{Sections/MCRL}
+%\appendix
+%\newpage
+%\input{Sections/MCRL}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
