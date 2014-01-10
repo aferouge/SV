@@ -1,1 +1,2 @@
-[true* . commPreSign(off) . !commPreSign(on)* . commStopSign(on)]false
+[true* . commBarrier_front(lower) . !commBarrier_front(lift)* . commLock(on)]false &&
+[true* . commBarrier_back(lower) . !commBarrier_back(lift)* . commLock(on)]false

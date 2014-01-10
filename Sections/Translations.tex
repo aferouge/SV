@@ -7,103 +7,101 @@ Because the requirements often concern all individual objects of a specific comp
 %
 \begin{enumerate}
   \setcounter{enumi}{-1}
-  
-  
+
+
   %Example
   \item \textbf{Example; B cannot happen unless A happened first.}
   \begin{enumerate}
 		\item Only when action \texttt{A} has occured first, action \texttt{B} can occur.
-		\item $[true^* \cdot \overline{A} \cdot B]false$ 
+		\item $[true^* \cdot \overline{A} \cdot B]false$
 	\end{enumerate}
 
 	%Requirement 1
 	\item \textbf{Stop signs cannot be switched on unless all pre lights are switched on}
 	\begin{enumerate}
-		\item Always after a \texttt{setSign(S$_i$,off)}, a \texttt{setSign(P$_i$,on)} cannot occur unless a \texttt{setSign(P$_i$,on)} has occured intermediately.
-		\item $[true^* \cdot setPre(P_i, off) \cdot \overline{setPre(P_i, on)^{*}} \cdot setStop(S_i, on)]false$
+		\item Always after a \texttt{commPreSign(off)}, a \texttt{commStopSign(on)} cannot occur unless a \texttt{commPreSign(on)} has occured intermediately.
+		\item $[true^* \cdot commPreSign(off) \cdot \overline{commPreSign(on)^{*}} \cdot commStopSign(on)]false$
 	\end{enumerate}
-		
+
 	%Requirement 2
 	\item \textbf{Barriers cannot be lowered unless all stop signs are switched on}
 	\begin{enumerate}
-		\item Always after a \texttt{setSign(S$_i$,off)}, a \texttt{setBarrier(B$_i$,down)} cannot occur unless a \texttt{setSign(S$_i$,on)} has occured intermediately.
-		\item $[true^* \cdot setStop(S_i, off) \cdot \overline{setStop(S_i, on)^{*}} \cdot setBarrier(B_i, lower)]false$
+		\item Always after a \texttt{commStopSign(S$_i$,off)}, a \texttt{commBar\_front(down)} or \texttt{commBar\_back(down)} cannot occur unless a \texttt{commStopSign(on)} has occured intermediately.
+		\item $[true^* \cdot commStopSign(off) \cdot \overline{commStopSign(on)^{*}} \cdot commBarrier\_front(lower)]false$ \\
+					$[true^* \cdot commStopSign(off) \cdot \overline{commStopSign(on)^{*}} \cdot commBarrier\_back(lower)]false$ \\
 	\end{enumerate}
-	
+
 	%Requirement 3
 	\item \textbf{The bridge can only be unlocked when all barriers are down}
 	\begin{enumerate}
-		\item Always after a \texttt{setBarrier(B$_i$,up)}, \texttt{setLock(L$_1$,disengage)} or \texttt{setLock(L$_2$,disengage)} cannot occur unless a \texttt{setBarrier(B$_i$,down)} has occured intermediately.
-		\item $[true^* \cdot setBarrier(B_i, lift) \cdot \overline{setBarrier(B_i, lower^{*})} \cdot (setLock(L1, disengaged)\cup setLock(L2, disengage))]false$
+		\item Always after a \texttt{commBar\_back(up)}, \texttt{commLock(disengage)} cannot occur unless a \texttt{commBar\_back(down)} has occured intermediately. \\
+					Always after a \texttt{commBar\_front(up)}, \texttt{commLock(disengage)} cannot occur unless a \texttt{commBar\_front(down)} has occured intermediately.
+		\item $[true^* \cdot commBarrier\_back(lift) \cdot \overline{commBarrier\_back(lower^{*})} \cdot (commLock(disengaged))]false$
+					$[true^* \cdot commBarrier\_front(lift) \cdot \overline{commBarrier\_front(lower^{*})} \cdot (commLock(disengaged))]false$
 	\end{enumerate}
-		
+
 	%Requirement 4
 	\item	\textbf{The deck can only be lifted when both locks are disengaged}
 	\begin{enumerate}
-		\item Always after a \texttt{setLock(L$_1$,engage)}, a \texttt{setDeck(up)} cannot occur unless a \texttt{setLock(L$_1$,disengage)} has occured intermediately.\\ 
-					Always after a \texttt{setLock(L$_2$,engage)}, a \texttt{setDeck(up)} cannot occur unless a \texttt{setLock(L$_2$,disengage)} has occured intermediately.
-		\item $[true^* \cdot setLock(L1, engaged)\cdot \overline{setLock(L1, disengage)^{*}} \cdot setDeck(up)]false$\\
-					$[true^* \cdot setLock(L2, engaged)\cdot \overline{setLock(L2, disengage)^{*}} \cdot setDeck(up)]false$
+		\item Always after a \texttt{commLock(engaged)}, a \texttt{commDeck(up)} cannot occur unless a \texttt{commLock(disengaged)} has occured intermediately.
+		\item $[true^* \cdot commLock(engaged)\cdot \overline{commLock(disengaged)^{*}} \cdot commDeck(up)]false$\\
 	\end{enumerate}
-	
+
 	%Requirement 5
 	\item \textbf{Bridge locks can only be engaged when the deck is down}
 	\begin{enumerate}
-		\item Always when \texttt{setLock(L$_1$, engaged)} or \texttt{setLock(L$_2$, engaged)}, then \texttt{setDeck(down)} has occurred before, and no \texttt{setDeck(up)} has occurred intermediately. 
-		\item $[true^* \cdot setBarrier(B_i, lower) \cdot \overline{setBarrier(B_i, lift^{*})} \cdot setLock(L1, disengage)]false}$\\
-					$[true^* \cdot setBarrier(B_i, lower) \cdot \overline{setBarrier(B_i, lift^{*})} \cdot setLock(L2, disengage)]false}$
+		\item Always when \texttt{commLock(engaged)} then \texttt{commDeck(down)} has occurred before, and no \texttt{commDeck(up)} has occurred intermediately.
+		\item $[true^* \cdot commDeck(up) \cdot \overline{commDeck(down)^{*}} \cdot commLock(engaged)]false$\\
 	\end{enumerate}
-	
+
 	%Requirement 6
-	\item \textbf{Barriers can only be up when the bridge is locked by both locks	}
+	\item \textbf{Barriers can only be up when the bridge is locked by the locks}
 	\begin{enumerate}
-		\item Always after a \texttt{setLock(L$_1$, disabled)}, a \texttt{setBarrier(B$_i$, up)} cannot occur unless a \texttt{setLock(L$_1$, engage)} has occurred intermediately.\\
-					Always after a \texttt{setLock(L$_2$, disabled)}, a \texttt{setBarrier(B$_i$, up)} cannot occur unless a \texttt{setLock(L$_2$, engage)} has occurred intermediately.
-		\item $[true^* \cdot setLock(L2, disengaged)\cdot \overline{setLock(L2, engage)^{*}} \cdot setBarrier(B_i, lift)]false$\\
-					$[true^* \cdot setLock(L1, disengaged)\cdot \overline{setLock(L1, engage)^{*}} \cdot setBarrier(B_i, lift)]false$
+		\item Always after a \texttt{commLock(disengaged)}, a \texttt{commBar\_front(up)} or \texttt{commBar\_back(up)} cannot occur unless a \texttt{commLock(engaged)} has occurred intermediately.
+		\item $[true^* \cdot commLock(disengaged)\cdot \overline{commLock(engage)^{*}} \cdot commBar\_front(lift)]false$\\
 	\end{enumerate}
-	
+
 	%Requirement 7
-	\item \textbf{Stop signs can be shut off only when all barriers are up}
+	\item \textbf{Stop signs can only be shut off only when all barriers are up}
 	\begin{enumerate}
-		\item Always when setStop(S$_i$, off) occurs, setBarrier(B$_i$, up) has to be occured and no setBarrier(B$_i$, down) may have occured intermediately.
-		\item 	$[true^* \cdot setBarrier(B_i, lower) \cdot \overline{setBarrier(B_i, lift)^{*}} \cdot setStop(S_i,	off)]false}$
+		\item Always when commStopSign(off) occurs, \texttt{commBar\_front(up)} and \texttt{commBar\_back(up)} have to be occured and no \texttt{commBar\_front(down)} or \texttt{commBar\_back(down)} may have occured intermediately.
+		\item $[true^* \cdot commBar\_front(lower) \cdot \overline{commBar\_front(lift)^{*}} \cdot commStopSign(off)]false$
+					$[true^* \cdot commBar\_back(lower) \cdot \overline{commBar\_back(lift)^{*}} \cdot commStopSign(off)]false$
 	\end{enumerate}
-	
+
 	%Requirement 8
 	\item \textbf{The bridge should be able to be opened when a ship approaches}
 	\begin{enumerate}
-		\item When \texttt{openBridge} occurs, \texttt{setDeck(up)} should eventually occur.
-		\item $[openBridge]\mu \vartimes.(true \wedge <setDeck(up)>\vartimes)$
+		\item From every state eventually \texttt{commDeck(up)} can occur.
+		\item $[true* \cdot commDeck(up)]true$
 	\end{enumerate}
-		
+
 	%Requirement 9
 	\item \textbf{The bridge should be able to close in order to let cars pass}
 	\begin{enumerate}
-		\item When \texttt{closeBridge} occurs, \texttt{setDeck(down)} should eventually occur.
-		\item $[closeBridge]\mu \vartimes.(true \wedge <setDeck(down)>\vartimes)$
+		\item From every state eventually \texttt{commStopSign(off)} can occur.
+		\item $[true* \cdot commStopSign(off)]true$
 	\end{enumerate}
-	
+
 	%Requirement 10
 	\item \textbf{The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge}
 	\begin{enumerate}
-		\item Always when \texttt{setBarrier(B$_2$, down)}, \texttt{setBarrier(B$_1$, up)} has to be occured before. No \texttt{setBarrier(B$_1$, up)} may have occured intermediately.\\
-					Always when \texttt{setBarrier(B$_3$, down)}, \texttt{setBarrier(B$_4$, up)} has to be occured before. No \texttt{setBarrier(B$_4$, up)} may have occured intermediately.	
-		\item $[true^* \cdot setBarrier(B_1, up) \cdot \overline{setBarrier(B_1, down)^{*}} \cdot setBarrier(B_2, down)]false}$\\
-					$[true^* \cdot setBarrier(B_3, up) \cdot \overline{setBarrier(B_3, down)^{*}} \cdot setBarrier(B_4, down)]false}$
+		\item Always when \texttt{commBar\_back(down)}, \texttt{commBar\_front(down)} has to be occured before. No \texttt{commBar\_front(up)} may have occured intermediately.
+		\item $[true^* \cdot commBar\_front(up) \cdot \overline{commBar\_front(down)^{*}} \cdot commBar\_back(down)]false$\\
 	\end{enumerate}
 
 	%Requirement 11
-	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge.}
-	\begin{enumerate}
-		\item Always after a \texttt{setPre(P$_i$, on)}, a \texttt{setBarrier(B$_i$, down)} cannot happen unless a \texttt{setPre(P$_i$, on)} happend intermediately.
-		\item $[true^* \cdot setStop(S_i, off) \cdot \overline{setStop(S_i, on)^{*}} \cdot setBarrier(B_i, lower)]false}$
-	\end{enumerate}
-	
+%	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge.}
+%	\begin{enumerate}
+%		\item Always after a \texttt{commPre(P$_i$, on)}, a \texttt{commBarrier(B$_i$, down)} cannot happen unless a \texttt{commPre(P$_i$, on)} happend intermediately.
+%		\item $[true^* \cdot commStop(S_i, off) \cdot \overline{commStop(S_i, on)^{*}} \cdot commBarrier(B_i, lower)]false}$
+%	\end{enumerate}
+
 	%Requirement 12
-	\item \textbf{If the motor is in the 'broken' status, the bridge should stay in the current position.} 
-	\begin{enumerate}
-		\item Always after a \texttt{motorStatus(broken)}, a next action cannot happen unless a \texttt{motorStatus(!broken)} happened intermediately.
-		\item $[true^* \cdot motorStatus(Broken) \cdot \overline{motorStatus(\neg Broken)^*}  \cdot setDeck(up)]false$
-	\end{enumerate}
+%	\item \textbf{If the motor is in the 'broken' status, the bridge should stay in the current position.}
+%	\begin{enumerate}
+%		\item Always after a \texttt{motorStatus(broken)}, a next action cannot happen unless a \texttt{motorStatus(!broken)} happened intermediately.
+%		\item $[true^* \cdot motorStatus(Broken) \cdot \overline{motorStatus(\neg Broken)^*}  \cdot commDeck(up)]false$
+%	\end{enumerate}
+
 \end{enumerate}
