@@ -19,21 +19,25 @@ In the next subsection, the desired behaviour of the bridge is being determined 
 
 \subsection{Desired behavior of the bridge}
 
-Although it seems pretty straightforward what should be the desired behavior of a bridge, the Ketelbrug accident shows us that this can be slightly more complicated that it appears. For the project, the Project Guide\footnote{J. J. A. Keiren, System Validation (IN4387) Project Guide, VU University Amterdam, november 2013} has described the desired behavior in detail. For the sake of the clarity of this report, the general outline is repeated here. The bridge has two main functions: open en close. The sequence below shows all steps that need to be taken to open and close the bridge.
+Although it seems pretty straightforward what should be the desired behavior of a bridge, the Ketelbrug accident shows us that this can be slightly more complicated that it appears. For the project, the Project Guide\footnote{J. J. A. Keiren, System Validation (IN4387) Project Guide, VU University Amterdam, november 2013} has described the desired behavior in detail. For the sake of the clarity of this report, the general outline is repeated here. The bridge has two main functions: open en close. The sequence below shows all steps that need to be taken to open and to close the bridge.
 %
-\begingroup
-\footnotesize
-\vspace{+10pt}
-\texttt{switch on pre signs -> switch on stop signs -> lower barriers -> disengage deck locks -> lift bridge deck}\\
-\endgroup
+\begin{table}[h]%
+\begin{tabular}{l}
+	\footnotesize
+	\texttt{switch on pre signs -> switch on stop signs -> lower barriers -> disengage deck locks -> lift bridge deck}\\
+\end{tabular}
+\caption{}
+\label{}
+\end{table}
 %
-\begingroup
-\footnotesize
-\vspace{+10pt}
-\texttt{lower bridge deck -> engage deck locks -> raise barriers -> switch off stop signs -> switch off pre signs}\\
-\vspace{+10pt}
-\label{close}
-\endgroup
+\begin{table}[h]%
+\begin{tabular}{l}
+	\footnotesize
+	\texttt{lower bridge deck -> engage deck locks -> raise barriers -> switch off stop signs -> switch off pre signs}\\
+\end{tabular}
+\caption{}
+\label{}
+\end{table}
 %
 The most important feature is that every action can only be performed when the previous action has already occurred properly (according to assumptions we stated earlier). For example, it undesireable for cars to have a barrier coming down when no warning sign has been switched on previously. Also, the system has to be free of deadlocks. 
 
