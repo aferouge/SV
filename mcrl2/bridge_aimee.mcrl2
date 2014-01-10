@@ -1,0 +1,70 @@
+% Modeling the barriers
+
+sort
+	st_barrier = struct up | down;	%barrier status
+	st_lock = struct engaged | disengaged;	%lock status
+	st_deck = struct open | closed;	%deck status
+
+act
+	sendBarrier_2_3: st_barrier;
+	receiveBarrier_2_3: st_barrier;
+	commBarrier_2_3: st_barrier;
+	
+	sendBarrier_1_4: st_barrier;
+	receiveBarrier_1_4: st_barrier;
+	commBarrier_1_4: st_barrier;
+	
+	sendLock: st_lock;
+	receiveLock: st_lock;
+	commLock: st_lock;
+
+	sendDeck: st_deck;
+	receiveDeck: st_deck;
+	commDeck: st_deck;
+		
+% When barrier 1 & 4 are down, barrier 2 & 3 can be lowered too
+% Requirement 10
+proc
+	Barrier_1_4 (status : st_barrier)
+
+		= (status == down) -> sendBarrier_2_3(down).Barrier_1_4(down)
+		+ (status == down) -> receiveBarrier_1_4(up).Barrier_1_4(up)
+		+ (status == up) -> receiveBarrier_1_4(down).Barrier_1_4(down);
+
+% When barrier 2 & 3 are down, the locks can be disengaged
+% Requirement 3
+proc 
+	Barrier_2_3 (status : st_barrier)
+		= (status == down) -> sendLock(disengaged).Barrier_2_3(down)
+		+ (status == down) -> receiveBarrier_2_3(up).Barrier_2_3(up)
+		+ (status == up) -> sendBarrier_1_4(up).Barrier_2_3(up)
+		+ (status == up) -> receiveBarrier_2_3(down).Barrier_2_3(down);
+
+% When both locks are disengaged, the deck can be lifted
+% Requirement 4
+proc 
+	Lock (status : st_lock)
+		= (status == disengaged) -> sendDeck(open).Lock(status)
+		+ (status == disengaged) -> receiveLock(engaged).Lock(engaged)
+		+ (status == engaged) -> sendBarrier_2_3(up).Lock(engaged)
+		+ (status == engaged) -> receiveLock(disengaged).Lock(disengaged);
+
+proc 
+	Deck (status : st_deck)
+		= (status == closed) -> receiveDeck(open).Deck(open)
+		+ (status == closed) -> sendLock(engaged).Deck(closed)
+		+ (status == open) -> receiveDeck(closed).Deck(closed);
+
+proc
+	User
+		= sendBarrier_1_4(down).User
+		+ sendDeck(closed).User;
+
+% Communication is established for all bridge components
+init allow({commBarrier_1_4, commBarrier_2_3, commLock, commDeck},
+     comm({receiveBarrier_1_4 | sendBarrier_1_4 -> commBarrier_1_4,
+	receiveBarrier_2_3 | sendBarrier_2_3 -> commBarrier_2_3,
+	receiveLock | sendLock -> commLock,
+	receiveDeck | sendDeck -> commDeck},
+            
+	Barrier_1_4(up) || Barrier_2_3(up) || Lock(engaged) || Deck(closed) || User));

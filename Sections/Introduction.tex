@@ -1,12 +1,10 @@
 \section{Introduction}
 
-As has been pointed out by the incident at the Ketelbrug between Emmeloord and
-Lelystad, bridges require a very precise control system.  Many examples exist
-where bridges are not opened or closed properly, where bridge components break
-down or the bridge is being stuck in a particular state. The goal of this
-project is to design a safety layer that can be added to the main control
-interface, in order to capture all possible situations and failures.
-Throughout the report, we make use of the following assumptions:
+As has been pointed out by the incident at the Ketelbrug between Emmeloord and Lelystad, bridges require a very precise control system.  Many examples exist where bridges are not opened or closed properly, where bridge components break down or the bridge is being stuck in a particular state. The goal of this project is to design a safety layer that can be added to the main control interface, in order to capture all possible situations and failures.
+
+In order to achieve this, we first define all requirements that must be met by the bridge. This is being done both informally and formally using $\mu$-calculus, a way of expressing modal logic. Then, we model the bridge using mCRL2, a tool to create concurrent discrete event systems. Within this program, the $\mu$-calculus requirements can be verified on whether they are being satisfied. This is the last step and will result in an verification overview of all the requirements of our bridge.
+
+Modeling the bridge can be done in various levels of detail. For our model, we make use of the following assumptions:
 %
 \begin{itemize}
 	\item If three or four sensors detect an open/closed bridge, the bridge can be considered open/closed
@@ -16,3 +14,23 @@ Throughout the report, we make use of the following assumptions:
 %
 In this section, the desired behaviour of the bridge is being determined and defined. Section \ref{sec:glob} contains the global requirements that will be met in our system. Specific interactions that can be performed by the bridge are discussed in Section \ref{sec:act}, whereas Section \ref{sec:trans} translates these interactions into the requirements stated earlier.
 
+\subsection{Desired behavior of the bridge}
+
+Although it seems pretty straight what should be the desired behavior of a bridge, the Ketebrug accident shows us that this can be slightly more complicated that it appears. For the project, the Project Guide\footnote{J. J. A. Keiren, System Validation (IN4387) Project Guide, VU University Amterdam, november 2013} has described the desired behavior in detail. For the sake of the clarity of this report, the general outline is repeated here. The bridge has two main functions: open en close. Sequence \ref{open} shows all steps that need to be taken to open the bridge. Sequence \ref{close} show the same for the closing procedure.\\
+%
+\begingroup
+\footnotesize
+\vspace{+10pt}
+\texttt{switch on pre signs -> switch on stop signs -> lower barriers -> disengage deck locks -> lift bridge deck}\\
+\label{open}
+\endgroup
+%
+\begingroup
+\footnotesize
+\vspace{+10pt}
+\texttt{lower bridge deck -> engage deck locks -> raise barriers -> switch off stop signs -> switch off pre signs}\\
+\vspace{+10pt}
+\label{close}
+\endgroup
+%
+The most important feature is that every action can only be performed when the previous action has already occurred properly (according to assumptions we stated earlier). For example, it undesireable for cars to have a barrier coming down when no warning sign has been switched on previously. Also, the system has to be free of deadlocks. 

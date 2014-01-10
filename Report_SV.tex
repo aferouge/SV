@@ -24,27 +24,27 @@
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
-%\usepackage{times} % Uncomment to use the Times New Roman font
-
 %----------------------------------------------------------------------------------------
-%	DOCUMENT INFORMATION
+%	TITLE AND DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
+\begin{document}
 
-\title{Report System Validation Project \\
+\centering
+\vspace{+150pt}
+\LARGE{Report System Validation Project \\
   Modeling a Bridge's Control System\\
   Creating a safety layer with mCRL2 using Labelled Transition Systems} % Title
+\vspace{+50pt}} % Ruimte tussen titel en auteurs
 
-\author{Aimee \textsc{Ferouge} 4014030 \\
+\Large{Aimee \textsc{Ferouge} 4014030 \\
   Wieger \textsc{IJntema} 4034570 \\
   Arian \textsc{Stolwijk} 4001079 \\
   Group 7} % Author name
 
-\date{\today} % Date for the report
+\date{	\today} % Date for the report
+\vspace{+300pt}} % Title
 
-\begin{document}
-
-\maketitle % Insert the title, author and date
-
+\vfill
 \begin{center}
 \begin{tabular}{l r}
 Date Performed: & Januari, 2013 \\ % Date the experiment was performed
@@ -52,11 +52,37 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 \end{tabular}
 \end{center}
 
-%\section{Preface}
+\raggedright
+\normalsize
 
-%\tableofcontents
+%----------------------------------------------------------------------------------------
+%	Preface, lists, TOC
+%----------------------------------------------------------------------------------------
 
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%\addcontentsline{toc}{section}{Preface}
+%\input{Sections/Preface}
+%\addcontentsline{toc}{section}{List of Figures}
+%\listoffigures
+%\addcontentsline{toc}{section}{List of Tables}
+%\listoftables
+
+\newpage
+\tableofcontents
+\newpage
+\pagestyle{plain}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\setcounter{section}{0}
+
+%\addcontentsline{toc}{section}{Summary}
 %\input{Sections/Summary}
+
+%----------------------------------------------------------------------------------------
+%	Report
+%----------------------------------------------------------------------------------------
 \input{Sections/Introduction}
 \newpage
 \input{Sections/Requirements}
@@ -66,13 +92,16 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 \input{Sections/Architecture}
 \newpage
 \input{Sections/Translations}
+\newpage
+\input{Sections/Modeling}
 
 
 %----------------------------------------------------------------------------------------
-%	Second Delivarable
+%	Appendices
 %----------------------------------------------------------------------------------------
 
-%\section{Second Deliverable}
+\appendix
+\newpage
 \input{Sections/MCRL}
 
 %----------------------------------------------------------------------------------------
@@ -84,7 +113,6 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 %\bibliography{sample}
 %
 %----------------------------------------------------------------------------------------
-
 
 \end{document}
 
