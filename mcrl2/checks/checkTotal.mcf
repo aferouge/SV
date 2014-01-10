@@ -1,9 +1,10 @@
-[true* . commPreSign(off) . !commPreSign(on)* . commStopSign(on)]false &&
-[true* . sendStop(off) . !sendStop(on)* . (sendBar_front(lower) && sendBar_back(lower))]false &&
-[true* . commPreSign(off) . !commPreSign(on)* . commStopSign(on)]false &&
-[true* . commLock(engaged) . !commLock(disengaged)* . commDeck(up)]false &&
-
-[true* . commLock(disengaged) . !commLock(engaged)* . (commBar_front(lift) || commBar_back(lift))]false &&
-[true* . commBar_front(lower)  . !commBar_front(lift)* . commStopSign(off)]false &&
-[true* . commDeck(up) ]true &&
-[true* . commStopSign(off)]true
+v[true* . commPreSign(off) . !commPreSign(on)* . commStopSign(on)]false &&
+v[true* . commStopSign(off) . !commStopSign(on)* . commBar_front(lower)]false && [true* . commStopSign(off) . !commStopSign(on)* . commBar_back(lower)]false &&
+v[true* . commBar_back(lift) . !commBar_back(lower)* . commLock(disengaged)]false && [true* . commBar_front(lift) . !commBar_front(lower)* . commLock(disengaged)]false &&
+v[true* . commLock(engaged) . !commLock(disengaged)* . commDeck(up)]false &&
+v[true* . commDeck(up) . commDeck(down)* . commLock(engaged)]false &&
+v[true* . commLock(disengaged) . commLock(engage)* . commBar front(lift)]false &&
+v[true* . commBar_front(lower) . commBar_front(lift)* . commStopSign(off)]false && [true* . commBar_back(lower) . commBar_back(lift)* . commStopSign(off)]false &&
+v[true* . commDeck(up) ]true &&
+v[true* . commStopSign(off)]true &&
+[true* . commBar front(up) . commBar front(down)* . commBar back(down)]false
