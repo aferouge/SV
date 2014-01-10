@@ -6,14 +6,13 @@ sort
   st_lock    = struct engaged | disengaged; %lock status
   st_bridge  = struct open | close;
 
+  pre_id = struct P1 | P2 | P3 | P4;
+  stop_id = struct P1 | P2 | P3 | P4;
+
 % Flip actions to make a bridge component alter his status
 % SIGNS
 map
   flip_sign: st_sign -> st_sign;
-
-var
-  st: st_sign;
-
 eqn
   flip_sign(on) = off;
   flip_sign(off) = on;
@@ -21,10 +20,6 @@ eqn
 % DECK
 map
   flip_deck: st_deck -> st_deck;
-
-var
-  st: st_deck;
-
 eqn
   flip_deck(up) = up;
   flip_deck(down) = down;
@@ -32,10 +27,6 @@ eqn
 % FRONT BARRIERS
 map
   flip_barfront: st_barrier -> st_barrier;
-
-var
-  st: st_barrier;
-
 eqn
   flip_barfront(lift) = lift;
   flip_barfront(lower) = lower;
@@ -43,22 +34,22 @@ eqn
 % BACK BARRIERS
 map
   flip_barback: st_barrier -> st_barrier;
-
-var
-  st: st_barrier;
-
 eqn
   flip_barback(lift) = lift;
   flip_barback(lower) = lower;
 
 % LOCKS
 map
+<<<<<<< HEAD
   flip_lockL1: st_lock -> st_lock;
   flip_lockL2: st_lock -> st_lock;
 
 var
   st: st_lock;
 
+=======
+  flip_lock: st_lock -> st_lock;
+>>>>>>> 0c14e980f1216aa018dc10f9fdaa02f27e9ea11c
 eqn
   flip_lockL1(engaged) = engaged;
   flip_lockL1(disengaged) = disengaged;
@@ -151,14 +142,10 @@ proc
     + (status == down) -> sendLock2(engaged).Deck(down);
 
 proc
-  Bridge(status: st_bridge)
-    = (status == close) -> receiveOpenBridge . sendPre(on) . Bridge(open)
-    + (status == open) -> receiveCloseBridge . sendDeck(down) . Bridge(close);
-
-proc
   User
-    = sendLock1(engaged) . User;
-%    + sendCloseBridge . User;
+    = sendPre(on) . User
+    + sendDeck(down) . User;
+
 
 init
   allow(
@@ -170,8 +157,6 @@ init
       commLock1,
       commLock2,
       commDeck,
-      openBridge,
-      closeBridge,
       sendPre,
       sendStop,
       sendBar_front,
@@ -192,14 +177,13 @@ init
         receiveCloseBridge|sendCloseBridge -> closeBridge
       },
 
-      %   PreSign(off)
-      %|| StopSign(off)
-      %|| Bar_front(lift)
-      %|| Bar_back(lift)
-       L1(engaged)
-      || L2(engaged)
-      %|| Deck(down)
-      %|| Bridge(close)
+         PreSign(off)
+      || StopSign(off)
+      || Bar_front(lift)
+      || Bar_back(lift)
+      || Lock(engaged)
+      || Deck(down)
+>>>>>>> 0c14e980f1216aa018dc10f9fdaa02f27e9ea11c
       || User
     )
   );
