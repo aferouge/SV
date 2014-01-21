@@ -1,2 +1,2 @@
-[true* . commFrontBarrier(lift) . !commFrontBarrier(lower)* . commLock(disengaged)]false &&
-[true* . commBackBarrier(lift) . !commBackBarrier(lower)* . commLock(disengaged)]false
+[true* . commFrontBarrier(lift) . !cFrontBarrier(lower)* . cLock(disengaged)]false &&
+[true* . commBackBarrier(lift) . !cBackBarrier(lower)* . cLock(disengaged)]false

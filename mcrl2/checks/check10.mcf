@@ -1,1 +1,1 @@
-[true* . commFrontBarrier(lift) . !commFrontBarrier(lower) . commBackBarrier(lower)]false
+[true* . commFrontBarrier(lift) . !cFrontBarrier(lower) . cBackBarrier(lower)]false

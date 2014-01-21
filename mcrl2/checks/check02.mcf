@@ -1,1 +1,1 @@
-[true* . commStop(off) . !commStop(on)* . (commFrontBarrier(lower) && commBackBarrier(lower))]false
+[true* . commStop(off) . !cSwitchStop(on)* . (cFrontBarrier(lower) || cBackBarrier(lower))]false

@@ -1,1 +1,1 @@
-[true* . commPre(off) . !commPre(on)* . commStop(on)]false
+[true* . commPre(off) . !cSwitchPre(on)* . cSwitchStop(on)]false
