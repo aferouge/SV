@@ -6,6 +6,8 @@ sort
   st_lock    = struct engaged | disengaged; %lock status
   id_barrier = struct B1 | B2;              %barrier identifier
 
+  id_lock    = struct L1 | L2;
+
 act
   sendPre, receivePre, commPre: st_sign;
   rSwitchPre, sSwitchPre, cSwitchPre: st_sign;
@@ -51,15 +53,22 @@ proc
     + sendBackBarrier(status) . BackBarrier();
 
 act
-  sendLock, receiveLock, commLock: st_lock;
-  rLock, sLock, cLock: st_lock;
   setLock: st_lock;
+  sendLock, receiveLock, commLock: id_lock # st_lock;
+  rLock, sLock, cLock: id_lock # st_lock;
+  sendLocks, receiveLocks, commLocks: st_lock;
 
 proc
-  Lock(status: st_lock)
-    = (status == engaged) -> rLock(disengaged) . Lock(status = disengaged)
-    + (status == disengaged) -> rLock(engaged) . Lock(status = engaged)
-    + sendLock(status) . Lock();
+  Lock(id: id_lock, status: st_lock)
+    = rLock(id, disengaged) . Lock(status = disengaged)
+    + rLock(id, engaged) . Lock(status = engaged)
+    + sendLock(id, status) . Lock();
+
+proc
+  Locks(status: st_lock)
+    = (status == engaged) -> sLock(L1, disengaged) . sLock(L2, disengaged) . Locks()
+    + (status == disengaged) -> sLock(L1, engaged) . sLock(L2, engaged) . Locks()
+    + receiveLock(L1, status) . receiveLock(L2, status) . sendLocks(status) . Locks();
 
 act
   sendDeck, receiveDeck, commDeck: st_deck;
@@ -86,11 +95,11 @@ proc
     + sum id: id_barrier . setBackBarrier(id, lower) . (receiveBackBarrier(lower) + receiveBackBarrier(lift) . (receiveFrontBarrier(lower) . sBackBarrier(B1, lower) . sBackBarrier(B2, lower) + receiveFrontBarrier(lift))) . SafetyLayer()
     + sum id: id_barrier . setBackBarrier(id, lift) . (receiveBackBarrier(lift) + receiveBackBarrier(lower) . (receiveLock(engaged) . sBackBarrier(B1, lift) . sBackBarrier(B2, lift) + receiveLock(disengaged))) . SafetyLayer()
 
-    + setLock(engaged) . (receiveLock(engaged) + receiveLock(disengaged) . (receiveDeck(down) . sLock(engaged) + receiveDeck(up))) . SafetyLayer()
-    + setLock(disengaged) . (receiveLock(disengaged) + receiveLock(engaged) . (receiveBackBarrier(lower) . sLock(disengaged) + receiveBackBarrier(lift))) . SafetyLayer()
+    + setLock(engaged) . (receiveLocks(engaged) + receiveLocks(disengaged) . (receiveDeck(down) . sendLocks(engaged) + receiveDeck(up))) . SafetyLayer()
+    + setLock(disengaged) . (receiveLocks(disengaged) + receiveLocks(engaged) . (receiveBackBarrier(lower) . sendLocks(disengaged) + receiveBackBarrier(lift))) . SafetyLayer()
 
-    + setDeck(up) . (receiveDeck(up) + receiveDeck(down) . (receiveLock(disengaged) . sDeck(up) + receiveLock(engaged))) . SafetyLayer()
-    + setDeck(down) . (receiveDeck(down) + receiveDeck(up) . (receiveLock(disengaged) . sDeck(down) + receiveLock(engaged))) . SafetyLayer();
+    + setDeck(up) . (receiveDeck(up) + receiveDeck(down) . (receiveLocks(disengaged) . sDeck(up) + receiveLocks(engaged))) . SafetyLayer()
+    + setDeck(down) . (receiveDeck(down) + receiveDeck(up) . (receiveLocks(disengaged) . sDeck(down) + receiveLocks(engaged))) . SafetyLayer();
 
 init
   allow({
@@ -112,6 +121,7 @@ init
 
     setLock,
     commLock,
+    commLocks,
     cLock,
 
     setDeck,
@@ -132,6 +142,7 @@ init
     rBackBarrier|sBackBarrier -> cBackBarrier,
 
     receiveLock|sendLock -> commLock,
+    receiveLocks|sendLocks -> commLocks,
     rLock|sLock -> cLock,
 
     receiveDeck|sendDeck -> commDeck,
@@ -143,7 +154,9 @@ init
     || FrontBarrier(B2, lift)
     || BackBarrier(B1, lift)
     || BackBarrier(B2, lift)
-    || Lock(engaged)
+    || Lock(L1, engaged)
+    || Lock(L2, engaged)
+    || Locks(engaged)
     || Deck(down)
     || SafetyLayer
   ));
