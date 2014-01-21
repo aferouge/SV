@@ -54,141 +54,58 @@ eqn
 
 % Actions for communication between the bridge components
 act
-  sendPre: st_sign;
-  receivePre: st_sign;
-  commPreSign: st_sign;
 
-  sendStop: st_sign;
-  receiveStop: st_sign;
-  commStopSign: st_sign;
+  sendPre, receivePre, commPre: st_sign;
+  rSwitchOffPre, sSwitchOffPre, cSwitchOffPre;
+  rSwitchOnPre, sSwitchOnPre, cSwitchOnPre;
+  setPreSign: st_sign;
 
-  sendDeck: st_deck;
-  receiveDeck: st_deck;
-  commDeck: st_deck;
-
-  sendBar_back: st_barrier;
-  receiveBar_back: st_barrier;
-  commBar_back: st_barrier;
-
-  sendBar_front: st_barrier;
-  receiveBar_front: st_barrier;
-  commBar_front: st_barrier;
-
-  sendLock: st_lock;
-  receiveLock: st_lock;
-  commLock: st_lock;
-
-%  sendLock1: st_lock;
-%  receiveLock1: st_lock;
-%  commLock1: st_lock;
-
-%  sendLock2: st_lock;
-%  receiveLock2: st_lock;
-%  commLock2: st_lock;
-
-  openBridge;
-  sendOpenBridge;
-  receiveOpenBridge;
-
-  closeBridge;
-  sendCloseBridge;
-  receiveCloseBridge;
+  sendStop, receiveStop, commStop: st_sign;
+  rSwitchOffStop, sSwitchOffStop, cSwitchOffStop;
+  rSwitchOnStop, sSwitchOnStop, cSwitchOnStop;
+  setStopSign: st_sign;
 
 proc
+
   PreSign(status: st_sign)
-    = receivePre(flip_sign(status)) . PreSign(flip_sign(status))
-    + (status == on) -> sendStop(on) . PreSign(on);
+    = (status == on) -> rSwitchOffPre . PreSign(status = off)
+    + (status == off) -> rSwitchOnPre . PreSign(status = on)
+    + sendPre(status) . PreSign();
 
   StopSign(status: st_sign)
-    = receiveStop(flip_sign(status)) . StopSign(flip_sign(status))
-    + (status == on)  -> sendBar_front(lower) . StopSign(status)
-    + (status == off) -> sendPre(off) . StopSign(status);
+    = (status == on) -> rSwitchOffStop . StopSign(status = off)
+    + (status == off) -> rSwitchOnStop . StopSign(status = on)
+    + sendStop(status) . StopSign();
 
 proc
-  Bar_front (status : st_barrier)
-    = receiveBar_front(flip_barfront(status)) . Bar_front(flip_barfront(status))
-    + (status == lower) -> sendBar_back(lower) . Bar_front(lower)
-    + (status == lift) -> sendStop(off ). Bar_front(lift);
-
-  % When barrier 2 & 3 are lower, the locks can be disengaged
-  % Requirement 3
-  Bar_back (status : st_barrier)
-    = receiveBar_back(flip_barback(status)) . Bar_back(flip_barback(status))
-    + (status == lower) -> sendLock(disengaged) . Bar_back(lower)
-%    + (status == lower) -> sendLock2(disengaged).Bar_back(lower)
-    + (status == lift) -> sendBar_front(lift) . Bar_back(lift);
-
-proc
-  % When both locks are disengaged, the deck can be lifted
-  % Requirement 4
-  Lock (status : st_lock)
-    = receiveLock(flip_lock(status)) . Lock(flip_lock(status))
-    + (status == disengaged) -> sendDeck(up) . Lock(disengaged)
-    + (status == engaged) -> sendBar_back(lift) . Lock(engaged);
- 
-% L1 (status : st_lock)
-%    = receiveLock1(flip_lockL1(status)) . sendLock1(status) . L1(flip_lockL1(status))
-%    + (status == disengaged) -> receiveLock2(status) . (status == disengaged) -> sendDeck(up) . L1(status)
-%    + (status == disengaged) -> receiveLock2(status) . (status == engaged) -> receiveLock1(flip_lockL1(status)) . sendLock1(status) . L1(flip_lockL1(status))
-%    + (status == engaged) -> receiveLock2(status) . (status == disengaged) -> sendBar_back(lift) . L1(status)
-%    + (status == engaged) -> receiveLock2(status) . (status == disengaged) -> receiveLock1(flip_lockL1(status)) . sendLock1(status) . L1(flip_lockL1(status));
-
-%  L2 (status : st_lock)
-%    = receiveLock2(flip_lockL2(status)) . sendLock2(status) . L2(flip_lockL2(status))
-%    + (status == disengaged) -> receiveLock1(status) . (status == disengaged) -> sendDeck(up). L2(status)
-%    + (status == disengaged) -> receiveLock1(status) . (status == engaged) -> receiveLock2(flip_lockL1(status)) . sendLock2(status) . L2(flip_lockL2(status))
-%    + (status == engaged) -> receiveLock1(status) . (status == disengaged) -> sendBar_back(lift) . L2(status)
-%    + (status == engaged) -> receiveLock1(status) . (status == disengaged) -> receiveLock2(flip_lockL1(status)) . sendLock2(status) . L2(flip_lockL2(status));
-
-  Deck (status : st_deck)
-    = receiveDeck(flip_deck(status)) . Deck(flip_deck(status))
-    + (status == down) -> sendLock(engaged).Deck(down);
-%    + (status == down) -> sendLock2(engaged).Deck(down);
-
-proc
-  User
-    = sendPre(on) . User
-    + sendDeck(down) . User;
+  SafetyLayer
+    = setPreSign(on) . sSwitchOnPre . SafetyLayer()
+    + setPreSign(off) . receiveStop(off) . sSwitchOffPre . SafetyLayer()
+    + setStopSign(on) . receivePre(on) . sSwitchOnStop . SafetyLayer()
+    + setStopSign(off) . sSwitchOffStop . SafetyLayer();
 
 init
   allow(
     {
-      commPreSign,
-      commStopSign,
-      commBar_front,
-      commBar_back,
-      commLock,
-%      commLock1,
-%      commLock2,
-      commDeck,
-      sendPre,
-      sendStop,
-      sendBar_front,
-      sendBar_back,
-      sendLock,
-%      sendLock2,
-      sendDeck
+      commPre,
+      commStop,
+      cSwitchOffPre,
+      cSwitchOffStop,
+      setPreSign,
+      setPreSign,
+      setStopSign,
+      setStopSign
     },
-
     comm({
-        receiveBar_front | sendBar_front -> commBar_front,
-        receiveBar_back | sendBar_back -> commBar_back,
-        receiveLock | sendLock -> commLock,
-%       receiveLock1 | sendLock1 -> commLock1,
-%       receiveLock2 | sendLock2 -> commLock2,
-        receivePre|sendPre -> commPreSign,
-        receiveStop|sendStop -> commStopSign,
-        receiveDeck|sendDeck -> commDeck,
-        receiveOpenBridge|sendOpenBridge -> openBridge,
-        receiveCloseBridge|sendCloseBridge -> closeBridge
+        receivePre|sendPre -> commPre,
+        receiveStop|sendStop -> commStop,
+        rSwitchOffPre|sSwitchOffPre -> cSwitchOffPre,
+        rSwitchOnPre|sSwitchOnPre -> cSwitchOnPre,
+        rSwitchOffStop|sSwitchOffStop -> cSwitchOffStop,
+        rSwitchOnStop|sSwitchOnStop -> cSwitchOnStop
       },
-
          PreSign(off)
       || StopSign(off)
-      || Bar_front(lift)
-      || Bar_back(lift)
-      || Lock(engaged)
-      || Deck(down)
-      || User
+      || SafetyLayer
     )
   );
