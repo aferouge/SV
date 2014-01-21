@@ -1,1 +1,1 @@
-[true* . sendStop(off) . !sendStop(on)* . (sendBar_front(lower) && sendBar_back(lower))]false
+[true* . commStop(off) . !commStop(on)* . (commFrontBarrier(lower) && commbackBarrier(lower))]false

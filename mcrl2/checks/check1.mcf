@@ -1,1 +1,1 @@
-[true* . commPreSign(off) . !commPreSign(on)* . commStopSign(on)]false
+[true* . commPre(off) . !commPre(on)* . commStop(on)]false
