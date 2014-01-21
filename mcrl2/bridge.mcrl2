@@ -126,87 +126,86 @@ proc
 
 proc
   SafetyLayer
-    = setPreSign(on) . sSwitchOnPre . SafetyLayer()
-    + setPreSign(off) . receiveStop(off) . sSwitchOffPre . SafetyLayer()
+    = setPreSign(on) . (receivePre(on) + receivePre(off) . sSwitchOnPre) . SafetyLayer()
+    + setPreSign(off) . (receivePre(off) + receivePre(on) . (receiveStop(off) . sSwitchOffPre + receiveStop(on))) . SafetyLayer()
 
-    + setStopSign(on) . receivePre(on) . sSwitchOnStop . SafetyLayer()
-    + setStopSign(off) . receiveFrontBarrier(lift) . sSwitchOffStop . SafetyLayer()
+    + setStopSign(on) . (receiveStop(on) + receiveStop(off) . (receivePre(on) . sSwitchOnStop + receivePre(off))) . SafetyLayer()
+    + setStopSign(off) . (receiveStop(off) + receiveStop(on) . (receiveFrontBarrier(lift) . sSwitchOffStop + receiveFrontBarrier(lower))) . SafetyLayer()
 
-    + setFrontBarrier(lower) . receiveStop(on) . sLowerFrontBarrier . SafetyLayer()
-    + setFrontBarrier(lift) . receiveBackBarrier(lift) . sLiftFrontBarrier . SafetyLayer()
-    + setBackBarrier(lower) . receiveFrontBarrier(lower) . sLowerBackBarrier . SafetyLayer()
-    + setBackBarrier(lift) . receiveLock(engaged) . sLiftBackBarrier . SafetyLayer()
+    + setFrontBarrier(lower) . (receiveFrontBarrier(lower) + receiveFrontBarrier(lift) . (receiveStop(on) . sLowerFrontBarrier + receiveStop(off))) . SafetyLayer()
+    + setFrontBarrier(lift) . (receiveFrontBarrier(lift) + receiveFrontBarrier(lower) . (receiveBackBarrier(lift) . sLiftFrontBarrier + receiveBackBarrier(lower))) . SafetyLayer()
 
-    + setLock(engaged) . receiveDeck(down) . sEngage . SafetyLayer()
-    + setLock(disengaged) . receiveBackBarrier(lower) . sDisengage . SafetyLayer()
+    + setBackBarrier(lower) . (receiveBackBarrier(lower) + receiveBackBarrier(lift) . (receiveFrontBarrier(lower) . sLowerBackBarrier + receiveFrontBarrier(lift))) . SafetyLayer()
+    + setBackBarrier(lift) . (receiveBackBarrier(lift) + receiveBackBarrier(lower) . (receiveLock(engaged) . sLiftBackBarrier + receiveLock(disengaged))) . SafetyLayer()
 
-    + setDeck(up). receiveLock(disengaged) . sLiftDeck . SafetyLayer()
-    + setDeck(down). receiveLock(disengaged) . sLowerDeck . SafetyLayer();
+    + setLock(engaged) . (receiveLock(engaged) + receiveLock(disengaged) . (receiveDeck(down) . sEngage + receiveDeck(up))) . SafetyLayer()
+    + setLock(disengaged) . (receiveLock(disengaged) + receiveLock(engaged) . (receiveBackBarrier(lower) . sDisengage + receiveBackBarrier(lift))) . SafetyLayer()
+
+    + setDeck(up) . (receiveDeck(up) + receiveDeck(down) . (receiveLock(disengaged) . sLiftDeck + receiveLock(engaged))) . SafetyLayer()
+    + setDeck(down) . (receiveDeck(down) + receiveDeck(up) . (receiveLock(disengaged) . sLowerDeck + receiveLock(engaged))) . SafetyLayer();
 
 init
-  allow(
-    {
-      setPreSign,
-      commPre,
-      cSwitchOffPre,
-      cSwitchOnPre,
+  allow({
+    setPreSign,
+    commPre,
+    cSwitchOffPre,
+    cSwitchOnPre,
 
-      setStopSign,
-      commStop,
-      cSwitchOffStop,
-      cSwitchOnStop,
+    setStopSign,
+    commStop,
+    cSwitchOffStop,
+    cSwitchOnStop,
 
-      setFrontBarrier,
-      commFrontBarrier,
-      cLowerFrontBarrier,
-      cLiftFrontBarrier,
+    setFrontBarrier,
+    commFrontBarrier,
+    cLowerFrontBarrier,
+    cLiftFrontBarrier,
 
-      setBackBarrier,
-      commBackBarrier,
-      cLowerBackBarrier,
-      cLiftBackBarrier,
+    setBackBarrier,
+    commBackBarrier,
+    cLowerBackBarrier,
+    cLiftBackBarrier,
 
-      setLock,
-      commLock,
-      cEngage,
-      cDisengage,
+    setLock,
+    commLock,
+    cEngage,
+    cDisengage,
 
-      setDeck,
-      commDeck,
-      cLowerDeck,
-      cLiftDeck
-    },
-    comm({
-        receivePre|sendPre -> commPre,
-        rSwitchOffPre|sSwitchOffPre -> cSwitchOffPre,
-        rSwitchOnPre|sSwitchOnPre -> cSwitchOnPre,
+    setDeck,
+    commDeck,
+    cLowerDeck,
+    cLiftDeck
+  },
+  comm({
+    receivePre|sendPre -> commPre,
+    rSwitchOffPre|sSwitchOffPre -> cSwitchOffPre,
+    rSwitchOnPre|sSwitchOnPre -> cSwitchOnPre,
 
-        receiveStop|sendStop -> commStop,
-        rSwitchOffStop|sSwitchOffStop -> cSwitchOffStop,
-        rSwitchOnStop|sSwitchOnStop -> cSwitchOnStop,
+    receiveStop|sendStop -> commStop,
+    rSwitchOffStop|sSwitchOffStop -> cSwitchOffStop,
+    rSwitchOnStop|sSwitchOnStop -> cSwitchOnStop,
 
-        receiveFrontBarrier|sendFrontBarrier -> commFrontBarrier,
-        rLowerFrontBarrier|sLowerFrontBarrier -> cLowerFrontBarrier,
-        rLiftFrontBarrier|sLiftFrontBarrier -> cLiftFrontBarrier,
+    receiveFrontBarrier|sendFrontBarrier -> commFrontBarrier,
+    rLowerFrontBarrier|sLowerFrontBarrier -> cLowerFrontBarrier,
+    rLiftFrontBarrier|sLiftFrontBarrier -> cLiftFrontBarrier,
 
-        receiveBackBarrier|sendBackBarrier -> commBackBarrier,
-        rLowerBackBarrier|sLowerBackBarrier -> cLowerBackBarrier,
-        rLiftBackBarrier|sLiftBackBarrier -> cLiftBackBarrier,
+    receiveBackBarrier|sendBackBarrier -> commBackBarrier,
+    rLowerBackBarrier|sLowerBackBarrier -> cLowerBackBarrier,
+    rLiftBackBarrier|sLiftBackBarrier -> cLiftBackBarrier,
 
-        receiveLock|sendLock -> commLock,
-        rEngage|sEngage -> cEngage,
-        rDisengage|sDisengage -> cDisengage,
+    receiveLock|sendLock -> commLock,
+    rEngage|sEngage -> cEngage,
+    rDisengage|sDisengage -> cDisengage,
 
-        rLowerDeck|sLowerDeck -> cLowerDeck,
-        rLiftDeck|sLiftDeck -> cLiftDeck,
-        receiveDeck|sendDeck -> commDeck
-      },
-         PreSign(off)
-      || StopSign(off)
-      || FrontBarrier(lift)
-      || BackBarrier(lift)
-      || Lock(engaged)
-      || Deck(down)
-      || SafetyLayer
-    )
-  );
+    rLowerDeck|sLowerDeck -> cLowerDeck,
+    rLiftDeck|sLiftDeck -> cLiftDeck,
+    receiveDeck|sendDeck -> commDeck
+  },
+       PreSign(off)
+    || StopSign(off)
+    || FrontBarrier(lift)
+    || BackBarrier(lift)
+    || Lock(engaged)
+    || Deck(down)
+    || SafetyLayer
+  ));
