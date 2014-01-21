@@ -1,1 +1,1 @@
-[true* . commBar_front(lower)  . !commBar_front(lift)* . commStopSign(off)]false
+[true* . commFrontBarrier(lower)  . !commFrontBarrier(lift)* . commStop(off)]false
