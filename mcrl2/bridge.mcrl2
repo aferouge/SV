@@ -6,52 +6,6 @@ sort
   st_lock    = struct engaged | disengaged; %lock status
   st_bridge  = struct open | close;
 
-  sign_id = struct P1 | P2 | P3 | P4;
-
-% Flip actions to make a bridge component alter his status
-% SIGNS
-map
-  flip_sign: st_sign -> st_sign;
-eqn
-  flip_sign(on) = off;
-  flip_sign(off) = on;
-
-% DECK
-map
-  flip_deck: st_deck -> st_deck;
-eqn
-  flip_deck(up) = down;
-  flip_deck(down) = up;
-
-% FRONT BARRIERS
-map
-  flip_barfront: st_barrier -> st_barrier;
-eqn
-  flip_barfront(lift) = lower;
-  flip_barfront(lower) = lift;
-
-% BACK BARRIERS
-map
-  flip_barback: st_barrier -> st_barrier;
-eqn
-  flip_barback(lift) = lower;
-  flip_barback(lower) = lift;
-
-% LOCKS
-map
-  flip_lock: st_lock -> st_lock;
-%  flip_lockL2: st_lock -> st_lock;
-
-var
-  st: st_lock;
-
-eqn
-  flip_lock(engaged) = disengaged;
-  flip_lock(disengaged) = engaged;
-%  flip_lockL2(engaged) = engaged;
-%  flip_lockL2(disengaged) = disengaged;
-
-
 act
   sendPre, receivePre, commPre: st_sign;
   rSwitchOffPre, sSwitchOffPre, cSwitchOffPre;
