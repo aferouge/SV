@@ -65,6 +65,18 @@ act
   rSwitchOnStop, sSwitchOnStop, cSwitchOnStop;
   setStopSign: st_sign;
 
+  sendLock, receiveLock, commLock: st_sign;
+  rEngage, sEngage, cEngage;
+  rDisengage, sDisengage, cDisengage;
+  setLock: st_sign;
+
+proc
+
+  Lock(status: st_sign)
+  = (status == engaged) -> rDisengage . Lock(status = disengaged)
+  + (status == disengaged) -> rEngage . Lock(status = engaged)
+  + sendLock(status) . Lock();  
+
 proc
 
   PreSign(status: st_sign)
@@ -81,28 +93,39 @@ proc
   SafetyLayer
     = setPreSign(on) . sSwitchOnPre . SafetyLayer()
     + setPreSign(off) . receiveStop(off) . sSwitchOffPre . SafetyLayer()
+
     + setStopSign(on) . receivePre(on) . sSwitchOnStop . SafetyLayer()
     + setStopSign(off) . sSwitchOffStop . SafetyLayer();
+
+    + setLock(engaged) . receiveDeck(down) . sEngage . SafetyLayer()
+    + setLock(disengaged) . receiveBackBarrier(lower) . sDisengage . SafetyLayer()
 
 init
   allow(
     {
       commPre,
       commStop,
+      commLock,
       cSwitchOffPre,
       cSwitchOffStop,
+      cEngage,
+      cDisengage,
       setPreSign,
       setPreSign,
       setStopSign,
-      setStopSign
+      setStopSign,
+      setLock
     },
     comm({
         receivePre|sendPre -> commPre,
         receiveStop|sendStop -> commStop,
+        receiveLock|sendLock -> commLock,
         rSwitchOffPre|sSwitchOffPre -> cSwitchOffPre,
         rSwitchOnPre|sSwitchOnPre -> cSwitchOnPre,
         rSwitchOffStop|sSwitchOffStop -> cSwitchOffStop,
-        rSwitchOnStop|sSwitchOnStop -> cSwitchOnStop
+        rSwitchOnStop|sSwitchOnStop -> cSwitchOnStop,
+        rEngage|sEngage -> cEngage,
+        rDisengage|sDisengage -> cDisengage
       },
          PreSign(off)
       || StopSign(off)
