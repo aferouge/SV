@@ -65,6 +65,13 @@ act
   rSwitchOnStop, sSwitchOnStop, cSwitchOnStop;
   setStopSign: st_sign;
 
+
+  
+  sendDeck, recieveDeck, commDeck: st_deck;
+  sLiftDeck, rLiftDeck, cLiftDeck;
+  sLowerDeck, rLowerDeck, cLowerDeck;
+  setDeck: st_deck;
+
 proc
 
   PreSign(status: st_sign)
@@ -77,12 +84,25 @@ proc
     + (status == off) -> rSwitchOnStop . StopSign(status = on)
     + sendStop(status) . StopSign();
 
+
+
+
+
+
+  Deck(status: st_deck)
+    = (status == up) -> rLowerDeck . Deck(status = down)
+    + (status == down) -> rLiftDeck . Deck(status = up)
+    + sendDeck(status) . StopSign();
+  
+
 proc
   SafetyLayer
     = setPreSign(on) . sSwitchOnPre . SafetyLayer()
     + setPreSign(off) . receiveStop(off) . sSwitchOffPre . SafetyLayer()
     + setStopSign(on) . receivePre(on) . sSwitchOnStop . SafetyLayer()
     + setStopSign(off) . sSwitchOffStop . SafetyLayer();
+    + setDeck(up). receiveLock(disengaged) . sLiftDeck . SafetyLayer()
+    + setDeck(down). receiveLock(disengaged) . slowerDeck . SafetyLayer()
 
 init
   allow(
@@ -94,7 +114,8 @@ init
       setPreSign,
       setPreSign,
       setStopSign,
-      setStopSign
+      setStopSign,
+      setDeck,
     },
     comm({
         receivePre|sendPre -> commPre,
@@ -102,10 +123,16 @@ init
         rSwitchOffPre|sSwitchOffPre -> cSwitchOffPre,
         rSwitchOnPre|sSwitchOnPre -> cSwitchOnPre,
         rSwitchOffStop|sSwitchOffStop -> cSwitchOffStop,
-        rSwitchOnStop|sSwitchOnStop -> cSwitchOnStop
+        rSwitchOnStop|sSwitchOnStop -> cSwitchOnStop,
+        
+        rLowerDeck|sLowerDeck -> cLowerDeck,
+        rLiftDeck|sLiftDeck -> cLiftDeck,
+        receiveDeck|sendDeck -> commDeck,
       },
          PreSign(off)
       || StopSign(off)
+
+      || Deck(down)
       || SafetyLayer
     )
   );
