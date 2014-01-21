@@ -3,57 +3,117 @@
 
 
 The interactions can be divided into two categories. The first category contains the global interactions, which are the direct translations of the requirements from Section \ref{sec:glob}.
-Switching of the signs, moving the barriers or engaging the locking pins are all actions to be performed by the system and can be found in table \ref{tab:glob}. Also, these actions are also events that a bridge operator can try to enforce. For example, when the bridge is performing an opening procedure and suddenly a child runs past the lowered barriers, the bridge operator should be able to pause or undo the procedure. Obviously, not all actions that are available to the bridge operator are safe, and this is the reason the safety controller is added to decide wheter such particular action is allowed.
-The internal interactions are used for communication purposes, combining the state perceptions of different components. These can be found in table \ref{tab:int}.
+Switching of the signs, moving the barriers or engaging the locking pins are all actions to be performed by the system and can be found in the table \ref{tab:glob}. These actions are also events that a bridge operator can try to enforce. For example, when the bridge is performing an opening procedure and suddenly a child runs past the lowered barriers, the bridge operator should be able to pause or undo the procedure. Obviously, not all actions that are available to the bridge operator are safe, and this is the reason the safety controller is added to decide wheter such particular action is allowed.
+The internal interactions are used for communication purposes and control of the components. The communication between components is done by the interactions in table \ref{tab:process}. After checking the safety the components are controled by means of the interactions in table \ref{tab:tau}.
 %
 \begin{table}[htb]%
 \begin{tabular}{lll}
-      \textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
-      \hline
-      \texttt{openBridge} & Initiates the system to open the bridge &\\
-      \texttt{closeBridge} & Initiates the system to close the bridge & \\
-      \texttt{sendPre} & Switches on/off the pre sign & st\_sign\\
-      \texttt{sendStop} & Switches on/off the stop sign & st\_sign\\
-      \texttt{sendBar\_front} & Lifts/lowers the barriers that are encountered first & st\_barrier\\
-			\texttt{sendBar\_back} & Lifts/lowers the barriers that are encountered second & st\_barrier\\
-      \texttt{sendLock} & Engages/disengages the locks & st\_lock\\
-      \texttt{sendDeck} & Lifts/lowers the bridge deck & st\_deck\\
+			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
+  		\hline
+  		\texttt{setPre} & Switching the pre sign on/off & st\_sign\\
+      \texttt{setStop} & Switching the stop sign on/off & st\_sign\\
+      \texttt{setFrontBarrier} & Lifting/lowering the barriers that are encountered first & st\_barrier\\
+			\texttt{sendBackBarrier} & Lifting/lowering the barriers that are encountered second & st\_barrier\\
+      \texttt{setLock} & Engaging/disengaging the locks & st\_lock\\
+      \texttt{setDeck} & Lifting/lowering the bridge deck & st\_deck\\
 \end{tabular}
-\caption{Global interactions to be checked for safety by the safety layer of the control system.}
+\caption{All interactions that to be performed by the bridge operator.}
 \label{tab:glob}
 \end{table}
 %
 \begin{table}[htb]%
 \begin{tabular}{lll}
-      \textbf{Interaction} &	\textbf{Description}	&	\textbf{Parameters}\\
+			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
       \hline
-      \texttt{receivePre} & Receives status of a particular pre signs & st\_sign\\
-      \texttt{commPreSign} & Synchronization action for sendPre $\mid$ receivePre & st\_sign\\
       
-      \texttt{receiveStop} & Receives status of a particular stop signs & st\_sign\\
-      \texttt{commStopSign} & Synchronization action for sendStop $\mid$ receiveStop & st\_sign\\
+      \texttt{sendPre} & Sends status of the pre signs & st\_sign\\
+      \texttt{receivePre} & Requests status of the pre signs & st\_sign\\
+      \texttt{commPre} & Synchronization action for sendPre $\mid$ receivePre & st\_sign\\
       
-      \texttt{receiveBarrier} & Receives status of a particular barrier & st\_barrier\\
-      \texttt{commBarrier} & Synchronization action for sendBarrier $\mid$ receiveBarrier & st\_barrier\\
+      \texttt{sendStop} & Sends status of the stop signs & st\_sign\\
+      \texttt{receiveStop} & Requests status of the stop signs & st\_sign\\
+      \texttt{commStop} & Synchronization action for sendStop $\mid$ receiveStop & st\_sign\\
       
-      \texttt{receiveLock} & Receives status of a particular locking pin & st\_lock\\
+      \texttt{sendFrontBarrier} & Sends status of the front barriers & st\_barrier\\
+      \texttt{receiveFrontBarrier} & Requests status of the front barriers & st\_barrier\\
+      \texttt{commFrontBarrier} & Synchronization action for sendFrontBarrier $\mid$ receiveFrontBarrier & 
+      st\_barrier\\
+      
+      \texttt{sendLock} & Sends status of the locks & st\_lock\\
+      \texttt{receiveLock} & Requests status of a particular locking pin & st\_lock\\
       \texttt{commLock} & Synchronization action for sendLock $\mid$ receiveLock & st\_lock\\
       
-      \texttt{receiveDeck} & Receives status of the bridge deck & st\_deck\\
+      \texttt{sendDeck} & Sends status of the bridge deck & st\_deck\\
+      \texttt{receiveDeck} & Requests status of the bridge deck & st\_deck\\
       \texttt{commDeck} & Synchronization action for sendDeck $\mid$ receiveDeck & st\_deck\\
-      
-      \texttt{motorStatus} & Receives the status of the motor & st\_motor\\
 \end{tabular}
-\caption{Internal interactions of the safety layer of the control system used for communication.}
-\label{tab:int}
+\caption{Internal interactions of the safety layer used for communication.}
+\label{tab:process}
 \end{table}
-
+%
+\begin{table}%
+\begin{tabular}{lll}
+			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
+  		\hline
+  		
+			\texttt{sSwitchOnPre} & Initiates switching on the pre signs & st\_sign\\
+      \texttt{rSwitchOnPre} & Acknowledges switching on the pre signs & st\_sign\\
+      \texttt{cSwitchOnPre} & Switching on the pre signs & st\_sign\\
+      
+      \texttt{sSwitchOffPre} & Initiates switching off the pre signs & st\_sign\\
+      \texttt{rSwitchOffPre} & Acknowledges switching off the pre signs & st\_sign\\
+      \texttt{cSwitchOffPre} & Switching off the pre signs & st\_sign\\
+      
+      \texttt{sSwitchOnStop} & Initiates switching on the stop signs & st\_sign\\
+      \texttt{rSwitchOnStop} & Acknowledges switching on the stop signs & st\_sign\\
+      \texttt{cSwitchOnStop} & Switching on the stop signs & st\_sign\\
+      
+      \texttt{sSwitchOffStop} & Initiates switching off the pre signs & st\_sign\\
+      \texttt{rSwitchOffStop} & Acknowledges switching off the pre signs & st\_sign\\
+      \texttt{cSwitchOffStop} & Switching off the pre signs & st\_sign\\
+      
+      \texttt{sLiftFrontBarrier} & Initiates lifting the front barrier & st\_barrier\\
+      \texttt{rLiftFrontBarrier} & Acknowledges lifting the front barriers & st\_barrier\\
+      \texttt{cLiftFrontBarrier} & Lifting the front barriers & st\_barrier\\
+      
+      \texttt{sLowerFrontBarrier} & Initiates lowering the front barrier & st\_barrier\\
+      \texttt{rLowerFrontBarrier} & Acknowledges lowering the front barriers & st\_barrier\\
+      \texttt{cLowerFrontBarrier} & Lowering the front barriers & st\_barrier\\
+      
+      \texttt{sLiftBackBarrier} & Initiates lifting the back barrier & st\_barrier\\
+      \texttt{rLiftBackBarrier} & Acknowledges lifting the back barriers & st\_barrier\\
+      \texttt{cLiftBackBarrier} & Lifting the back barriers & st\_barrier\\
+      
+      \texttt{sLowerBackBarrier} & Initiates lowering the back barrier & st\_barrier\\
+      \texttt{rLowerBackBarrier} & Acknowledges lowering the back barriers & st\_barrier\\
+      \texttt{cLowerBackBarrier} & Lowering the back barriers & st\_barrier\\
+      
+      \texttt{sEngageLock} & Initiates engaging the locks & st\_lock\\
+      \texttt{rEngageLock} & Acknowledges engaging the locks & st\_lock\\
+      \texttt{cEngageLock} & Engaging the locks & st\_lock\\
+      
+      \texttt{sDisengageLock} & Initiates disengaging the locks & st\_lock\\
+      \texttt{rDisengageLock} & Acknowledges disengaging the locks & st\_lock\\
+      \texttt{cDisengageLock} & Disengaging the locks & st\_lock\\
+      
+      \texttt{sLiftDeck} & Initiates lifting the deck & st\_deck\\
+      \texttt{rLiftDeck} & Acknowledges lifting the deck & st\_deck\\
+      \texttt{cLiftDeck} & Lifting the deck & st\_deck\\
+      
+      \texttt{sLowerDeck} & Initiates lowering the deck & st\_deck\\
+      \texttt{rLowerDeck} & Acknowledges lowering the deck & st\_deck\\
+      \texttt{cLowerDeck} & Lowering the deck & st\_deck\\
+\end{tabular}
+\caption{Internal interactions of the safety layer used for system control.}
+\label{tab:tau}
+\end{table}
+%
 For the parameters of the interactions, data structs are introduced which group certain values. Table \ref{tab:types} lists these datatypes and their possible values.
 
 \begin{table}[htb]%
 \begin{tabular}{ll}
 	\textbf{Datatype} & \textbf{Values}\\
-	st\_sign & on, off\\
+	status & on, off\\
 	st\_barrier & lift, lower\\
 	st\_lock & engaged, disengaged\\
 	st\_deck & up, down\\
