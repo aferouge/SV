@@ -56,19 +56,12 @@ act
   setLock: st_lock;
   sendLock, receiveLock, commLock: id_lock # st_lock;
   rLock, sLock, cLock: id_lock # st_lock;
-  sendLocks, receiveLocks, commLocks: st_lock;
 
 proc
   Lock(id: id_lock, status: st_lock)
-    = rLock(id, disengaged) . Lock(status = disengaged)
-    + rLock(id, engaged) . Lock(status = engaged)
+    = (status == engaged) -> rLock(id, disengaged) . Lock(status = disengaged)
+    + (status == disengaged) -> rLock(id, engaged) . Lock(status = engaged)
     + sendLock(id, status) . Lock();
-
-proc
-  Locks(status: st_lock)
-    = (status == engaged) -> sLock(L1, disengaged) . sLock(L2, disengaged) . Locks()
-    + (status == disengaged) -> sLock(L1, engaged) . sLock(L2, engaged) . Locks()
-    + receiveLock(L1, status) . receiveLock(L2, status) . sendLocks(status) . Locks();
 
 act
   sendDeck, receiveDeck, commDeck: st_deck;
@@ -93,13 +86,77 @@ proc
     + setFrontBarrier(lift) . (receiveFrontBarrier(lift) + receiveFrontBarrier(lower) . (receiveBackBarrier(lift) . sFrontBarrier(lift) + receiveBackBarrier(lower))) . SafetyLayer()
 
     + setBackBarrier(lower) . (receiveBackBarrier(lower) + receiveBackBarrier(lift) . (receiveFrontBarrier(lower) . sBackBarrier(lower) + receiveFrontBarrier(lift))) . SafetyLayer()
-    + setBackBarrier(lift) . (receiveBackBarrier(lift) + receiveBackBarrier(lower) . (receiveLocks(engaged) . sBackBarrier(lift) + receiveLocks(disengaged))) . SafetyLayer()
 
-    + setLock(engaged) . (receiveLocks(engaged) + receiveLocks(disengaged) . (receiveDeck(down) . sendLocks(engaged) + receiveDeck(up))) . SafetyLayer()
-    + setLock(disengaged) . (receiveLocks(disengaged) + receiveLocks(engaged) . (receiveBackBarrier(lower) . sendLocks(disengaged) + receiveBackBarrier(lift))) . SafetyLayer()
+    + setBackBarrier(lift)
+      . (
+        receiveBackBarrier(lift)
+        + receiveBackBarrier(lower)
+          . (
+            receiveLock(L1, disengaged)
+            + receiveLock(L1, engaged)
+              . (
+                receiveLock(L2, disengaged)
+                + receiveLock(L2, engaged) . sBackBarrier(lift)
+              )
+          )
+      )
+      . SafetyLayer()
 
-    + setDeck(up) . (receiveDeck(up) + receiveDeck(down) . (receiveLocks(disengaged) . sDeck(up) + receiveLocks(engaged))) . SafetyLayer()
-    + setDeck(down) . (receiveDeck(down) + receiveDeck(up) . (receiveLocks(disengaged) . sDeck(down) + receiveLocks(engaged))) . SafetyLayer();
+    + setLock(engaged)
+      . (
+        receiveDeck(up)
+        + receiveDeck(down)
+          . (
+            receiveLock(L1, engaged)
+            + receiveLock(L1, disengaged) . sLock(L1, engaged)
+          )
+          . (
+            receiveLock(L2, engaged)
+            + receiveLock(L2, disengaged) . sLock(L2, engaged)
+          )
+      ) . SafetyLayer()
+
+    + setLock(disengaged)
+      . (
+        receiveBackBarrier(lift)
+        + receiveBackBarrier(lower)
+          . (
+            receiveLock(L1, disengaged)
+            + receiveLock(L1, engaged) . sLock(L1, disengaged)
+          ) . (
+            receiveLock(L2, disengaged)
+            + receiveLock(L2, engaged) . sLock(L2, disengaged)
+          )
+      ) . SafetyLayer()
+
+    + setDeck(up)
+      . (
+        receiveDeck(up)
+        + receiveDeck(down)
+          . (
+            receiveLock(L1, engaged)
+            + receiveLock(L1, disengaged)
+              . (
+                receiveLock(L2, engaged)
+                + receiveLock(L2, disengaged) . sDeck(up)
+              )
+          )
+      ) . SafetyLayer()
+
+    + setDeck(down)
+      . (
+        receiveDeck(down)
+        + receiveDeck(up)
+          . (
+            receiveLock(L1, engaged)
+            + receiveLock(L1, disengaged)
+              . (
+                receiveLock(L2, engaged)
+                + receiveLock(L2, disengaged) . sDeck(down)
+              )
+          )
+      ) . SafetyLayer();
+
 
 init
   allow({
@@ -121,7 +178,6 @@ init
 
     setLock,
     commLock,
-    commLocks,
     cLock,
 
     setDeck,
@@ -142,7 +198,6 @@ init
     rBackBarrier|sBackBarrier -> cBackBarrier,
 
     receiveLock|sendLock -> commLock,
-    receiveLocks|sendLocks -> commLocks,
     rLock|sLock -> cLock,
 
     receiveDeck|sendDeck -> commDeck,
@@ -150,9 +205,10 @@ init
   },
        PreSign(off)
     || StopSign(off)
+    || FrontBarrier(lift)
+    || BackBarrier(lift)
     || Lock(L1, engaged)
     || Lock(L2, engaged)
-    || Locks(engaged)
     || Deck(down)
     || SafetyLayer
   ));
