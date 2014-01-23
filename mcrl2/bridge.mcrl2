@@ -4,7 +4,7 @@ sort
   st_deck    = struct up | down;            %deck status
   st_barrier = struct lift | lower;         %barrier status
   st_lock    = struct engaged | disengaged; %lock status
-  id_barrier = struct B1 | B2;              %barrier identifier
+  st_bridge  = struct open | close;
 
   id_lock    = struct L1 | L2;
 
@@ -32,24 +32,24 @@ proc
 
 act
   sendFrontBarrier, receiveFrontBarrier, commFrontBarrier: st_barrier;
-  rFrontBarrier, sFrontBarrier, cFrontBarrier: id_barrier # st_barrier;
-  setFrontBarrier: id_barrier # st_barrier;
+  rFrontBarrier, sFrontBarrier, cFrontBarrier: st_barrier;
+  setFrontBarrier: st_barrier;
 
 proc
-  FrontBarrier(id: id_barrier, status: st_barrier)
-    = (status == lower) -> rFrontBarrier(status = lift) . FrontBarrier(status = lift)
-    + (status == lift) -> rFrontBarrier(status = lower) . FrontBarrier(status = lower)
+  FrontBarrier(status: st_barrier)
+    = (status == lower) -> rFrontBarrier(lift) . FrontBarrier(status = lift)
+    + (status == lift) -> rFrontBarrier(lower) . FrontBarrier(status = lower)
     + sendFrontBarrier(status) . FrontBarrier();
 
 act
   sendBackBarrier, receiveBackBarrier, commBackBarrier: st_barrier;
-  rBackBarrier, sBackBarrier, cBackBarrier: id_barrier # st_barrier;
-  setBackBarrier: id_barrier # st_barrier;
+  rBackBarrier, sBackBarrier, cBackBarrier: st_barrier;
+  setBackBarrier: st_barrier;
 
 proc
-  BackBarrier(id: id_barrier, status: st_barrier)
-    = (status == lower) -> rBackBarrier(status = lift) . BackBarrier(status = lift)
-    + (status == lift) -> rBackBarrier(status = lower) . BackBarrier(status = lower)
+  BackBarrier(status: st_barrier)
+    = (status == lower) -> rBackBarrier(lift) . BackBarrier(status = lift)
+    + (status == lift) -> rBackBarrier(lower) . BackBarrier(status = lower)
     + sendBackBarrier(status) . BackBarrier();
 
 act
@@ -89,11 +89,11 @@ proc
     + setStopSign(on) . (receiveStop(on) + receiveStop(off) . (receivePre(on) . sSwitchStop(on) + receivePre(off))) . SafetyLayer()
     + setStopSign(off) . (receiveStop(off) + receiveStop(on) . (receiveFrontBarrier(lift) . sSwitchStop(off) + receiveFrontBarrier(lower))) . SafetyLayer()
 
-    + sum id: id_barrier . setFrontBarrier(id, lower) . (receiveFrontBarrier(lower) + receiveFrontBarrier(lift) . (receiveStop(on) . sFrontBarrier(B1, lower) . sFrontBarrier(B2, lower) + receiveStop(off))) . SafetyLayer()
-    + sum id: id_barrier . setFrontBarrier(id, lift) . (receiveFrontBarrier(lift) + receiveFrontBarrier(lower) . (receiveBackBarrier(lift) . sFrontBarrier(B1, lift) . sFrontBarrier(B2, lift) + receiveBackBarrier(lower))) . SafetyLayer()
+    + setFrontBarrier(lower) . (receiveFrontBarrier(lower) + receiveFrontBarrier(lift) . (receiveStop(on) . sFrontBarrier(lower) + receiveStop(off))) . SafetyLayer()
+    + setFrontBarrier(lift) . (receiveFrontBarrier(lift) + receiveFrontBarrier(lower) . (receiveBackBarrier(lift) . sFrontBarrier(lift) + receiveBackBarrier(lower))) . SafetyLayer()
 
-    + sum id: id_barrier . setBackBarrier(id, lower) . (receiveBackBarrier(lower) + receiveBackBarrier(lift) . (receiveFrontBarrier(lower) . sBackBarrier(B1, lower) . sBackBarrier(B2, lower) + receiveFrontBarrier(lift))) . SafetyLayer()
-    + sum id: id_barrier . setBackBarrier(id, lift) . (receiveBackBarrier(lift) + receiveBackBarrier(lower) . (receiveLock(engaged) . sBackBarrier(B1, lift) . sBackBarrier(B2, lift) + receiveLock(disengaged))) . SafetyLayer()
+    + setBackBarrier(lower) . (receiveBackBarrier(lower) + receiveBackBarrier(lift) . (receiveFrontBarrier(lower) . sBackBarrier(lower) + receiveFrontBarrier(lift))) . SafetyLayer()
+    + setBackBarrier(lift) . (receiveBackBarrier(lift) + receiveBackBarrier(lower) . (receiveLock(engaged) . sBackBarrier(lift) + receiveLock(disengaged))) . SafetyLayer()
 
     + setLock(engaged) . (receiveLocks(engaged) + receiveLocks(disengaged) . (receiveDeck(down) . sendLocks(engaged) + receiveDeck(up))) . SafetyLayer()
     + setLock(disengaged) . (receiveLocks(disengaged) + receiveLocks(engaged) . (receiveBackBarrier(lower) . sendLocks(disengaged) + receiveBackBarrier(lift))) . SafetyLayer()
@@ -150,10 +150,6 @@ init
   },
        PreSign(off)
     || StopSign(off)
-    || FrontBarrier(B1, lift)
-    || FrontBarrier(B2, lift)
-    || BackBarrier(B1, lift)
-    || BackBarrier(B2, lift)
     || Lock(L1, engaged)
     || Lock(L2, engaged)
     || Locks(engaged)
