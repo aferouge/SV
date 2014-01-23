@@ -93,7 +93,7 @@ proc
     + setFrontBarrier(lift) . (receiveFrontBarrier(lift) + receiveFrontBarrier(lower) . (receiveBackBarrier(lift) . sFrontBarrier(lift) + receiveBackBarrier(lower))) . SafetyLayer()
 
     + setBackBarrier(lower) . (receiveBackBarrier(lower) + receiveBackBarrier(lift) . (receiveFrontBarrier(lower) . sBackBarrier(lower) + receiveFrontBarrier(lift))) . SafetyLayer()
-    + setBackBarrier(lift) . (receiveBackBarrier(lift) + receiveBackBarrier(lower) . (receiveLock(engaged) . sBackBarrier(lift) + receiveLock(disengaged))) . SafetyLayer()
+    + setBackBarrier(lift) . (receiveBackBarrier(lift) + receiveBackBarrier(lower) . (receiveLocks(engaged) . sBackBarrier(lift) + receiveLocks(disengaged))) . SafetyLayer()
 
     + setLock(engaged) . (receiveLocks(engaged) + receiveLocks(disengaged) . (receiveDeck(down) . sendLocks(engaged) + receiveDeck(up))) . SafetyLayer()
     + setLock(disengaged) . (receiveLocks(disengaged) + receiveLocks(engaged) . (receiveBackBarrier(lower) . sendLocks(disengaged) + receiveBackBarrier(lift))) . SafetyLayer()
