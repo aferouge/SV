@@ -1,2 +1,4 @@
-[true* . commFrontBarrier(lift) . !cFrontBarrier(lower)* . cLock(disengaged)]false &&
-[true* . commBackBarrier(lift) . !cBackBarrier(lower)* . cLock(disengaged)]false
+[true* . commFrontBarrier(lift) . !cFrontBarrier(lower)* . cLock(L1, disengaged)]false &&
+[true* . commBackBarrier(lift) . !cBackBarrier(lower)* . cLock(L1, disengaged)]false &&
+[true* . commFrontBarrier(lift) . !cFrontBarrier(lower)* . cLock(L2, disengaged)]false &&
+[true* . commBackBarrier(lift) . !cBackBarrier(lower)* . cLock(L2, disengaged)]false

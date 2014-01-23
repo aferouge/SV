@@ -1,1 +1,1 @@
-[true* . commPreSign(on). cFrontBarrier(lift)	]true
+[true* . commPre(on) . cFrontBarrier(lift)]true
