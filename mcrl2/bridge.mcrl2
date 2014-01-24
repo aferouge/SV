@@ -81,7 +81,6 @@ proc
   SafetyLayer
     =
 
-    % Swtich on pre sign
     setPreSign(on)
       . (
         receivePre(P1, on)
@@ -98,7 +97,6 @@ proc
       )
       . SafetyLayer()
 
-    % Swtich off pre sign
     + setPreSign(off)
       . (
         receiveStop(S1, on)
@@ -131,7 +129,6 @@ proc
       )
       . SafetyLayer()
 
-    % Swtich on stop sign
     + setStopSign(on)
       . (
         receivePre(P1, off)
@@ -164,7 +161,6 @@ proc
       )
       . SafetyLayer()
 
-    % Swtich off stop sign
     + setStopSign(off)
       . (
         receiveFrontBarrier(B1, lower)
@@ -189,7 +185,6 @@ proc
       )
       . SafetyLayer()
 
-    % Lower front barriers
     + setFrontBarrier(lower)
       . (
         receiveStop(S1, off)
@@ -216,7 +211,6 @@ proc
       )
       . SafetyLayer()
 
-    % Lift front barrier
     + setFrontBarrier(lift)
       . (
         receiveBackBarrier(B1, lower)
@@ -235,7 +229,6 @@ proc
       )
       . SafetyLayer()
 
-    % Lower back barriers
     + setBackBarrier(lower)
       . (
          receiveFrontBarrier(B1, lift)
@@ -254,7 +247,6 @@ proc
       )
       . SafetyLayer()
 
-    % Lift back barriers
     + setBackBarrier(lift)
       . (
         receiveLock(L1, disengaged)
@@ -273,7 +265,6 @@ proc
       )
       . SafetyLayer()
 
-    % Engage locks
     + setLock(engaged)
       . (
         receiveDeck(up)
@@ -288,7 +279,6 @@ proc
       )
       . SafetyLayer()
 
-    % Disengage locks
     + setLock(disengaged)
       . (
         receiveBackBarrier(B1, lift)
@@ -303,7 +293,6 @@ proc
       )
       . SafetyLayer()
 
-    % Lift deck
     + setDeck(up)
       . (
         receiveDeck(up)
@@ -319,7 +308,6 @@ proc
       )
       . SafetyLayer()
 
-    % Lower deck
     + setDeck(down)
       . (
         receiveDeck(down)
