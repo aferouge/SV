@@ -13,22 +13,22 @@ Because the requirements often concern all individual objects of a specific comp
   \item \textbf{Example; B cannot happen unless A happened first.}
   \begin{enumerate}
 		\item Only when action \texttt{A} has occured first, action \texttt{B} can occur.
-		\item $[true^* \cdot \overline{A} \cdot B]false$
+		\item $[true^* \cdot \overline{A}^{*} \cdot B]false$
 	\end{enumerate}
 
 	%Requirement 1
 	\item \textbf{Stop signs cannot be switched on unless all pre lights are switched on}
 	\begin{enumerate}
 		\item Always after a \texttt{commPreSign(off)}, a \texttt{commStopSign(on)} cannot occur unless a \texttt{commPreSign(on)} has occured intermediately.
-		\item $[true^* \cdot commPreSign(off) \cdot \overline{commPreSign(on)^{*}} \cdot commStopSign(on)]false$
+		\item $[true^* \cdot commPreSign(off) \cdot \overline{commPreSign(on)}^{*} \cdot commStopSign(on)]false$
 	\end{enumerate}
 
 	%Requirement 2
 	\item \textbf{Barriers cannot be lowered unless all stop signs are switched on}
 	\begin{enumerate}
 		\item Always after a \texttt{commStopSign(S$_i$,off)}, a \texttt{commBar\_front(down)} or \texttt{commBar\_back(down)} cannot occur unless a \texttt{commStopSign(on)} has occured intermediately.
-		\item $[true^* \cdot commStopSign(off) \cdot \overline{commStopSign(on)^{*}} \cdot commBar\_front(lower)]false$ \\
-					$[true^* \cdot commStopSign(off) \cdot \overline{commStopSign(on)^{*}} \cdot commBar\_back(lower)]false$ \\
+		\item $[true^* \cdot commStopSign(off) \cdot \overline{commStopSign(on)}^{*} \cdot commBar\_front(lower)]false$ \\
+					$[true^* \cdot commStopSign(off) \cdot \overline{commStopSign(on)}^{*} \cdot commBar\_back(lower)]false$ \\
 	\end{enumerate}
 
 	%Requirement 3
@@ -36,37 +36,37 @@ Because the requirements often concern all individual objects of a specific comp
 	\begin{enumerate}
 		\item Always after a \texttt{commBar\_back(up)}, \texttt{commLock(disengage)} cannot occur unless a \texttt{commBar\_back(down)} has occured intermediately. \\
 					Always after a \texttt{commBar\_front(up)}, \texttt{commLock(disengage)} cannot occur unless a \texttt{commBar\_front(down)} has occured intermediately.
-		\item $[true^* \cdot commBar\_back(lift) \cdot \overline{commBar\_back(lower)^{*}} \cdot commLock(disengaged)]false$
-					$[true^* \cdot commBar\_front(lift) \cdot \overline{commBar\_front(lower^{*})} \cdot commLock(disengaged)]false$
+		\item $[true^* \cdot commBar\_back(lift) \cdot \overline{commBar\_back(lower)}^{*} \cdot commLock(disengaged)]false$
+					$[true^* \cdot commBar\_front(lift) \cdot \overline{commBar\_front(lower)}^{*} \cdot commLock(disengaged)]false$
 	\end{enumerate}
 
 	%Requirement 4
 	\item	\textbf{The deck can only be lifted when both locks are disengaged}
 	\begin{enumerate}
 		\item Always after a \texttt{commLock(engaged)}, a \texttt{commDeck(up)} cannot occur unless a \texttt{commLock(disengaged)} has occured intermediately.
-		\item $[true^* \cdot commLock(engaged)\cdot \overline{commLock(disengaged)^{*}} \cdot commDeck(up)]false$\\
+		\item $[true^* \cdot commLock(engaged)\cdot \overline{commLock(disengaged)}^{*} \cdot commDeck(up)]false$\\
 	\end{enumerate}
 
 	%Requirement 5
 	\item \textbf{Bridge locks can only be engaged when the deck is down}
 	\begin{enumerate}
 		\item Always when \texttt{commLock(engaged)} then \texttt{commDeck(down)} has occurred before, and no \texttt{commDeck(up)} has occurred intermediately.
-		\item $[true^* \cdot commDeck(up) \cdot \overline{commDeck(down)^{*}} \cdot commLock(engaged)]false$\\
+		\item $[true^* \cdot commDeck(up) \cdot \overline{commDeck(down)}^{*} \cdot commLock(engaged)]false$\\
 	\end{enumerate}
 
 	%Requirement 6
 	\item \textbf{Barriers can only be up when the bridge is locked by the locks}
 	\begin{enumerate}
 		\item Always after a \texttt{commLock(disengaged)}, a \texttt{commBar\_front(up)} or \texttt{commBar\_back(up)} cannot occur unless a \texttt{commLock(engaged)} has occurred intermediately.
-		\item $[true^* \cdot commLock(disengaged)\cdot \overline{commLock(engage)^{*}} \cdot commBar\_front(lift)]false$\\
+		\item $[true^* \cdot commLock(disengaged)\cdot \overline{commLock(engage)}^{*} \cdot commBar\_front(lift)]false$\\
 	\end{enumerate}
 
 	%Requirement 7
 	\item \textbf{Stop signs can only be shut off only when all barriers are up}
 	\begin{enumerate}
 		\item Always when commStopSign(off) occurs, \texttt{commBar\_front(up)} and \texttt{commBar\_back(up)} have to be occured and no \texttt{commBar\_front(down)} or \texttt{commBar\_back(down)} may have occured intermediately.
-		\item $[true^* \cdot commBar\_front(lower) \cdot \overline{commBar\_front(lift)^{*}} \cdot commStopSign(off)]false$
-					$[true^* \cdot commBar\_back(lower) \cdot \overline{commBar\_back(lift)^{*}} \cdot commStopSign(off)]false$
+		\item $[true^* \cdot commBar\_front(lower) \cdot \overline{commBar\_front(lift)}^{*} \cdot commStopSign(off)]false$
+					$[true^* \cdot commBar\_back(lower) \cdot \overline{commBar\_back(lift)}^{*} \cdot commStopSign(off)]false$
 	\end{enumerate}
 
 	%Requirement 8
@@ -87,7 +87,7 @@ Because the requirements often concern all individual objects of a specific comp
 	\item \textbf{The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge}
 	\begin{enumerate}
 		\item Always when \texttt{commBar\_back(down)}, \texttt{commBar\_front(down)} has to be occured before. No \texttt{commBar\_front(up)} may have occured intermediately.
-		\item $[true^* \cdot commBar\_front(up) \cdot \overline{commBar\_front(down)^{*}} \cdot commBar\_back(down)]false$\\
+		\item $[true^* \cdot commBar\_front(up) \cdot \overline{commBar\_front(down)}^{*} \cdot commBar\_back(down)]false$\\
 	\end{enumerate}
 
 	%Requirement 11
