@@ -1,2 +1,6 @@
-forall l: id_lock . [true* . commFrontBarrier(lift) . !cFrontBarrier(lower)* . cLock(l, disengaged)]false &&
-                    [true* . commBackBarrier(lift) . !cBackBarrier(lower)* . cLock(l, disengaged)]false
+forall l: id_lock . (
+  forall b: id_barrier . (
+    [true* . commFrontBarrier(b, lift) . !cFrontBarrier(b, lower)* . cLock(l, disengaged)]false &&
+    [true* . commBackBarrier(b, lift) . !cBackBarrier(b, lower)* . cLock(l, disengaged)]false
+  )
+)

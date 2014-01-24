@@ -1,1 +1,1 @@
-[true* . commFrontBarrier(lift) . !cFrontBarrier(lower) . cBackBarrier(lower)]false
+forall b: id_barrier . [true* . commFrontBarrier(b, lift) . !cFrontBarrier(b, lower) . cBackBarrier(b, lower)]false
