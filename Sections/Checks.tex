@@ -1,4 +1,3 @@
-\newpage
 \section{Model verification}
 \label{sec:check}
 
@@ -12,4 +11,31 @@ requirement of~\ref{sec:trans} is translated to:
 \end{verbatim}
 
 After writing all the requirements into the mcf format we have found that all
-the model satisfies all $\mu$-calculus formulas.
+the model satisfies all $\mu$-calculus formulas, as states in table \ref{tab:checks}.
+%
+\begin{table}[htb]%
+\centering
+\begin{tabular}{|c|l|}
+	\hline
+	\textbf{Requirement} & \textbf{Verification}\\
+	\hline
+	1 & Fully satisfied\\
+	2 & Fully satisfied\\
+	3 & Fully satisfied\\
+	4 & Fully satisfied\\
+	5 & Fully satisfied\\
+	6 & Fully satisfied\\
+	7 & Fully satisfied\\
+	8 & Fully satisfied\\
+	9 & Fully satisfied\\
+	10 & Fully satisfied\\
+	\hline
+	false-test & Not satisfied\\
+	deadlock free & Fully satisfied\\
+	\hline
+\end{tabular}
+\caption{Verification of the safety requirements in the mCRL2 model of the bridge control system.}
+\label{tab:checks}
+\end{table}
+
+\newpage
