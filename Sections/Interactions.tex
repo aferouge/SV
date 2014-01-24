@@ -45,6 +45,10 @@ The internal interactions are used for communication purposes and control of the
       \texttt{sendDeck} & Sends status of the bridge deck & st\_deck\\
       \texttt{receiveDeck} & Requests status of the bridge deck & st\_deck\\
       \texttt{commDeck} & Synchronization action for sendDeck $\mid$ receiveDeck & st\_deck\\
+      
+      \texttt{sendMotor} & Sends status of the motor & st\_motor\\
+      \texttt{receiveMotor} & Requests status of the motor & st\_motor\\
+      \texttt{commMotor} & Synchronization action for sendMotor $\mid$ receiveMotor & st\_motor\\
 \end{tabular}
 \caption{Internal interactions of the safety layer used for communication.}
 \label{tab:process}
@@ -93,7 +97,7 @@ For the parameters of the interactions, data structures are introduced which gro
 	st\_barrier & lift, lower\\
 	st\_lock & engaged, disengaged\\
 	st\_deck & up, down\\
-	st\_motor & rising, lowering, broken\\
+	st\_motor & operational, broken\\
 	id\_pre & P1, P2, P3, P4\\
 	id\_stop & S1, S2, S3, S4\\
 	id\_barrier & B1, B2\\

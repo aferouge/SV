@@ -12,7 +12,7 @@ When writing the code, we kept to the architecture from section \ref{sec:act} in
 	\item confirm an execution action of the safety layer by means of a \texttt{r}-action
 \end{itemize}
 %
-All multi-actions (\texttt{comm} for the status update and \texttt{c} for execution) are synchronized in the \texttt{comm}-section at the bottom of the code. This section, which is part of the \texttt{init}-section, also holds all commands that the bridge operator can perform. These can be found in the \texttt{allow}-part. Finally, all processes are assigned an initial state and separated by two bars ($||$), indicating parallel execution. 
+All multi-actions (\texttt{comm} for the status update and \texttt{c} for execution) are synchronized in the \texttt{comm}-section at the bottom of the code. This section, which is part of the \texttt{init}-section, also holds all commands that the bridge operator can perform. These can be found in the \texttt{allow}-part. Finally, all processes are assigned an initial state and separated by two bars ($||$), indicating parallel execution.
 
 \subsection{Adding the Safety Layer}
 \label{sec:safety}
@@ -28,7 +28,7 @@ Figure \ref{fig:global} shows a general overview made with \texttt{lts$\_$graph}
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\columnwidth]{Images/global_graph.pdf}
-\caption{Graphical representation of the model, showing the global strucuture of the system.}%
+\caption{Graphical representation of the model, showing the global structure of the system.}%
 \label{fig:global}
 \end{figure}%
 %
@@ -38,7 +38,7 @@ Finally, the abstract components are assigned an  identity as a second parameter
 %
 \begin{figure}[htb]
 \centering
-\includegraphics[width=\columnwidth]{Images/detail_graph_gebeund.png}
+\includegraphics[width=\columnwidth]{Images/detail_graph.pdf}
 \caption{Detailed representation of the model (pre sign node), depicting the check procedures for all possible commands.}%
 \label{fig:detailed}
 \end{figure}%

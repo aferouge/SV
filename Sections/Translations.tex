@@ -8,7 +8,6 @@ Because the requirements often concern all individual objects of a specific comp
 \begin{enumerate}
   \setcounter{enumi}{-1}
 
-
   %Example
   \item \textbf{Example; B cannot happen unless A happened first.}
   \begin{enumerate}
@@ -29,7 +28,6 @@ Because the requirements often concern all individual objects of a specific comp
 		\item Always after a \texttt{commStop(S$_i$, off)}, a \texttt{cFrontBarrier($B_j$, down)} or \texttt{cBackBarrier($B_j$, down)} cannot occur unless a \texttt{cStopSign($S_i$, on)} has occurred intermediately.
 		\item $[true^* \cdot commStop(S_i, off) \cdot \overline{cSwitchStop(S_i, on)}^{*} \cdot (cFrontBarrier(B_j, lower) \vee cBackBarrier(B_j, lower))]false$ \\
 	\end{enumerate}
-	
 	
 	%Requirement 3
 	\item \textbf{The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge}
@@ -91,18 +89,11 @@ Because the requirements often concern all individual objects of a specific comp
 	\end{enumerate}
 
 	%Requirement 11
-%	\item \textbf{The barriers can only be lowered if both stop signs are being lit at each side of the bridge.}
-%	\begin{enumerate}
-%		\item Always after a \texttt{commPre(P$_i$, on)}, a \texttt{commBarrier(B$_i$, down)} cannot happen unless a \texttt{commPre(P$_i$, on)} happend intermediately.
-%		\item $[true^* \cdot commStop(S_i, off) \cdot \overline{commStop(S_i, on)^{*}} \cdot commBarrier(B_i, lower)]false}$
-%	\end{enumerate}
-
-	%Requirement 12
-%	\item \textbf{If the motor is in the 'broken' status, the bridge should stay in the current position.}
-%	\begin{enumerate}
-%		\item Always after a \texttt{motorStatus(broken)}, a next action cannot happen unless a \texttt{motorStatus(!broken)} happened intermediately.
-%		\item $[true^* \cdot motorStatus(Broken) \cdot \overline{motorStatus(\neg Broken)^*}  \cdot commDeck(up)]false$
-%	\end{enumerate}
+	\item \textbf{If the motor is in the 'broken' status, the may not be moved up or down.}
+	\begin{enumerate}
+		\item Always after a \texttt{motorStatus(broken)}, a \texttt{cDeck(lift)} or \texttt{cDeck(lower)} cannot happen unless a \texttt{motorStatus(!broken)} happened intermediately.
+		\item $[true^* \cdot motorStatus(Broken) \cdot \overline{motorStatus(\neg Broken)^*}  \cdot (cDeck(up) \vee cDeck(down))]false$
+	\end{enumerate}
 
 \end{enumerate}
 
