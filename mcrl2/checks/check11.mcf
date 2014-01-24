@@ -1,0 +1,1 @@
+[true* . commMotor(broken) . !commMotor(operational)* . (cDeck(up) || cDeck(down))]false

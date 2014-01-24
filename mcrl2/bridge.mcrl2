@@ -84,7 +84,7 @@ proc
     + sendDeck(status) . Deck();
 
 % Interactions between the motor and the safety layer
-act 
+act
   sendMotor, receiveMotor, commMotor: st_motor;
 
 proc
@@ -385,7 +385,7 @@ init
     setDeck,
     commDeck,
     cDeck,
- 
+
     commMotor
   },
   comm({
