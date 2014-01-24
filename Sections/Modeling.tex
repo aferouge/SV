@@ -1,7 +1,7 @@
 \section{Modeling the Bridge Using mCRL2}
 \label{sec:model}
 
-With the requirements clearly stated, now the bridge can be modeled. In order to create a model that can be verified using $\mu$-calculus, mCRL2 can be used. The code for the model can be found in appendix \ref{sec:mcrl} or the attached file \texttt{Bridge\_group7.mcrl2}. Section \ref{sec:basic} describes the first steps towards the model, declaring the data structures, actions and processes for the bridge components. The implementation of the safety layer is discussed second, in section \ref{sec:safety}. Section \ref{sec:ids} will finally explain the introduction of component identities.
+With the requirements clearly stated, now the bridge can be modeled. In order to create a model that can be verified using $\mu$-calculus, mCRL2 can be used. The code for the model can be found in appendix \ref{sec:mcrl} or the attached file \texttt{Bridge\_group7.mcrl2}. Section \ref{sec:basic} describes the first steps towards the model, declaring the data structures, actions and processes for the bridge components. The implementation of the safety layer is discussed secondly, in section \ref{sec:safety}. Section \ref{sec:ids} will finally explain the introduction of component identities.
 
 \subsection{Setting up the Basic Structure}
 \label{sec:basic}
@@ -23,7 +23,7 @@ Since there is not yet a safety layer to block dangerous commands, all possible 
 	\item self-loops, containing actions that are considered unsafe or meaningless (e.g. switching on the stop signs when the deck is lifted, while a lifted deck already implies switched on stop signs)
 \end{itemize}
 %
-Figure \ref{fig:global} shows a general overview made with \texttt{lts$\_$graph}. Here the node-to-node transitions can be seen as the connection between groups of states, which represent the nodes. The self-loop transitions are the reason for the cluttered groups of states, since many actions end up being a self-loop.
+Figure \ref{fig:global} shows a general overview made with \texttt{ltsgraph}. Here the node-to-node transitions can be seen as the connection between groups of states, which represent the nodes. The self-loop transitions are the reason for the cluttered groups of states, since many actions end up being a self-loop.
 %
 \begin{figure}[htb]
 \centering
@@ -34,7 +34,7 @@ Figure \ref{fig:global} shows a general overview made with \texttt{lts$\_$graph}
 %
 \subsection{Separating Components into Individual Objects}
 \label{sec:ids}
-Finally, the abstract components are assigned an  identity as a second parameter, this way creating unique instances of the components. As you can imagine, the safety layer will expand because of this. A simple check whether the barriers are down, now becomes four checks for barrier B1, B2, B3 and B4, respectively. Since the identities of the components can also be grouped, four new data structures have been added at the beginning of the code. With respect to the usability of the system, we have decided not to implement the identities in the global interactions. Thus, the bridge operator can only control the components all together. This prevent the bridge operator to have a \texttt{setLock(disengage)} command being blocked because of three lowered barriers, while the operator himself under the presumption all barriers are down. Expanding the user interface with control to individual objects requires a well-designed user interface and the provision of helpful feedback by the safety layer. Since these are not in the scope of this project, we have decided to keep the global interactions general. Figure \ref{fig:detailed} shows a section of \texttt{lts$\_$graph}, depicting all transitions leaving and entering the pre sign node. This image is applicable to all nodes from figure \ref{fig:global}.
+Finally, the abstract components are assigned an  identity as a second parameter, this way creating unique instances of the components. As you can imagine, the safety layer will expand because of this. A simple check whether the barriers are down, now becomes four checks for barrier B1, B2, B3 and B4, respectively. Since the identities of the components can also be grouped, four new data structures have been added at the beginning of the code. With respect to the usability of the system, we have decided not to implement the identities in the global interactions. Thus, the bridge operator can only control the components all together. This prevent the bridge operator to have a \texttt{setLock(disengage)} command being blocked because of three lowered barriers, while the operator himself under the presumption all barriers are down. Expanding the user interface with control to individual objects requires a well-designed user interface and the provision of helpful feedback by the safety layer. Since these are not in the scope of this project, we have decided to keep the global interactions general. Figure \ref{fig:detailed} shows a section of \texttt{ltsgraph}, depicting all transitions leaving and entering the pre sign node. This image is applicable to all nodes from figure \ref{fig:global}.
 %
 \begin{figure}[htb]
 \centering
