@@ -1,29 +1,46 @@
 \section{Modeling the Bridge Using mCRL2}
 \label{sec:model}
 
-With the requirements clearly stated, now the bridge can be modeled. In order to create a model that can be verified using $\mu$-calculus, the mCRL2 program can be used. The code for the model can be found in \ref{sec:mcrl} or the attached file \texttt{Bridge\_group7.mcrl2}.
+With the requirements clearly stated, now the bridge can be modeled. In order to create a model that can be verified using $\mu$-calculus, the mCRL2 program can be used. The code for the model can be found in \ref{sec:mcrl} or the attached file \texttt{Bridge\_group7.mcrl2}. Section \ref{sec:basic} describes the first steps towards the model, declaring the data structs, actions and processes for the . The implementation of the safety layer is discussed second, in section \ref{sec:safety}. Section \ref{sec:ids} will finally explain the introduction of component identities.
 
-When writing the code, we kept to the architecture from section \ref{sec:act} including three processes. The \emph{signs} process communicates with the \emph{barriers} process, which in turn communicates with the \emph{bridge} process. This leads to a linear structure of the model. The global actions consist of all possible commands that the bridge operator can send out, listed in table \ref{tab:allow}. Only the ones that are considered safe according to the safety layer are allowed. They turn out to be transitions to either the next state, the previous state or the same state (depicted as self loops). A screen of our current model is shown in figure \ref{fig:graph}.
+\subsection{Setting up the Basic Structure}
+\label{sec:basic}
+When writing the code, we kept to the architecture from section \ref{sec:act} including three component processes (\emph{Signs}, \emph{Barriers} and \emph{Bridge}). As explained in section \ref{sec:act}, five data structures are introduced to group possible states of the component. These are to be found at the beginning of the code. Next, each process is preceded by an \texttt{act}-section holding all interactions that apply to that particular process. By creating this structure, it is easy to see which interactions belong to which process. The processes themselves are pretty simple. The can basically perform two actions:
 %
-\begin{table}[htb]%
-\begin{tabular}{ll}
-	\texttt{openBridge},& \texttt{closeBridge},\\
-	\texttt{sendPre(on)},& \texttt{sendPre(off)},\\
-	\texttt{sendStop(on)},& \texttt{sendStop(off)},\\
-	\texttt{sendBar\_front(lift)},& \texttt{sendBar\_front(lower},\\
-	\texttt{sendBar\_back(lift)},& \texttt{sendBar\_back(lower)},\\
-	\texttt{sendLock(engaged)},& \texttt{sendLock(disengaged)},\\
-	\texttt{sendDeck(up)},& \texttt{sendDeck(down).}\\
-\end{tabular}
-\caption{All possible user input to be expected at all times.}
-\label{tab:allow}
-\end{table}
+\begin{itemize}
+	\item send their status towards the safety layer by means of a \texttt{send} action
+	\item confirm an execution action of the safety layer by means of a \texttt{r}-action
+\end{itemize}
+%
+All multi-actions (\texttt{comm} for the status update and \texttt{c} for execution) are synchronized in the \texttt{comm}-section at the bottom of the code. This section, which is part of the \texttt{init}-section, also holds all commands that the bridge operator can perform. These can be found in the \texttt{allow}-part. Finally, all processes are assigned an initial state and separated by two bars ($||$), indicating parallel execution. 
+
+\subsection{Adding the Safety Layer}
+\label{sec:safety}
+Since there is not yet a safety layer to block dangerous commands, all possible transitions can be taken. Locks can be disengaged without stop signs being switched on first, decks could be opened while the barriers are still up etc. Creating the fourth process (the \emph{Safety layer}) has been a quite time-consuming step. Every command that is in the \texttt{allow}-part, is first checked for safety in the safety layer by looking at its adjacent components (see table \ref{tab:open} and \ref{tab:close}). The structure of the can be compared with \texttt{if}-loops, since actions can be performed only if the requirements are satisfied. With the implementation of the safety layer, two types of transitions exist:
+%
+\begin{itemize}
+	\item node-to-node transitions, only taken when considered to be safe
+	\item self-loops, containing actions that are considered unsafe or meaningless (e.g. switching on the stop signs when the deck is lifted, while a lifted deck already implies switched on stop signs)
+\end{itemize}
+%
+Figure \ref{fig:global} shows a general overview made with \texttt{lts$\_$graph}. Here the node-to-node transitions can be seen as the connection between groups of states, which represent the nodes. The self-loop transitions are the reason for the cluttered groups of states, since many actions end up being a self-loop.
 %
 \begin{figure}[htb]
 \centering
-\includegraphics[width=\columnwidth]{Images/Bridge_allow_ltsgraph.png}
-\caption{Graphical representation of the Bridge model.}%
-\label{fig:graph}
+\includegraphics[width=\columnwidth]{Images/detail_graph.png}
+\caption{Graphical representation of the model, showing the global strucuture of the system.}%
+\label{fig:global}
+\end{figure}%
+%
+\subsection{Separating Components into Individual Objects}
+\label{sec:ids}
+Finally, the abstract components are assigned an  identity as a second parameter, this way creating unique instances of the components. As you can imagine, the safety layer will expand because of this. A simple check whether the barriers are down, now becomes four checks for barrier B1, B2, B3 and B4, respectively. Since the identities of the components can also be grouped, four new data structures have been added at the beginning of the code. With respect to the usability of the system, we have decided not to implement the identities in the global interactions. Thus, the bridge operator can only control the components all together. This prevent the bridge operator to have a \texttt{setLock(disengage)} command being blocked because of three lowered barriers, while the operator himself under the presumption all barriers are down. Expanding the user interface with control to individual objects requires a well-designed user interface and the provision of helpful feedback by the safety layer. Since these are not in the scope of this project, we have decided to keep the global interactions general. Figure \ref{fig:detailed} shows a section of \texttt{lts$\_$graph}, depicting all transitions leaving and entering the pre sign node. This image is applicable to all nodes from figure \ref{fig:global}.
+%
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\columnwidth]{Images/detail_graph_gebeund.png}
+\caption{Detailed representation of the model (pre sign node), depicting the check procedures for all possible commands.}%
+\label{fig:detailed}
 \end{figure}%
 %
 
