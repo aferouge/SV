@@ -86,155 +86,154 @@ proc
       . (
         receivePre(P1, on)
         + receivePre(P1, off) . sSwitchPre(P1, on)
-        ) . (
-            receivePre(P2, on)
-            + receivePre(P2, off) . sSwitchPre(P2, on)
-        ) . (
-            receivePre(P3, on)
-            + receivePre(P3, off) . sSwitchPre(P3, on)
-        ) . (
-            receivePre(P4, on)
-            + receivePre(P4, off) . sSwitchPre(P4, on)
-        )
-
-    . SafetyLayer()
+      ) . (
+        receivePre(P2, on)
+        + receivePre(P2, off) . sSwitchPre(P2, on)
+      ) . (
+        receivePre(P3, on)
+        + receivePre(P3, off) . sSwitchPre(P3, on)
+      ) . (
+        receivePre(P4, on)
+        + receivePre(P4, off) . sSwitchPre(P4, on)
+      )
+      . SafetyLayer()
 
     % Swtich off pre sign
     + setPreSign(off)
       . (
-         receiveStop(S1, on)
-         + receiveStop(S1, off)
-           . (
-             receiveStop(S2, on)
-             + receiveStop(S2, off)
-               . (
-                 receiveStop(S3, on)
-                 + receiveStop(S3, off)
-                   . (
-                     receiveStop(S4, on)
-                     + receiveStop(S4, off)
-                       . (
-               	     receivePre(P1, off)
-                	     + receivePre(P1, on) . sSwitchPre(P1, off)
-                 	     ) . (
-                   	         receivePre(P2, off)
-                             + receivePre(P2, on) . sSwitchPre(P2, off)
-                	     ) . (
-                  	         receivePre(P3, off)
-                	         + receivePre(P3, on) . sSwitchPre(P3, off)
-                         ) . (
-                  	         receivePre(P4, off)
-                  	         + receivePre(P4, on) . sSwitchPre(P4, off)
-                         )
-                     )
-                 )
-             )
-         )
-    . SafetyLayer()
+        receiveStop(S1, on)
+        + receiveStop(S1, off)
+          . (
+            receiveStop(S2, on)
+            + receiveStop(S2, off)
+              . (
+                receiveStop(S3, on)
+                + receiveStop(S3, off)
+                  . (
+                    receiveStop(S4, on)
+                    + receiveStop(S4, off)
+                      . (
+                        receivePre(P1, off)
+                        + receivePre(P1, on) . sSwitchPre(P1, off)
+                      ) . (
+                        receivePre(P2, off)
+                        + receivePre(P2, on) . sSwitchPre(P2, off)
+                      ) . (
+                        receivePre(P3, off)
+                        + receivePre(P3, on) . sSwitchPre(P3, off)
+                      ) . (
+                        receivePre(P4, off)
+                        + receivePre(P4, on) . sSwitchPre(P4, off)
+                      )
+                  )
+              )
+          )
+      )
+      . SafetyLayer()
 
     % Swtich on stop sign
     + setStopSign(on)
       . (
-         receivePre(P1, off)
-         + receivePre(P1, on)
-           . (
-             receivePre(P2, off)
-             + receivePre(P2, on)
-               . (
-                 receivePre(P3, off)
-                 + receivePre(P3, on)
-                   . (
-                     receivePre(P4, off)
-                     + receivePre(P4, on)
-                       . (
-               	     receiveStop(S1, on)
-                	     + receiveStop(S1, off) . sSwitchStop(S1, on)
-                 	     ) . (
-                   	         receiveStop(S2, on)
-                             + receiveStop(S2, off) . sSwitchStop(S2, on)
-                	     ) . (
-                  	         receiveStop(S3, on)
-                	         + receiveStop(S3, off) . sSwitchStop(S3, on)
-                         ) . (
-                  	         receiveStop(S4, on)
-                  	         + receiveStop(S4, off) . sSwitchStop(S4, on)
-                         )
-                     )
-                 )
-             )
-         )
-    . SafetyLayer()
+        receivePre(P1, off)
+        + receivePre(P1, on)
+          . (
+            receivePre(P2, off)
+            + receivePre(P2, on)
+              . (
+                receivePre(P3, off)
+                + receivePre(P3, on)
+                  . (
+                    receivePre(P4, off)
+                    + receivePre(P4, on)
+                      . (
+                        receiveStop(S1, on)
+                        + receiveStop(S1, off) . sSwitchStop(S1, on)
+                      ) . (
+                        receiveStop(S2, on)
+                        + receiveStop(S2, off) . sSwitchStop(S2, on)
+                      ) . (
+                        receiveStop(S3, on)
+                        + receiveStop(S3, off) . sSwitchStop(S3, on)
+                      ) . (
+                        receiveStop(S4, on)
+                        + receiveStop(S4, off) . sSwitchStop(S4, on)
+                      )
+                  )
+              )
+          )
+      )
+      . SafetyLayer()
 
     % Swtich off stop sign
     + setStopSign(off)
       . (
-         receiveFrontBarrier(B1, lower)
-         + receiveFrontBarrier(B1, lift)
-           . (
-             receiveFrontBarrier(B2, lower)
-             + receiveFrontBarrier(B2, lift)
-               . (
-                 receiveStop(S1, off)
-                 + receiveStop(S1, on) . sSwitchStop(S1, off)
-                 ) . (
-                   receiveStop(S2, off)
-                   + receiveStop(S2, on) . sSwitchStop(S2, off)
-                 ) . (
-                   receiveStop(S3, off)
-                   + receiveStop(S3, on) . sSwitchStop(S3, off)
-                 ) . (
-                   receiveStop(S4, off)
-                   + receiveStop(S4, on) . sSwitchStop(S4, off)
-                 )
-             )
-         )
-    . SafetyLayer()
+        receiveFrontBarrier(B1, lower)
+        + receiveFrontBarrier(B1, lift)
+          . (
+            receiveFrontBarrier(B2, lower)
+            + receiveFrontBarrier(B2, lift)
+              . (
+                receiveStop(S1, off)
+                + receiveStop(S1, on) . sSwitchStop(S1, off)
+               ) . (
+                 receiveStop(S2, off)
+                 + receiveStop(S2, on) . sSwitchStop(S2, off)
+               ) . (
+                 receiveStop(S3, off)
+                 + receiveStop(S3, on) . sSwitchStop(S3, off)
+               ) . (
+                 receiveStop(S4, off)
+                 + receiveStop(S4, on) . sSwitchStop(S4, off)
+               )
+          )
+      )
+      . SafetyLayer()
 
     % Lower front barriers
     + setFrontBarrier(lower)
       . (
-         receiveStop(S1, off)
-         + receiveStop(S1, on)
-           . (
-             receiveStop(S2, off)
-             + receiveStop(S2, on)
-               . (
-                 receiveStop(S3, off)
-                 + receiveStop(S3, on)
-                   . (
-                     receiveStop(S4, off)
-                     + receiveStop(S4, on)
-                       . (
-               	     receiveFrontBarrier(B1, lower)
-                	     + receiveFrontBarrier(B1, lift) . sFrontBarrier(B1, lower)
-                 	     ) . (
-                   	         receiveFrontBarrier(B2, lower)
-                             + receiveFrontBarrier(B2, lift) . sFrontBarrier(B2, lower)
-                	     )
-                     )
-                 )
-             )
-         )
-    . SafetyLayer()
+        receiveStop(S1, off)
+        + receiveStop(S1, on)
+          . (
+            receiveStop(S2, off)
+            + receiveStop(S2, on)
+              . (
+                receiveStop(S3, off)
+                + receiveStop(S3, on)
+                  . (
+                    receiveStop(S4, off)
+                    + receiveStop(S4, on)
+                      . (
+                        receiveFrontBarrier(B1, lower)
+                        + receiveFrontBarrier(B1, lift) . sFrontBarrier(B1, lower)
+                      ) . (
+                        receiveFrontBarrier(B2, lower)
+                        + receiveFrontBarrier(B2, lift) . sFrontBarrier(B2, lower)
+                      )
+                  )
+              )
+          )
+      )
+      . SafetyLayer()
 
     % Lift front barrier
     + setFrontBarrier(lift)
       . (
-         receiveBackBarrier(B1, lower)
-         + receiveBackBarrier(B1, lift)
-           . (
-             receiveBackBarrier(B2, lower)
-             + receiveBackBarrier(B2, lift)
-               . (
-                 receiveFrontBarrier(B1, lift)
-                 + receiveFrontBarrier(B1, lower) . sFrontBarrier(B1, lift)
-                 ) . (
-                   receiveFrontBarrier(B2, lift)
-                   + receiveFrontBarrier(B2, lower) . sFrontBarrier(B2, lift)
-                 )
-             )
-         )
-    . SafetyLayer()
+        receiveBackBarrier(B1, lower)
+        + receiveBackBarrier(B1, lift)
+          . (
+            receiveBackBarrier(B2, lower)
+            + receiveBackBarrier(B2, lift)
+              . (
+                receiveFrontBarrier(B1, lift)
+                + receiveFrontBarrier(B1, lower) . sFrontBarrier(B1, lift)
+              ) . (
+                receiveFrontBarrier(B2, lift)
+                + receiveFrontBarrier(B2, lower) . sFrontBarrier(B2, lift)
+              )
+          )
+      )
+      . SafetyLayer()
 
     % Lower back barriers
     + setBackBarrier(lower)
@@ -247,32 +246,32 @@ proc
                . (
                  receiveBackBarrier(B1, lower)
                  + receiveBackBarrier(B1, lift) . sBackBarrier(B1, lower)
-                 ) . (
-                   receiveBackBarrier(B2, lower)
-                   + receiveBackBarrier(B2, lift) . sBackBarrier(B2, lower)
-                 )
-             )
-         )
-    . SafetyLayer()
+               ) . (
+                 receiveBackBarrier(B2, lower)
+                 + receiveBackBarrier(B2, lift) . sBackBarrier(B2, lower)
+               )
+           )
+      )
+      . SafetyLayer()
 
     % Lift back barriers
     + setBackBarrier(lift)
       . (
-         receiveLock(L1, disengaged)
-         + receiveLock(L1, engaged)
-           . (
-             receiveLock(L2, disengaged)
-             + receiveLock(L2, engaged)
-               . (
-                 receiveBackBarrier(B1, lift)
-                 + receiveBackBarrier(B1, lower) . sBackBarrier(B1, lift)
-                 ) . (
-                   receiveBackBarrier(B2, lift)
-                   + receiveBackBarrier(B2, lower) . sBackBarrier(B2, lift)
-                 )
-             )
-         )
-    . SafetyLayer()
+        receiveLock(L1, disengaged)
+        + receiveLock(L1, engaged)
+          . (
+            receiveLock(L2, disengaged)
+            + receiveLock(L2, engaged)
+              . (
+                receiveBackBarrier(B1, lift)
+                + receiveBackBarrier(B1, lower) . sBackBarrier(B1, lift)
+              ) . (
+                receiveBackBarrier(B2, lift)
+                + receiveBackBarrier(B2, lower) . sBackBarrier(B2, lift)
+              )
+          )
+      )
+      . SafetyLayer()
 
     % Engage locks
     + setLock(engaged)
@@ -282,13 +281,12 @@ proc
           . (
             receiveLock(L1, engaged)
             + receiveLock(L1, disengaged) . sLock(L1, engaged)
-            )
-          . (
+          ) . (
             receiveLock(L2, engaged)
             + receiveLock(L2, disengaged) . sLock(L2, engaged)
-            )
-        )
-     . SafetyLayer()
+          )
+      )
+      . SafetyLayer()
 
     % Disengage locks
     + setLock(disengaged)
@@ -302,7 +300,8 @@ proc
             receiveLock(L2, disengaged)
             + receiveLock(L2, engaged) . sLock(L2, disengaged)
           )
-      ) . SafetyLayer()
+      )
+      . SafetyLayer()
 
     % Lift deck
     + setDeck(up)
@@ -317,7 +316,8 @@ proc
                 + receiveLock(L2, disengaged) . sDeck(up)
               )
           )
-      ) . SafetyLayer()
+      )
+      . SafetyLayer()
 
     % Lower deck
     + setDeck(down)
@@ -332,8 +332,8 @@ proc
                 + receiveLock(L2, disengaged) . sDeck(down)
               )
           )
-      ) . SafetyLayer();
-
+      )
+      . SafetyLayer();
 
 init
   allow({
