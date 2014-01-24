@@ -1,7 +1,7 @@
 \section{Architecture}
 \label{sec:arch}
 
-Four parallel processes exist being \emph{signs}, \emph{barriers}, \emph{bridge} and \emph{safety layer}. \emph{Signs} handles the control of the lights, whereas \emph{barriers} handles the barriers and \emph{Bridge} the locks and the deck. \emph{Safety layer} makes sure that the input from the bridge operator can only be executed if the conditions are so safe, so no accidents like the Ketelbrug will be possible. The structure of this setup can be explained as follows:
+In total eight different kinds of processes exist. There is a process for the pre signs, stop signs, front barriers, back barriers, locks, the deck, the motor and the safety layer. In order to make it easier to describe and discuss the architecture, some processes can be grouped. This results in four parallel processes being \emph{signs}, \emph{barriers}, \emph{bridge} and \emph{safety layer}. \emph{Signs} handles the control of the lights, whereas \emph{barriers} handles the barriers and \emph{Bridge} the locks and the deck. \emph{Safety layer} makes sure that the input from the bridge operator can only be executed if the conditions are so safe, so no accidents like the Ketelbrug will be possible. The structure of this setup can be explained as follows:
 %
 \begin{itemize}
 	\item \emph{Safety layer} is the process that accepts all possible inputs
@@ -26,12 +26,12 @@ Four parallel processes exist being \emph{signs}, \emph{barriers}, \emph{bridge}
 	layer 	bases its judgement for safety. When receiving an \texttt{s}-action from the safety layer, \emph{Bridge} returns a \texttt{r}-action to confirm the execution.
 \end{itemize}
 %
-Figure~\ref{fig:arch} shows a diagram of the communication flow between these parallel processes. As you can see, also the global actions that are available to the bridge operator are included. They are pictured as italic actions from outside the system that enter the safety layer on the upper side.
+Figure~\ref{fig:arch} shows a diagram of the communication flow between these grouped processes. As you can see, also the global actions that are available to the bridge operator are included. They are pictured as italic actions from outside the system that enter the safety layer on the upper side.
 %
 \begin{figure}[htb]%
 \centering
 \includegraphics[width=\columnwidth, angle=90]{Images/Architecture_2}%
-\caption{Communication flow between parallel processes \emph{signs}, \emph{barriers} and \emph{bridge}.}%
+\caption{Communication flow between process blocks \emph{signs}, \emph{barriers} and \emph{bridge}.}%
 \label{fig:arch}%
 \end{figure}
 %
