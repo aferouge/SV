@@ -4,18 +4,18 @@
 Four parallel processes exist being \emph{signs}, \emph{barriers},  \emph{bridge}a nd \emph{Safety layer}. \emph{Signs} handles the control of the lights, whereas \emph{barriers} handles the barriers and \emph{bridge} the locks and the deck. \emph{Safety layer} makes sure that the input from the bridge operator can only be executed if the conditions are so save, so no accident like the Ketelbrug will be possible. The structure of this setup can be explained as follows:
 %
 \begin{itemize}
-	\item \emph{Safety layer} is the process that accepts all possible inputs that are allowed by the bridge operator. For every command, the safety layer knows what current states of the individual components are required for the 
-	execution to be safe. For checking whether these requirements are fulfilled, it requests the three processes \emph{signs}, \emph{barriers} and \emph{bridge} for a status by means of a \texttt{receive}-action. 
-	When the command is considered safe, \emph{Safety layer} informs the processes by means of \texttt{s}-actions. When these are answered by \texttt{r}-actions, a communication (\texttt{c}) action is established and the command 
+	\item \emph{Safety layer} is the process that accepts all possible inputs that are allowed by the bridge operator. For every command, the safety layer knows what current states of the individual components are required for the
+	execution to be safe. For checking whether these requirements are fulfilled, it requests the three processes \emph{signs}, \emph{barriers} and \emph{bridge} for a status by means of a \texttt{receive}-action.
+	When the command is considered safe, \emph{Safety layer} informs the processes by means of \texttt{s}-actions. When these are answered by \texttt{r}-actions, a communication (\texttt{c}) action is established and the command
 	is executed.
-	\item \emph{Signs} is the process that holds the sensor values for the pre and stop signs. Recall that our assumption is that the status of the process is the value detected by the majority of the sensors. When the safety layer 
-	requests the status of a sign, the process sends out a \texttt{send}-action in return. Together with the \texttt{receive}-action from the safety layer, a \texttt{comm}-action is formed upon which the safety layer bases its 
+	\item \emph{Signs} is the process that holds the sensor values for the pre and stop signs. Recall that our assumption is that the status of the process is the value detected by the majority of the sensors. When the safety layer
+	requests the status of a sign, the process sends out a \texttt{send}-action in return. Together with the \texttt{receive}-action from the safety layer, a \texttt{comm}-action is formed upon which the safety layer bases its
 	judgement for safety. When receiving an \texttt{s}-action from the safety layer, \emph{Signs} returns a \texttt{r}-action to confirm the execution.
-	\item \emph{Barriers} is the process that holds the sensor values for the front and back barriers. Recall that our assumption is that the status of the process is the value detected by the majority of the sensors. When the 
-	safety layer requests the status of a barrier, the process sends out a \texttt{send}-action in return. Together with the \texttt{receive}-action from the safety layer, a \texttt{comm}-action is formed upon which the safety layer 
+	\item \emph{Barriers} is the process that holds the sensor values for the front and back barriers. Recall that our assumption is that the status of the process is the value detected by the majority of the sensors. When the
+	safety layer requests the status of a barrier, the process sends out a \texttt{send}-action in return. Together with the \texttt{receive}-action from the safety layer, a \texttt{comm}-action is formed upon which the safety layer
 	bases its judgement for safety. When receiving an \texttt{s}-action from the safety layer, \emph{Barrier} returns a \texttt{r}-action to confirm the execution.
-	\item \emph{Bridge} is the process that holds the sensor values for the locks and bridge deck. Recall that our assumption is that the status of the process is the value detected by the majority of the sensors. When the 
-	safety layer requests the status of a lock or deck, the process sends out a \texttt{send}-action in return. Together with the \texttt{receive}-action from the safety layer, a \texttt{comm}-action is formed upon which the safety 
+	\item \emph{Bridge} is the process that holds the sensor values for the locks and bridge deck. Recall that our assumption is that the status of the process is the value detected by the majority of the sensors. When the
+	safety layer requests the status of a lock or deck, the process sends out a \texttt{send}-action in return. Together with the \texttt{receive}-action from the safety layer, a \texttt{comm}-action is formed upon which the safety
 	layer 	bases its judgement for safety. When receiving an \texttt{s}-action from the safety layer, \emph{Bridge} returns a \texttt{r}-action to confirm the execution.
 \end{itemize}
 %
@@ -29,4 +29,3 @@ Figure \ref{fig:arch} shows a diagram of the communication flow between these pa
 \end{figure}
 %
 
-\newpage
