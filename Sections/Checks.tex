@@ -3,16 +3,24 @@
 
 In section~\ref{sec:trans} the translations of the requirements are also
 translated into $\mu$-calculus. From that it is trivial to transform that into
-a mcf (mu-calculus formula) file which can be checked with the mCRL2 tools. For example the first
-requirement of~\ref{sec:trans} is translated to:
+a mcf (mu-calculus formula) file which can be checked with the mCRL2 tools. A
+mcf file can be checked against a \texttt{lps} file with the following command:
 
 \begin{verbatim}
-[true* . commPreSign(off) . !commPreSign(on)* . commStopSign(on)]false
+lps2pbes bridge.lps -f check01.mcf | pbes2bool
 \end{verbatim}
 
+The output of this command is either true or false. Each check is constructed such
+that the output of the command should be \texttt{true} for each mcf file.
+
 After writing all the requirements into the mcf format we have found that all
-the model satisfies all $\mu$-calculus formulas, as states in table \ref{tab:checks}.
-%
+the model satisfies all $\mu$-calculus formulas, as stated in
+table~\ref{tab:checks}. The checks correspond with the translated requirements
+from section~\ref{sec:trans}, and can be found in appendix~\ref{sec:mcf}. The
+\texttt{false-test} is an extra check to make sure at least once \texttt{false}
+is returned: \texttt{[true*]false}. The deadlock free test is a test to check
+that there is no deadlock in the model: \texttt{[true*]<true>true}.
+
 \begin{table}[htb]%
 \centering
 \begin{tabular}{|c|l|}

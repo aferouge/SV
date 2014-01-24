@@ -24,6 +24,13 @@
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
+\lstdefinestyle{custommcrl2}{%
+  belowcaptionskip=1\baselineskip,
+  xleftmargin=\parindent,
+  basicstyle=\footnotesize\ttfamily
+}
+
+
 %----------------------------------------------------------------------------------------
 %	TITLE AND DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
@@ -100,10 +107,11 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 %----------------------------------------------------------------------------------------
 %	Appendices
 %----------------------------------------------------------------------------------------
-
-\appendix
 \newpage
+\appendix
+
 \input{Sections/MCRL}
+\input{Sections/MCF}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
