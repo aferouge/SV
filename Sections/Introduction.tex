@@ -8,17 +8,17 @@ Modeling the bridge can be done in various levels of detail. For our model, we m
 %
 \begin{itemize}
 	\item When a bridge component is to be said in a particular state, this implies that the majority of the sensors have detected the bridge to be in this state (e.g. if the bridge is considered open, three or four sensors have detected the bridge deck to be open.)
-	\item	The individual sensors of the components (sign, barrier or lock) communicate with the control system by means of one signal (so they always agree on the bridge status)
+	\item The individual sensors of the components (sign, barrier or lock) communicate with the control system by means of one signal (so the sensors always agree on the bridge status)
 	\item If a communication has been established between two regarding the status, it means that a \texttt{send} action from component A has been received, processed and confirmed by object B
 	\item If a communication has been established between two components regarding an action, it means that a \texttt{send} action from object A has been received, processed and executed by object B
-	\item In order for a required to be satisfied, it must be satisfied for all instances of the components (e.g. \emph{all} pre signs must be switched on in order for a stop sign to be switched on)
+	\item In order for a requirement to be satisfied, it must be satisfied for all instances of the components (e.g. \emph{all} pre signs must be switched on in order for a stop sign to be switched on)
 \end{itemize}
 %
-In the next subsection, the desired behaviour of the bridge is being determined and defined. Section \ref{sec:glob} contains the global requirements that will be met in our system. Specific interactions that can be performed by the bridge are discussed in Section \ref{sec:act}, whereas section \ref{sec:arch} discusses the used architecture of the system. In section \ref{sec:trans} the requirements stated earlier are translated into these interactions. The modeling of the bridge is covered by section \ref{sec:model}, followed by section \ref{sec:check} holding the results of the system validation. Finally, the conclusion can be found in section \ref{sec:conclusion}.
+In the next subsection, the desired behaviour of the bridge is will be defined. Section~\ref{sec:glob} contains the global requirements that should be met in our system. Specific interactions that can be performed by the bridge are discussed in section~\ref{sec:act}, whereas section~\ref{sec:arch} discusses the used architecture of the system. In section~\ref{sec:trans} the requirements stated earlier are translated into these interactions. The modeling of the bridge is covered by section~\ref{sec:model}, followed by section~\ref{sec:check} holding the results of the system validation. Finally, the conclusion can be found in section~\ref{sec:conclusion}.
 
 \subsection{Desired behavior of the bridge}
 
-Although it seems pretty straightforward what should be the desired behavior of a bridge, the Ketelbrug accident shows us that this can be slightly more complicated than it appears. For the project, the Project Guide\footnote{J. J. A. Keiren, System Validation (IN4387) Project Guide, VU University Amsterdam, November 2013} has described the desired behavior in detail. For the sake of the clarity of this report, the general outline is repeated here. The bridge has two main modes: open and close. Sequences \ref{tab:open} and \ref{tab:close} below shows all steps that need to be taken to open and close the bridge.
+Although it seems pretty straightforward what should be the desired behavior of a bridge, the Ketelbrug accident shows us that this can be slightly more complicated than it appears. For the project, the Project Guide\footnote{J. J. A. Keiren, System Validation (IN4387) Project Guide, VU University Amsterdam, November 2013} has described the desired behavior in detail. For the sake of the clarity of this report, the general outline is repeated here. The bridge has two main states: open and close. Sequences \ref{tab:open} and \ref{tab:close} below shows all steps that need to be taken to open and close the bridge.
 %
 \begin{table}[h]%
 \begin{tabular}{l}
@@ -40,7 +40,7 @@ Although it seems pretty straightforward what should be the desired behavior of 
 %
 The most important feature is that every action can only be performed when the previous action has already occurred properly (according to assumptions we stated earlier). For example, it undesirable for cars to have a barrier coming down when no warning sign has been switched on previously. Also, the system has to be free of deadlocks.
 
-In the following sections of the report, the bridge components will be labelled with individual identifiers. These are based on figure \ref{fig:setup}, an image from the project guide.
+In the following sections of the report, the bridge components will be labelled with individual identifiers. These are based on figure~\ref{fig:setup}, an image from the project guide.
 %
 \begin{figure}[htb]%
 \includegraphics[width=\columnwidth]{Images/setup.pdf}%
