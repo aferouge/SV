@@ -1,7 +1,7 @@
 \section{Architecture}
 \label{sec:arch}
 
-Four parallel processes exist being \emph{signs}, \emph{barriers},  \emph{bridge}a nd \emph{Safety layer}. \emph{Signs} handles the control of the lights, whereas \emph{barriers} handles the barriers and \emph{bridge} the locks and the deck. \emph{Safety layer} makes sure that the input from the bridge operator can only be executed if the conditions are so save, so no accident like the Ketelbrug will be possible. The structure of this setup can be explained as follows:
+Four parallel processes exist being \emph{signs}, \emph{barriers},  \emph{bridge}a nd \emph{safety layer}. \emph{Signs} handles the control of the lights, whereas \emph{barriers} handles the barriers and \emph{bridge} the locks and the deck. \emph{Safety layer} makes sure that the input from the bridge operator can only be executed if the conditions are so save, so no accident like the Ketelbrug will be possible. The structure of this setup can be explained as follows:
 %
 \begin{itemize}
 	\item \emph{Safety layer} is the process that accepts all possible inputs that are allowed by the bridge operator. For every command, the safety layer knows what current states of the individual components are required for the 
@@ -23,7 +23,7 @@ Figure \ref{fig:arch} shows a diagram of the communication flow between these pa
 %
 \begin{figure}[htb]%
 \centering
-\includegraphics[width=\columnwidth]{Images/Architecture_2}%
+\includegraphics[width=\columnwidth, angle=90]{Images/Architecture_2}%
 \caption{Communication flow between parallel processes \emph{signs}, \emph{barriers} and \emph{bridge}.}%
 \label{fig:arch}%
 \end{figure}

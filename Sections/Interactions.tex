@@ -4,7 +4,7 @@
 
 The interactions can be divided into two categories. The first category contains the global interactions, which are the direct translations of the requirements from Section \ref{sec:glob}.
 Switching the signs on or off, moving the barriers or engaging the locking pins are all actions to be performed by the system and can be found in the table \ref{tab:glob}. These actions are also events that a bridge operator is allowed to enforce. For example, when the bridge has just disengaged its locks and suddenly a child runs past the lowered barriers onto the deck, the bridge operator should be able to re-engage the locks. Obviously, not all actions that are available to the bridge operator are safe, which is why the safety layer is added to decide wheter such particular action should be executed.
-The internal interactions are used for communication purposes and control of the components. The communication between components is done by means of the interactions in table \ref{tab:process}. After checking for safety, the components are controled by means of the interactions in table \ref{tab:tau}.
+The internal interactions make up the second category and are used for communication purposes and control of the components. The communication between components is done by means of the interactions in table \ref{tab:process}. After checking for safety, the components are controled by means of the interactions in table \ref{tab:tau}.
 %
 \begin{table}[htb]%
 \begin{tabular}{lll}
@@ -87,7 +87,7 @@ The internal interactions are used for communication purposes and control of the
 \label{tab:tau}
 \end{table}
 %
-For the parameters of the interactions, data structures are introduced which group all possible states and identities of the components. Table \ref{tab:types} lists these datatypes and their possible values.
+For the parameters of the interactions, data structures are introduced which group all possible states and identities of the components. Table \ref{tab:types} lists these data structures and their possible values.
 
 \begin{table}[htb]%
 \begin{tabular}{ll}

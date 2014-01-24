@@ -1,14 +1,14 @@
 \section{Modeling the Bridge Using mCRL2}
 \label{sec:model}
 
-With the requirements clearly stated, now the bridge can be modeled. In order to create a model that can be verified using $\mu$-calculus, the mCRL2 program can be used. The code for the model can be found in \ref{sec:mcrl} or the attached file \texttt{Bridge\_group7.mcrl2}. Section \ref{sec:basic} describes the first steps towards the model, declaring the data structs, actions and processes for the . The implementation of the safety layer is discussed second, in section \ref{sec:safety}. Section \ref{sec:ids} will finally explain the introduction of component identities.
+With the requirements clearly stated, now the bridge can be modeled. In order to create a model that can be verified using $\mu$-calculus, mCRL2 can be used. The code for the model can be found in appendix \ref{sec:mcrl} or the attached file \texttt{Bridge\_group7.mcrl2}. Section \ref{sec:basic} describes the first steps towards the model, declaring the data structures, actions and processes for the bridge components. The implementation of the safety layer is discussed second, in section \ref{sec:safety}. Section \ref{sec:ids} will finally explain the introduction of component identities.
 
 \subsection{Setting up the Basic Structure}
 \label{sec:basic}
-When writing the code, we kept to the architecture from section \ref{sec:act} including three component processes (\emph{Signs}, \emph{Barriers} and \emph{Bridge}). As explained in section \ref{sec:act}, five data structures are introduced to group possible states of the component. These are to be found at the beginning of the code. Next, each process is preceded by an \texttt{act}-section holding all interactions that apply to that particular process. By creating this structure, it is easy to see which interactions belong to which process. The processes themselves are pretty simple. The can basically perform two actions:
+When writing the code, we kept to the architecture from section \ref{sec:act} including three component processes (\emph{Signs}, \emph{Barriers} and \emph{Bridge}). As explained in section \ref{sec:act}, five data structures are introduced to group possible states of the component. These can be found at the beginning of the code. Next, each process is preceded by an \texttt{act}-section holding all interactions that apply to that particular process. By writing the code in this order, it is easy to see which interactions belong to which process. The processes themselves are pretty simple. They can basically perform two actions:
 %
 \begin{itemize}
-	\item send their status towards the safety layer by means of a \texttt{send} action
+	\item send their status to the safety layer by means of a \texttt{send} action
 	\item confirm an execution action of the safety layer by means of a \texttt{r}-action
 \end{itemize}
 %
@@ -16,7 +16,7 @@ All multi-actions (\texttt{comm} for the status update and \texttt{c} for execut
 
 \subsection{Adding the Safety Layer}
 \label{sec:safety}
-Since there is not yet a safety layer to block dangerous commands, all possible transitions can be taken. Locks can be disengaged without stop signs being switched on first, decks could be opened while the barriers are still up etc. Creating the fourth process (the \emph{Safety layer}) has been a quite time-consuming step. Every command that is in the \texttt{allow}-part, is first checked for safety in the safety layer by looking at its adjacent components (see table \ref{tab:open} and \ref{tab:close}). The structure of the can be compared with \texttt{if}-loops, since actions can be performed only if the requirements are satisfied. With the implementation of the safety layer, two types of transitions exist:
+Since there is not yet a safety layer to block dangerous commands, all possible transitions can be taken. Locks can be disengaged without stop signs being switched on first, decks can be opened while the barriers are still up etc. Creating a fourth process (the \emph{safety layer}) has been a quite time-consuming task. Every command that is in the \texttt{allow}-part, is first checked for safety in the safety layer by looking at its adjacent components (see table \ref{tab:open} and \ref{tab:close}). The structure of the safety layer can be compared with \texttt{if}-loops, since actions can be performed only if the requirements are satisfied. With the implementation of the safety layer, two types of transitions exist:
 %
 \begin{itemize}
 	\item node-to-node transitions, only taken when considered to be safe
@@ -27,7 +27,7 @@ Figure \ref{fig:global} shows a general overview made with \texttt{lts$\_$graph}
 %
 \begin{figure}[htb]
 \centering
-\includegraphics[width=\columnwidth]{Images/global_graph.pdf}
+\includegraphics[width=\columnwidth, angle=270]{Images/global_graph.pdf}
 \caption{Graphical representation of the model, showing the global structure of the system.}%
 \label{fig:global}
 \end{figure}%

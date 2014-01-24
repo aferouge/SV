@@ -1,7 +1,7 @@
 \section{Translation of Requirements in Terms of Interactions}
 \label{sec:trans}
 
-In order to create a model for the bridge in mCRL2, which is modeling software used for system validation, the requirements have to expressed in terms of the previous stated interactions. Then, in order to check our model in mCRL2, the requirements have to be written using $\mu$-calculus. During the project, these translations will be used for model checking and therefore constantly be revised.
+In order to create a model for the bridge in mCRL2, which is a modeling software used for system validation, the requirements have to expressed in terms of the previous stated interactions. Then, in order to check our model in mCRL2, the requirements have to be written using $\mu$-calculus. During the project, these translations will be used for model checking.
 
 Because the requirements often concern all individual objects of a specific component (sign or barrier), the variables $i, j$ have been introduced. When discussing signs, these variables will satisfy $i,j \in \{$1,2,3,4$\}$. For example, parameter \texttt{S$_i$} in the $\mu$-calculus covers all four stop signs being S$_1$, S$_2$, S$_3$ and S$_4$. When discussing barriers or locks, $i,j \in \{$1,2$\}$ holds and \texttt{L$_i$} in the $\mu$-calculus covers both locks being L$_1$ and L$_2$.
 %
