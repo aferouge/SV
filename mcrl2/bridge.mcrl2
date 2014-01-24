@@ -91,7 +91,9 @@ proc
   Motor(status: st_motor)
     = sendMotor(status) . Motor();
 
-% Safety layer checking all possible input actions for safety. If unsafe, the transition ends up as a self-loop. If safe, a transition to another node is taken.
+% Safety layer checking all possible input actions for safety. 
+%If unsafe, the transition ends up as a self-loop. 
+%If safe, a transition to another node is taken.
 proc
   SafetyLayer
     =

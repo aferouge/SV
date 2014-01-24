@@ -92,7 +92,7 @@ Because the requirements often concern all individual objects of a specific comp
 	\item \textbf{If the motor is in the 'broken' status, the may not be moved up or down.}
 	\begin{enumerate}
 		\item Always after a \texttt{motorStatus(broken)}, a \texttt{cDeck(lift)} or \texttt{cDeck(lower)} cannot happen unless a \texttt{motorStatus(!broken)} happened intermediately.
-		\item $[true^* \cdot commMotor(Broken) \cdot \overline{commMotor(\neg Broken)^*}  \cdot (cDeck(up) \vee cDeck(down))]false$
+		\item $[true^* \cdot commMotor(Broken) \cdot \overline{commMotor(\neg Broken)}^{*}  \cdot (cDeck(up) \vee cDeck(down))]false$
 	\end{enumerate}
 
 \end{enumerate}
