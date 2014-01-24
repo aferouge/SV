@@ -1,3 +1,1 @@
-forall b: id_barrier . (
-  [true* . commFrontBarrier(b, lift) . !cFrontBarrier(b, lower) . cBackBarrier(b, lower)]false
-)
+forall s: id_stop . [true*]<true* . cSwitchStop(s, off)>true

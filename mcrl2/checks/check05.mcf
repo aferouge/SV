@@ -1,1 +1,1 @@
-forall l: id_lock . [true* . commDeck(up) . !cDeck(down)* . cLock(l, engaged)]false
+forall l: id_lock . [true* . commLock(L1, engaged) . !cLock(l, disengaged)* . cDeck(up)]false

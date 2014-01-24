@@ -1,1 +1,1 @@
-forall s: id_stop . [true*]<true* . cSwitchStop(s, off)>true
+[true*]<true* . cDeck(up)>true

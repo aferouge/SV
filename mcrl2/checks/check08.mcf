@@ -1,1 +1,6 @@
-[true*]<true* . cDeck(up)>true
+forall s: id_stop . (
+  forall b: id_barrier . (
+    [true* . commFrontBarrier(b, lower) . !cFrontBarrier(b, lift)* . cSwitchStop(s, off)]false &&
+    [true* . commBackBarrier(b, lower) . !cBackBarrier(b, lift)* . cSwitchStop(s, off)]false
+  )
+)
