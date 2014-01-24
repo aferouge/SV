@@ -1,19 +1,18 @@
 \section{Interactions}
 \label{sec:act}
 
-
-The interactions can be divided into two categories. The first category contains the global interactions, which are the direct translations of the requirements from Section \ref{sec:glob}.
+The interactions can be divided into three categories. The first category contains the global interactions, which are the direct translations of the requirements from section~\ref{sec:glob}.
 Switching the signs on or off, moving the barriers or engaging the locking pins are all actions to be performed by the system and can be found in the table \ref{tab:glob}. These actions are also events that a bridge operator is allowed to enforce. For example, when the bridge has just disengaged its locks and suddenly a child runs past the lowered barriers onto the deck, the bridge operator should be able to re-engage the locks. Obviously, not all actions that are available to the bridge operator are safe, which is why the safety layer is added to decide wheter such particular action should be executed.
 The internal interactions make up the second category and are used for communication purposes and control of the components. The communication between components is done by means of the interactions in table \ref{tab:process}. After checking for safety, the components are controled by means of the interactions in table \ref{tab:tau}.
 %
 \begin{table}[htb]%
 \begin{tabular}{lll}
-			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
-  		\hline
-  		\texttt{setPre} & Switching the pre sign on/off & st\_sign\\
+      \textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
+      \hline
+      \texttt{setPre} & Switching the pre sign on/off & st\_sign\\
       \texttt{setStop} & Switching the stop sign on/off & st\_sign\\
       \texttt{setFrontBarrier} & Lifting/lowering the barriers that are encountered first & st\_barrier\\
-			\texttt{setBackBarrier} & Lifting/lowering the barriers that are encountered second & st\_barrier\\
+      \texttt{setBackBarrier} & Lifting/lowering the barriers that are encountered second & st\_barrier\\
       \texttt{setLock} & Engaging/disengaging the locks & st\_lock\\
       \texttt{setDeck} & Lifting/lowering the bridge deck & st\_deck\\
 \end{tabular}
@@ -23,29 +22,28 @@ The internal interactions make up the second category and are used for communica
 %
 \begin{table}[htb]%
 \begin{tabular}{lll}
-			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
+      \textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
       \hline
-      
       \texttt{sendPre} & Sends status of the pre signs & id\_pre, st\_sign\\
       \texttt{receivePre} & Requests status of the pre signs & id\_pre, st\_sign\\
       \texttt{commPre} & Synchronization action for sendPre $\mid$ receivePre & id\_pre, st\_sign\\
-      
+
       \texttt{sendStop} & Sends status of the stop signs & id\_stop, st\_sign\\
       \texttt{receiveStop} & Requests status of the stop signs & id\_stop, st\_sign\\
       \texttt{commStop} & Synchronization action for sendStop $\mid$ receiveStop & id\_stop, st\_sign\\
-      
+
       \texttt{sendFrontBarrier} & Sends status of the front barriers & id\_barrier, st\_barrier\\
       \texttt{receiveFrontBarrier} & Requests status of the front barriers & id\_barrier, st\_barrier\\
       \texttt{commFrontBarrier} & Synchronization action for sendFrontBarrier $\mid$ receiveFrontBarrier & id\_barrier, st\_barrier\\
-      
+
       \texttt{sendLock} & Sends status of the locks & id\_lock, st\_lock\\
       \texttt{receiveLock} & Requests status of a particular locking pin & id\_lock, st\_lock\\
       \texttt{commLock} & Synchronization action for sendLock $\mid$ receiveLock & id\_lock, st\_lock\\
-      
+
       \texttt{sendDeck} & Sends status of the bridge deck & st\_deck\\
       \texttt{receiveDeck} & Requests status of the bridge deck & st\_deck\\
       \texttt{commDeck} & Synchronization action for sendDeck $\mid$ receiveDeck & st\_deck\\
-      
+
       \texttt{sendMotor} & Sends status of the motor & st\_motor\\
       \texttt{receiveMotor} & Requests status of the motor & st\_motor\\
       \texttt{commMotor} & Synchronization action for sendMotor $\mid$ receiveMotor & st\_motor\\
@@ -56,29 +54,29 @@ The internal interactions make up the second category and are used for communica
 %
 \begin{table}%
 \begin{tabular}{lll}
-			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
-  		\hline
-  		
-			\texttt{sSwitchPre} & Initiates switching on the pre signs & id\_pre, st\_sign\\
+      \textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
+      \hline
+
+      \texttt{sSwitchPre} & Initiates switching on the pre signs & id\_pre, st\_sign\\
       \texttt{rSwitchPre} & Acknowledges switching on the pre signs & id\_pre, st\_sign\\
       \texttt{cSwitchPre} & Switching on the pre signs & id\_pre, st\_sign\\
-            
+
       \texttt{sSwitchStop} & Initiates switching on the stop signs & id\_stop, st\_sign\\
       \texttt{rSwitchStop} & Acknowledges switching on the stop signs & id\_stop, st\_sign\\
       \texttt{cSwitchStop} & Switching on the stop signs & id\_stop, st\_sign\\
-            
+
       \texttt{sFrontBarrier} & Initiates lifting the front barrier & id\_barrier, st\_barrier\\
       \texttt{rFrontBarrier} & Acknowledges lifting the front barriers & id\_barrier, st\_barrier\\
       \texttt{cFrontBarrier} & Lifting the front barriers & id\_barrier, st\_barrier\\
-      
+
       \texttt{sBackBarrier} & Initiates lifting the back barrier & id\_barrier, st\_barrier\\
       \texttt{rBackBarrier} & Acknowledges lifting the back barriers & id\_barrier, st\_barrier\\
       \texttt{cBackBarrier} & Lifting the back barriers & id\_barrier, st\_barrier\\
-      
+
       \texttt{sLock} & Initiates engaging the locks & id\_lock, st\_lock\\
       \texttt{rLock} & Acknowledges engaging the locks & id\_lock, st\_lock\\
       \texttt{cLock} & Engaging the locks & id\_lock, st\_lock\\
-      
+
       \texttt{sDeck} & Initiates lifting the deck & st\_deck\\
       \texttt{rDeck} & Acknowledges lifting the deck & st\_deck\\
       \texttt{cDeck} & Lifting the deck & st\_deck\\
@@ -88,7 +86,7 @@ The internal interactions make up the second category and are used for communica
 \end{table}
 %
 For the parameters of the interactions, data structures are introduced which group all possible states and identities of the components. Table \ref{tab:types} lists these data structures and their possible values.
-
+%
 \begin{table}[htb]%
 \begin{tabular}{ll}
 	\textbf{Datatype} & \textbf{Values}\\
@@ -106,6 +104,4 @@ For the parameters of the interactions, data structures are introduced which gro
 \caption{Data structures used as parameters for the interactions.}
 \label{tab:types}
 \end{table}
-%
 
-\newpage

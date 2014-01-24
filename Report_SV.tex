@@ -20,7 +20,6 @@
 \usepackage{nameref}
 \usepackage{listings}
 \usepackage{graphicx} % Required for the inclusion of images
-\newcommand{\sectionbreak}{\clearpage} % Every section on new page
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
@@ -47,7 +46,7 @@
   Wieger \textsc{IJntema} 4034570 \\
   Arian \textsc{Stolwijk} 4001079 \\
   Group 7} % Author name
-  
+
 \vspace{+50pt} % Title
 \today % Date for the report
 \vspace{+300pt} % Title
@@ -93,15 +92,14 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 %	Report
 %----------------------------------------------------------------------------------------
 %\input{Sections/Summary}
-\input{Sections/Introduction}
-\input{Sections/Requirements}
-\input{Sections/Interactions}
-\newpage
-\input{Sections/Architecture}
-\input{Sections/Translations}
-\input{Sections/Modeling}
-\input{Sections/Checks}
-\input{Sections/Conclusion}
+\include{Sections/Introduction}
+\include{Sections/Requirements}
+\include{Sections/Interactions}
+\include{Sections/Architecture}
+\include{Sections/Translations}
+\include{Sections/Modeling}
+\include{Sections/Checks}
+\include{Sections/Conclusion}
 
 
 %----------------------------------------------------------------------------------------
@@ -110,8 +108,8 @@ Instructor: & J. J. A. Keiren % Instructor/supervisor
 \newpage
 \appendix
 
-\input{Sections/MCRL}
-\input{Sections/MCF}
+\include{Sections/MCRL}
+\include{Sections/MCF}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY

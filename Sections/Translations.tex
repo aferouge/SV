@@ -28,7 +28,7 @@ Because the requirements often concern all individual objects of a specific comp
 		\item Always after a \texttt{commStop(S$_i$, off)}, a \texttt{cFrontBarrier($B_j$, down)} or \texttt{cBackBarrier($B_j$, down)} cannot occur unless a \texttt{cStopSign($S_i$, on)} has occurred intermediately.
 		\item $[true^* \cdot commStop(S_i, off) \cdot \overline{cSwitchStop(S_i, on)}^{*} \cdot (cFrontBarrier(B_j, lower) \vee cBackBarrier(B_j, lower))]false$ \\
 	\end{enumerate}
-	
+
 	%Requirement 3
 	\item \textbf{The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge}
 	\begin{enumerate}
@@ -97,4 +97,3 @@ Because the requirements often concern all individual objects of a specific comp
 
 \end{enumerate}
 
-\newpage
