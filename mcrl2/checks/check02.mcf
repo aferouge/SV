@@ -1,5 +1,6 @@
 forall s: id_stop . (
   forall b: id_barrier . (
-    [true* . commStop(s, off) . !cSwitchStop(s, on)* . (cFrontBarrier(b, lower) || cBackBarrier(b, lower))]false
+    [true* . commStop(s, off) . !cSwitchStop(s, on)*
+      . (cFrontBarrier(b, lower) || cBackBarrier(b, lower))]false
   )
 )
