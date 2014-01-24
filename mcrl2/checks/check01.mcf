@@ -1,1 +1,3 @@
-[true* . commPre(off) . !cSwitchPre(on)* . cSwitchStop(on)]false
+forall p: id_pre . (
+  forall s: id_stop . [true* . commPre(p, off) . !cSwitchPre(p, on)* . cSwitchStop(s, on)]false
+)

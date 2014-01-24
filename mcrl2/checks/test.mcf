@@ -1,1 +1,3 @@
-[true* . commPre(on) . cFrontBarrier(lift)]true
+forall p: id_pre . (
+  forall b: id_barrier . [true* . commPre(p, on) . cFrontBarrier(b, lift)]true
+)

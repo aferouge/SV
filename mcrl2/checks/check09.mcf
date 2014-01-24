@@ -1,1 +1,1 @@
-[true* . commStop(off)]true
+forall s: id_stop . [true* . commStop(s, off)]true
