@@ -26,13 +26,13 @@ The internal interactions are used for communication purposes and control of the
 			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
       \hline
       
-      \texttt{sendPre} & Sends status of the pre signs & id\_sign, st\_sign\\
-      \texttt{receivePre} & Requests status of the pre signs & id\_sign, st\_sign\\
-      \texttt{commPre} & Synchronization action for sendPre $\mid$ receivePre & id\_sign, st\_sign\\
+      \texttt{sendPre} & Sends status of the pre signs & id\_pre, st\_sign\\
+      \texttt{receivePre} & Requests status of the pre signs & id\_pre, st\_sign\\
+      \texttt{commPre} & Synchronization action for sendPre $\mid$ receivePre & id\_pre, st\_sign\\
       
-      \texttt{sendStop} & Sends status of the stop signs & id\_sign, st\_sign\\
-      \texttt{receiveStop} & Requests status of the stop signs & id\_sign, st\_sign\\
-      \texttt{commStop} & Synchronization action for sendStop $\mid$ receiveStop & id\_sign, st\_sign\\
+      \texttt{sendStop} & Sends status of the stop signs & id\_stop, st\_sign\\
+      \texttt{receiveStop} & Requests status of the stop signs & id\_stop, st\_sign\\
+      \texttt{commStop} & Synchronization action for sendStop $\mid$ receiveStop & id\_stop, st\_sign\\
       
       \texttt{sendFrontBarrier} & Sends status of the front barriers & id\_barrier, st\_barrier\\
       \texttt{receiveFrontBarrier} & Requests status of the front barriers & id\_barrier, st\_barrier\\
@@ -55,13 +55,13 @@ The internal interactions are used for communication purposes and control of the
 			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
   		\hline
   		
-			\texttt{sSwitchre} & Initiates switching on the pre signs & id\_sign, st\_sign\\
-      \texttt{rSwitchPre} & Acknowledges switching on the pre signs & id\_sign, st\_sign\\
-      \texttt{cSwitchPre} & Switching on the pre signs & id\_sign, st\_sign\\
+			\texttt{sSwitchPre} & Initiates switching on the pre signs & id\_pre, st\_sign\\
+      \texttt{rSwitchPre} & Acknowledges switching on the pre signs & id\_pre, st\_sign\\
+      \texttt{cSwitchPre} & Switching on the pre signs & id\_pre, st\_sign\\
             
-      \texttt{sSwitchStop} & Initiates switching on the stop signs & id\_sign, st\_sign\\
-      \texttt{rSwitchStop} & Acknowledges switching on the stop signs & id\_sign, st\_sign\\
-      \texttt{cSwitchStop} & Switching on the stop signs & id\_sign, st\_sign\\
+      \texttt{sSwitchStop} & Initiates switching on the stop signs & id\_stop, st\_sign\\
+      \texttt{rSwitchStop} & Acknowledges switching on the stop signs & id\_stop, st\_sign\\
+      \texttt{cSwitchStop} & Switching on the stop signs & id\_stop, st\_sign\\
             
       \texttt{sFrontBarrier} & Initiates lifting the front barrier & id\_barrier, st\_barrier\\
       \texttt{rFrontBarrier} & Acknowledges lifting the front barriers & id\_barrier, st\_barrier\\
@@ -94,8 +94,8 @@ For the parameters of the interactions, data structures are introduced which gro
 	st\_lock & engaged, disengaged\\
 	st\_deck & up, down\\
 	st\_motor & rising, lowering, broken\\
-	\hline
-	id\_sign & P1, P2, P3, P4, S1, S2, S3, S4\\
+	id\_pre & P1, P2, P3, P4\\
+	id\_stop & S1, S2, S3, S4\\
 	id\_barrier & B1, B2\\
 	id\_lock & L1, L2\\
 \end{tabular}

@@ -4,13 +4,14 @@ sort
   st_deck    = struct up | down;            %deck status
   st_barrier = struct lift | lower;         %barrier status
   st_lock    = struct engaged | disengaged; %lock status
-  st_bridge  = struct open | close;
+  st_motor   = struct broken | operational; %motor status
 
   id_pre     = struct P1 | P2 | P3 | P4;
   id_stop    = struct S1 | S2 | S3 | S4;
   id_barrier = struct B1 | B2;
   id_lock    = struct L1 | L2;
 
+% Interactions between the pre signs and the safety layer
 act
   sendPre, receivePre, commPre: id_pre # st_sign;
   rSwitchPre, sSwitchPre, cSwitchPre: id_pre # st_sign;
@@ -22,6 +23,7 @@ proc
     + (status == off) -> rSwitchPre(id, on) . PreSign(status = on)
     + sendPre(id, status) . PreSign();
 
+% Interactions between the stop signs and the safety layer
 act
   sendStop, receiveStop, commStop: id_stop # st_sign;
   rSwitchStop, sSwitchStop, cSwitchStop: id_stop # st_sign;
@@ -33,6 +35,7 @@ proc
     + (status == off) -> rSwitchStop(id, on) . StopSign(status = on)
     + sendStop(id, status) . StopSign();
 
+% Interactions between the front barriers and the safety layer
 act
   sendFrontBarrier, receiveFrontBarrier, commFrontBarrier: id_barrier # st_barrier;
   rFrontBarrier, sFrontBarrier, cFrontBarrier: id_barrier # st_barrier;
@@ -44,6 +47,7 @@ proc
     + (status == lift) -> rFrontBarrier(id, lower) . FrontBarrier(status = lower)
     + sendFrontBarrier(id, status) . FrontBarrier();
 
+% Interactions between the back barriers and the safety layer
 act
   sendBackBarrier, receiveBackBarrier, commBackBarrier: id_barrier # st_barrier;
   rBackBarrier, sBackBarrier, cBackBarrier: id_barrier # st_barrier;
@@ -55,6 +59,7 @@ proc
     + (status == lift) -> rBackBarrier(id, lower) . BackBarrier(status = lower)
     + sendBackBarrier(id, status) . BackBarrier();
 
+% Interactions between the locks and the safety layer
 act
   setLock: st_lock;
   sendLock, receiveLock, commLock: id_lock # st_lock;
@@ -66,6 +71,7 @@ proc
     + (status == disengaged) -> rLock(id, engaged) . Lock(status = engaged)
     + sendLock(id, status) . Lock();
 
+% Interactions between the deck and the safety layer
 act
   sendDeck, receiveDeck, commDeck: st_deck;
   sDeck, rDeck, cDeck: st_deck;
@@ -77,10 +83,20 @@ proc
     + (status == down) -> rDeck(up) . Deck(status = up)
     + sendDeck(status) . Deck();
 
+% Interactions between the motor and the safety layer
+act 
+  sendMotor, receiveMotor, commMotor: st_motor;
+
+proc
+  Motor(status: st_motor)
+    = sendMotor(status) . Motor();
+
+% Safety layer checking all possible input actions for safety. If unsafe, the transition ends up as a self-loop. If safe, a transition to another node is taken.
 proc
   SafetyLayer
     =
 
+    % Checking safety for switching on the pre signs
     setPreSign(on)
       . (
         receivePre(P1, on)
@@ -97,6 +113,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for switching off the pre signs
     + setPreSign(off)
       . (
         receiveStop(S1, on)
@@ -129,6 +146,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for switching on the stop signs
     + setStopSign(on)
       . (
         receivePre(P1, off)
@@ -161,6 +179,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for switching off the stop signs
     + setStopSign(off)
       . (
         receiveFrontBarrier(B1, lower)
@@ -185,6 +204,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for lowering the front barriers
     + setFrontBarrier(lower)
       . (
         receiveStop(S1, off)
@@ -211,6 +231,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for lifting on the front barriers
     + setFrontBarrier(lift)
       . (
         receiveBackBarrier(B1, lower)
@@ -229,6 +250,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for lowering the back barriers
     + setBackBarrier(lower)
       . (
          receiveFrontBarrier(B1, lift)
@@ -247,6 +269,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for lifting the back barriers
     + setBackBarrier(lift)
       . (
         receiveLock(L1, disengaged)
@@ -265,6 +288,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for engaging the locks
     + setLock(engaged)
       . (
         receiveDeck(up)
@@ -279,6 +303,7 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for disengaging the locks
     + setLock(disengaged)
       . (
         receiveBackBarrier(B1, lift)
@@ -293,38 +318,50 @@ proc
       )
       . SafetyLayer()
 
+    % Checking safety for lifting the deck
     + setDeck(up)
       . (
         receiveDeck(up)
         + receiveDeck(down)
           . (
-            receiveLock(L1, engaged)
-            + receiveLock(L1, disengaged)
+            receiveMotor(broken)
+            + receiveMotor(operational)
               . (
-                receiveLock(L2, engaged)
-                + receiveLock(L2, disengaged) . sDeck(up)
-              )
-          )
-      )
+                receiveLock(L1, engaged)
+                + receiveLock(L1, disengaged)
+                  . (
+                    receiveLock(L2, engaged)
+                    + receiveLock(L2, disengaged) . sDeck(up)
+                  )
+               )
+            )
+         )
       . SafetyLayer()
 
+    % Checking safety for lowering the deck
     + setDeck(down)
       . (
         receiveDeck(down)
         + receiveDeck(up)
           . (
-            receiveLock(L1, engaged)
-            + receiveLock(L1, disengaged)
+            receiveMotor(broken)
+            + receiveMotor(operational)
               . (
-                receiveLock(L2, engaged)
-                + receiveLock(L2, disengaged) . sDeck(down)
-              )
-          )
-      )
+                receiveLock(L1, engaged)
+                + receiveLock(L1, disengaged)
+                  . (
+                    receiveLock(L2, engaged)
+                    + receiveLock(L2, disengaged) . sDeck(down)
+                    )
+                )
+            )
+        )
       . SafetyLayer();
 
 init
   allow({
+
+    % all external actions to be performed by the bridge operator
     setPreSign,
     commPre,
     cSwitchPre,
@@ -347,9 +384,13 @@ init
 
     setDeck,
     commDeck,
-    cDeck
+    cDeck,
+ 
+    commMotor
   },
   comm({
+
+    % Synchronizing the multi-actions
     receivePre|sendPre -> commPre,
     rSwitchPre|sSwitchPre -> cSwitchPre,
 
@@ -366,8 +407,12 @@ init
     rLock|sLock -> cLock,
 
     receiveDeck|sendDeck -> commDeck,
-    rDeck|sDeck -> cDeck
+    rDeck|sDeck -> cDeck,
+
+    receiveMotor|sendMotor -> commMotor
   },
+
+    % Initial state
        PreSign(P1, off)
     || PreSign(P2, off)
     || PreSign(P3, off)
@@ -388,5 +433,6 @@ init
 
     || Deck(down)
 
+    || Motor(operational)
     || SafetyLayer
   ));
