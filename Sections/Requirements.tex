@@ -1,12 +1,13 @@
 \section{Global Requirements}
 \label{sec:glob}
 
-Having used the project guide as a source for the desired behaviour, the following requirements are defined:
+Having used the project guide as a source for the desired behaviour, the global safety requirements are defined. First, safety requirements considering the opening sequence of events are described. Second, the same is done for the closing procedure. Finally, some obvious funcional requirements are defined to ensure the bridge is capable of basic up and down movements.
 
 \subsubsection*{Opening the bridge}
 \begin{enumerate}
-	\item Stop signs cannot be switched on unless all pre lights are switched on
+	\item Stop signs cannot be switched on unless all pre signs are switched on
 	\item Barriers cannot be lowered unless all stop signs are switched on
+	\item The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge
 	\item The bridge can only be unlocked when all barriers are down
 	\item The deck can only be lifted when both locks are disengaged
 	\newcounter{enumTemp}
@@ -27,7 +28,6 @@ Having used the project guide as a source for the desired behaviour, the followi
 	\setcounter{enumi}{\theenumTemp}
 	\item The bridge should be able to be opened when a ship wants to pass
 	\item The bridge should be able to close in order to let cars pass
-	\item The first barrier to be encountered by the cars is lowered earlier than the second in order to enable cars to leave the bridge
 	\setcounter{enumTemp}{\theenumi}
 \end{enumerate}
 

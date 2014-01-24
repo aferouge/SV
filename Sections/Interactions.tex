@@ -3,8 +3,8 @@
 
 
 The interactions can be divided into two categories. The first category contains the global interactions, which are the direct translations of the requirements from Section \ref{sec:glob}.
-Switching of the signs, moving the barriers or engaging the locking pins are all actions to be performed by the system and can be found in the table \ref{tab:glob}. These actions are also events that a bridge operator can try to enforce. For example, when the bridge is performing an opening procedure and suddenly a child runs past the lowered barriers, the bridge operator should be able to pause or undo the procedure. Obviously, not all actions that are available to the bridge operator are safe, and this is the reason the safety controller is added to decide wheter such particular action is allowed.
-The internal interactions are used for communication purposes and control of the components. The communication between components is done by the interactions in table \ref{tab:process}. After checking the safety the components are controled by means of the interactions in table \ref{tab:tau}.
+Switching the signs on or off, moving the barriers or engaging the locking pins are all actions to be performed by the system and can be found in the table \ref{tab:glob}. These actions are also events that a bridge operator is allowed to enforce. For example, when the bridge has just disengaged its locks and suddenly a child runs past the lowered barriers onto the deck, the bridge operator should be able to re-engage the locks. Obviously, not all actions that are available to the bridge operator are safe, which is why the safety layer is added to decide wheter such particular action should be executed.
+The internal interactions are used for communication purposes and control of the components. The communication between components is done by means of the interactions in table \ref{tab:process}. After checking for safety, the components are controled by means of the interactions in table \ref{tab:tau}.
 %
 \begin{table}[htb]%
 \begin{tabular}{lll}
@@ -13,7 +13,7 @@ The internal interactions are used for communication purposes and control of the
   		\texttt{setPre} & Switching the pre sign on/off & st\_sign\\
       \texttt{setStop} & Switching the stop sign on/off & st\_sign\\
       \texttt{setFrontBarrier} & Lifting/lowering the barriers that are encountered first & st\_barrier\\
-			\texttt{sendBackBarrier} & Lifting/lowering the barriers that are encountered second & st\_barrier\\
+			\texttt{setBackBarrier} & Lifting/lowering the barriers that are encountered second & st\_barrier\\
       \texttt{setLock} & Engaging/disengaging the locks & st\_lock\\
       \texttt{setDeck} & Lifting/lowering the bridge deck & st\_deck\\
 \end{tabular}
@@ -26,22 +26,21 @@ The internal interactions are used for communication purposes and control of the
 			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
       \hline
       
-      \texttt{sendPre} & Sends status of the pre signs & st\_sign\\
-      \texttt{receivePre} & Requests status of the pre signs & st\_sign\\
-      \texttt{commPre} & Synchronization action for sendPre $\mid$ receivePre & st\_sign\\
+      \texttt{sendPre} & Sends status of the pre signs & id\_sign, st\_sign\\
+      \texttt{receivePre} & Requests status of the pre signs & id\_sign, st\_sign\\
+      \texttt{commPre} & Synchronization action for sendPre $\mid$ receivePre & id\_sign, st\_sign\\
       
-      \texttt{sendStop} & Sends status of the stop signs & st\_sign\\
-      \texttt{receiveStop} & Requests status of the stop signs & st\_sign\\
-      \texttt{commStop} & Synchronization action for sendStop $\mid$ receiveStop & st\_sign\\
+      \texttt{sendStop} & Sends status of the stop signs & id\_sign, st\_sign\\
+      \texttt{receiveStop} & Requests status of the stop signs & id\_sign, st\_sign\\
+      \texttt{commStop} & Synchronization action for sendStop $\mid$ receiveStop & id\_sign, st\_sign\\
       
-      \texttt{sendFrontBarrier} & Sends status of the front barriers & st\_barrier\\
-      \texttt{receiveFrontBarrier} & Requests status of the front barriers & st\_barrier\\
-      \texttt{commFrontBarrier} & Synchronization action for sendFrontBarrier $\mid$ receiveFrontBarrier & 
-      st\_barrier\\
+      \texttt{sendFrontBarrier} & Sends status of the front barriers & id\_barrier, st\_barrier\\
+      \texttt{receiveFrontBarrier} & Requests status of the front barriers & id\_barrier, st\_barrier\\
+      \texttt{commFrontBarrier} & Synchronization action for sendFrontBarrier $\mid$ receiveFrontBarrier & id\_barrier, st\_barrier\\
       
-      \texttt{sendLock} & Sends status of the locks & st\_lock\\
-      \texttt{receiveLock} & Requests status of a particular locking pin & st\_lock\\
-      \texttt{commLock} & Synchronization action for sendLock $\mid$ receiveLock & st\_lock\\
+      \texttt{sendLock} & Sends status of the locks & id\_lock, st\_lock\\
+      \texttt{receiveLock} & Requests status of a particular locking pin & id\_lock, st\_lock\\
+      \texttt{commLock} & Synchronization action for sendLock $\mid$ receiveLock & id\_lock, st\_lock\\
       
       \texttt{sendDeck} & Sends status of the bridge deck & st\_deck\\
       \texttt{receiveDeck} & Requests status of the bridge deck & st\_deck\\
@@ -56,70 +55,51 @@ The internal interactions are used for communication purposes and control of the
 			\textbf{Interaction} &	\textbf{Descripton}	&	\textbf{Parameters}\\
   		\hline
   		
-			\texttt{sSwitchOnPre} & Initiates switching on the pre signs & st\_sign\\
-      \texttt{rSwitchOnPre} & Acknowledges switching on the pre signs & st\_sign\\
-      \texttt{cSwitchOnPre} & Switching on the pre signs & st\_sign\\
+			\texttt{sSwitchre} & Initiates switching on the pre signs & id\_sign, st\_sign\\
+      \texttt{rSwitchPre} & Acknowledges switching on the pre signs & id\_sign, st\_sign\\
+      \texttt{cSwitchPre} & Switching on the pre signs & id\_sign, st\_sign\\
+            
+      \texttt{sSwitchStop} & Initiates switching on the stop signs & id\_sign, st\_sign\\
+      \texttt{rSwitchStop} & Acknowledges switching on the stop signs & id\_sign, st\_sign\\
+      \texttt{cSwitchStop} & Switching on the stop signs & id\_sign, st\_sign\\
+            
+      \texttt{sFrontBarrier} & Initiates lifting the front barrier & id\_barrier, st\_barrier\\
+      \texttt{rFrontBarrier} & Acknowledges lifting the front barriers & id\_barrier, st\_barrier\\
+      \texttt{cFrontBarrier} & Lifting the front barriers & id\_barrier, st\_barrier\\
       
-      \texttt{sSwitchOffPre} & Initiates switching off the pre signs & st\_sign\\
-      \texttt{rSwitchOffPre} & Acknowledges switching off the pre signs & st\_sign\\
-      \texttt{cSwitchOffPre} & Switching off the pre signs & st\_sign\\
+      \texttt{sBackBarrier} & Initiates lifting the back barrier & id\_barrier, st\_barrier\\
+      \texttt{rBackBarrier} & Acknowledges lifting the back barriers & id\_barrier, st\_barrier\\
+      \texttt{cBackBarrier} & Lifting the back barriers & id\_barrier, st\_barrier\\
       
-      \texttt{sSwitchOnStop} & Initiates switching on the stop signs & st\_sign\\
-      \texttt{rSwitchOnStop} & Acknowledges switching on the stop signs & st\_sign\\
-      \texttt{cSwitchOnStop} & Switching on the stop signs & st\_sign\\
+      \texttt{sLock} & Initiates engaging the locks & id\_lock, st\_lock\\
+      \texttt{rLock} & Acknowledges engaging the locks & id\_lock, st\_lock\\
+      \texttt{cLock} & Engaging the locks & id\_lock, st\_lock\\
       
-      \texttt{sSwitchOffStop} & Initiates switching off the pre signs & st\_sign\\
-      \texttt{rSwitchOffStop} & Acknowledges switching off the pre signs & st\_sign\\
-      \texttt{cSwitchOffStop} & Switching off the pre signs & st\_sign\\
-      
-      \texttt{sLiftFrontBarrier} & Initiates lifting the front barrier & st\_barrier\\
-      \texttt{rLiftFrontBarrier} & Acknowledges lifting the front barriers & st\_barrier\\
-      \texttt{cLiftFrontBarrier} & Lifting the front barriers & st\_barrier\\
-      
-      \texttt{sLowerFrontBarrier} & Initiates lowering the front barrier & st\_barrier\\
-      \texttt{rLowerFrontBarrier} & Acknowledges lowering the front barriers & st\_barrier\\
-      \texttt{cLowerFrontBarrier} & Lowering the front barriers & st\_barrier\\
-      
-      \texttt{sLiftBackBarrier} & Initiates lifting the back barrier & st\_barrier\\
-      \texttt{rLiftBackBarrier} & Acknowledges lifting the back barriers & st\_barrier\\
-      \texttt{cLiftBackBarrier} & Lifting the back barriers & st\_barrier\\
-      
-      \texttt{sLowerBackBarrier} & Initiates lowering the back barrier & st\_barrier\\
-      \texttt{rLowerBackBarrier} & Acknowledges lowering the back barriers & st\_barrier\\
-      \texttt{cLowerBackBarrier} & Lowering the back barriers & st\_barrier\\
-      
-      \texttt{sEngageLock} & Initiates engaging the locks & st\_lock\\
-      \texttt{rEngageLock} & Acknowledges engaging the locks & st\_lock\\
-      \texttt{cEngageLock} & Engaging the locks & st\_lock\\
-      
-      \texttt{sDisengageLock} & Initiates disengaging the locks & st\_lock\\
-      \texttt{rDisengageLock} & Acknowledges disengaging the locks & st\_lock\\
-      \texttt{cDisengageLock} & Disengaging the locks & st\_lock\\
-      
-      \texttt{sLiftDeck} & Initiates lifting the deck & st\_deck\\
-      \texttt{rLiftDeck} & Acknowledges lifting the deck & st\_deck\\
-      \texttt{cLiftDeck} & Lifting the deck & st\_deck\\
-      
-      \texttt{sLowerDeck} & Initiates lowering the deck & st\_deck\\
-      \texttt{rLowerDeck} & Acknowledges lowering the deck & st\_deck\\
-      \texttt{cLowerDeck} & Lowering the deck & st\_deck\\
+      \texttt{sDeck} & Initiates lifting the deck & st\_deck\\
+      \texttt{rDeck} & Acknowledges lifting the deck & st\_deck\\
+      \texttt{cDeck} & Lifting the deck & st\_deck\\
 \end{tabular}
 \caption{Internal interactions of the safety layer used for system control.}
 \label{tab:tau}
 \end{table}
 %
-For the parameters of the interactions, data structs are introduced which group certain values. Table \ref{tab:types} lists these datatypes and their possible values.
+For the parameters of the interactions, data structures are introduced which group all possible states and identities of the components. Table \ref{tab:types} lists these datatypes and their possible values.
 
 \begin{table}[htb]%
 \begin{tabular}{ll}
 	\textbf{Datatype} & \textbf{Values}\\
-	status & on, off\\
+	\hline
+	st\_sign & on, off\\
 	st\_barrier & lift, lower\\
 	st\_lock & engaged, disengaged\\
 	st\_deck & up, down\\
 	st\_motor & rising, lowering, broken\\
+	\hline
+	id\_sign & P1, P2, P3, P4, S1, S2, S3, S4\\
+	id\_barrier & B1, B2\\
+	id\_lock & L1, L2\\
 \end{tabular}
-\caption{Data structs used as parameters for the interactions.}
+\caption{Data structures used as parameters for the interactions.}
 \label{tab:types}
 \end{table}
 %
