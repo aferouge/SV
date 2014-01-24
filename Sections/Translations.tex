@@ -73,14 +73,14 @@ Because the requirements often concern all individual objects of a specific comp
 	\item \textbf{The bridge should be able to be opened when a ship approaches}
 	\begin{enumerate}
 		\item From every state eventually \texttt{commDeck(up)} can occur.
-		\item $[true^* \cdot commDeck(up)]true$
+		\item $[true^*]<true^* \cdot commDeck(up)>true$
 	\end{enumerate}
 
 	%Requirement 9
 	\item \textbf{The bridge should be able to close in order to let cars pass}
 	\begin{enumerate}
 		\item From every state eventually \texttt{commStopSign(off)} can occur.
-		\item $[true^* \cdot commStopSign(off)]true$
+		\item $[true^*]<true^* \cdot commStopSign(off)>true$
 	\end{enumerate}
 
 	%Requirement 10
